@@ -1,0 +1,58 @@
+/* The floor editor (back office): neutral, in the admin's own colours. */
+.restaurant-editor { display: grid; grid-template-columns: minmax(14rem, 18rem) 1fr; gap: 1rem; align-items: start; }
+.restaurant-editor-side { padding: 1rem; display: grid; gap: .6rem; }
+.restaurant-editor-side h2 { font-size: 1rem; margin: .4rem 0 0; }
+.restaurant-editor-list, .restaurant-editor-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
+.restaurant-editor-list ul { padding-left: .8rem; margin: .3rem 0; }
+.restaurant-editor-list a { text-decoration: none; color: inherit; }
+.restaurant-editor-list .is-current > a { font-weight: 700; color: var(--admin-accent, #432B52); }
+.restaurant-editor-inline { display: flex; gap: .4rem; }
+.restaurant-editor-main { padding: 1rem; display: grid; gap: .75rem; min-width: 0; }
+.restaurant-editor-toolbar { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+.restaurant-editor-group { display: inline-flex; gap: .35rem; align-items: center; flex-wrap: wrap; }
+.restaurant-editor-group.is-end { margin-left: auto; }
+.restaurant-editor-snap { display: inline-flex; gap: .3rem; align-items: center; font-size: .85rem; }
+.restaurant-editor-snap .form-control, .restaurant-editor-snap .form-select { width: 5.5rem; }
+.restaurant-editor-status { font-size: .85rem; opacity: .8; }
+.restaurant-editor-status.is-dirty { color: #b26b00; }
+.restaurant-editor-status.is-ok { color: #2e7d32; }
+.restaurant-editor-status.is-error { color: #c62828; }
+.restaurant-editor-stage { display: grid; grid-template-columns: 1fr minmax(12rem, 15rem); gap: .75rem; align-items: start; }
+.restaurant-editor-svg { width: 100%; height: auto; max-height: 72vh; background: rgba(127, 127, 127, .06); border-radius: .75rem; touch-action: none; user-select: none; outline: none; }
+.restaurant-editor-svg:focus-visible { box-shadow: 0 0 0 3px rgba(67, 43, 82, .35); }
+.restaurant-editor-room { fill: rgba(255, 255, 255, .7); stroke: currentColor; stroke-width: 6; opacity: .9; }
+.restaurant-editor-gridline { stroke: rgba(127, 127, 127, .18); stroke-width: 1; }
+.restaurant-editor-scale line { stroke: currentColor; stroke-width: 3; }
+.restaurant-editor-scale text { font-size: 18px; fill: currentColor; }
+.restaurant-editor-table, .restaurant-editor-decor { cursor: grab; }
+.restaurant-editor-table rect, .restaurant-editor-table ellipse { fill: #f3ecf6; stroke: #432B52; stroke-width: 3; }
+.restaurant-editor-table.is-counter rect { fill: #efe2d4; stroke: #7a5532; }
+.restaurant-editor-table.is-off { opacity: .35; }
+.restaurant-editor-table text { font: 700 22px/1 sans-serif; fill: #432B52; pointer-events: none; }
+.restaurant-editor-table .restaurant-editor-sub { font: 400 14px/1 sans-serif; fill: #6b5a78; }
+.restaurant-editor-seat { fill: none; stroke: #432B52; stroke-width: 2; opacity: .45; }
+.restaurant-editor-table.is-selected rect, .restaurant-editor-table.is-selected ellipse { stroke: #E07A2F; stroke-width: 6; }
+.restaurant-editor-decor rect { fill: #cfc8d3; stroke: none; }
+.restaurant-editor-decor.is-wall rect { fill: #4b4252; }
+.restaurant-editor-decor.is-counter rect { fill: #a9805b; }
+.restaurant-editor-decor.is-door rect { fill: #e8c9a7; }
+.restaurant-editor-decor.is-window rect { fill: #9ec6de; }
+.restaurant-editor-decor.is-kitchen rect { fill: #e3dbe7; stroke: #4b4252; stroke-dasharray: 10 8; stroke-width: 3; }
+.restaurant-editor-decor.is-plant rect { fill: #8fb07a; }
+.restaurant-editor-decor.is-label rect { fill: transparent; stroke: rgba(127, 127, 127, .5); stroke-dasharray: 6 6; }
+.restaurant-editor-decor text { font: 600 18px/1 sans-serif; fill: #241b2b; pointer-events: none; }
+.restaurant-editor-decor.is-selected rect { stroke: #E07A2F; stroke-width: 5; }
+.restaurant-editor-join { stroke: #E07A2F; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 2 14; pointer-events: none; }
+.restaurant-editor-props { display: grid; gap: .5rem; padding: .75rem; border-radius: .75rem; background: rgba(127, 127, 127, .07); }
+.restaurant-editor-props label { display: grid; gap: .2rem; font-size: .85rem; }
+@media (prefers-color-scheme: dark) {
+    .restaurant-editor-room { fill: rgba(30, 24, 36, .6); }
+    .restaurant-editor-table rect, .restaurant-editor-table ellipse { fill: #3a2c45; stroke: #d9c7e6; }
+    .restaurant-editor-table text { fill: #f4ecf8; }
+    .restaurant-editor-table .restaurant-editor-sub { fill: #cbb9d8; }
+    .restaurant-editor-seat { stroke: #d9c7e6; }
+    .restaurant-editor-decor text { fill: #f4ecf8; }
+}
+@media (max-width: 900px) {
+    .restaurant-editor, .restaurant-editor-stage { grid-template-columns: 1fr; }
+}

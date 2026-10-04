@@ -1,0 +1,15 @@
+{# The times free, service by service, as buttons: the chosen one fills the form's time. #}
+<div class="restaurant-slots" data-restaurant-booking-target="slots" aria-live="polite">
+    {% for name, list in slots %}
+    <div class="restaurant-service">
+        <h3>{{ name }}</h3>
+        <div class="restaurant-times">
+            {% for slot in list %}
+            <button type="button" class="restaurant-time{{ selected|default(null) == slot.time ? ' is-selected' }}" data-time="{{ slot.time }}" data-action="restaurant-booking#pick" aria-pressed="{{ selected|default(null) == slot.time ? 'true' : 'false' }}">{{ slot.time }}</button>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <p class="restaurant-none">{{ '@restaurant.book.none'|trans }}</p>
+    {% endfor %}
+</div>

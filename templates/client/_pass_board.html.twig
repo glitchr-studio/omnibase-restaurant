@@ -1,0 +1,96 @@
+{# The pass's board, drawn again whenever the revision grows. #}
+<div class="restaurant-pass-board" data-restaurant-pass-target="board" data-revision="{{ state.revision }}" data-latest="{{ state.latest }}">
+    <div class="restaurant-pass-summary">
+        <span><b>{{ covers }}</b> {{ '@restaurant.pass.covers'|trans }}</span>
+        {% if service %}<span>{{ service.name }}</span>{% endif %}
+        <span><b>{{ state.open }}</b> {{ '@restaurant.pass.open_tickets'|trans }}</span>
+        {% if to_confirm|length %}<span class="is-alert"><b>{{ to_confirm|length }}</b> {{ '@restaurant.pass.to_confirm'|trans }}</span>{% endif %}
+        <span class="restaurant-pass-clock">{{ now|date('H:i') }}</span>
+    </div>
+
+    <div class="restaurant-pass-grid">
+        <section class="restaurant-pass-floor" aria-label="{{ '@restaurant.pass.floor'|trans }}">
+            {% for drawing in rooms %}
+            <figure>
+                <figcaption>{{ drawing.room.name }}{% if drawing.layout %} · {{ drawing.layout.name }}{% endif %}</figcaption>
+                {% include '@Restaurant/client/_floor.html.twig' with {interactive: true} %}
+            </figure>
+            {% endfor %}
+            <ul class="restaurant-pass-legend">
+                {% for s in ['free', 'booked', 'seated', 'waiting', 'ready', 'call', 'bill'] %}<li class="is-{{ s }}"><i></i>{{ ('@restaurant.pass.state.' ~ s)|trans }}</li>{% endfor %}
+            </ul>
+
+            {# One card per table, shown when it is tapped. #}
+            {% for drawing in rooms %}{% for place in drawing.tables %}
+            {% set t = place.table %}{% set s = place.session %}
+            <div class="restaurant-pass-card" data-card="{{ t.id }}" hidden>
+                <header><h3>{{ '@restaurant.pass.table'|trans({table: t.label}) }}</h3><span class="restaurant-pill is-{{ place.state }}">{{ ('@restaurant.pass.state.' ~ place.state)|trans }}</span>
+                    <button type="button" class="restaurant-close" data-action="restaurant-pass#closeCard" aria-label="{{ '@restaurant.pass.close'|trans }}">×</button></header>
+                {% if place.reservation %}<p>{{ place.reservation.name }} · {{ place.reservation.covers }} · {{ place.reservation.time }}{% if place.reservation.allergies %} · <b>{{ place.reservation.allergies }}</b>{% endif %}</p>{% endif %}
+                {% if s %}
+                    {% for ticket in s.tickets %}
+                    <p class="restaurant-card-round is-{{ ticket.status.value }}">{{ ticket.round }}. {% for line in ticket.lines %}{{ line.quantity }} {{ line.name }}{{ not loop.last ? ', ' }}{% endfor %} <span class="restaurant-pill">{{ ('@restaurant.' ~ ticket.status.trans)|trans }}</span></p>
+                    {% endfor %}
+                    <p class="restaurant-total">{{ '@restaurant.table.total'|trans }} <strong>{{ s.total|format_currency(s.currency, {use_rate: false}) }}</strong></p>
+                    <div class="restaurant-card-actions">
+                        {% if s.waiterCalledAt %}<button type="button" class="restaurant-button is-small" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_table', {id: t.id, action: 'answer'}) }}">{{ '@restaurant.pass.answer'|trans }}</button>{% endif %}
+                        <button type="button" class="restaurant-button is-small" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_table', {id: t.id, action: 'settle'}) }}" data-with="card" data-confirm="{{ '@restaurant.pass.settle_confirm'|trans({total: s.total|format_currency(s.currency, {use_rate: false})}) }}">{{ '@restaurant.pass.settle_card'|trans }}</button>
+                        <button type="button" class="restaurant-button is-small" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_table', {id: t.id, action: 'settle'}) }}" data-with="cash" data-confirm="{{ '@restaurant.pass.settle_confirm'|trans({total: s.total|format_currency(s.currency, {use_rate: false})}) }}">{{ '@restaurant.pass.settle_cash'|trans }}</button>
+                        <label class="restaurant-transfer">{{ '@restaurant.pass.transfer'|trans }}
+                            <select data-action="change->restaurant-pass#transfer" data-url="{{ path('restaurant_pass_table', {id: t.id, action: 'transfer'}) }}">
+                                <option value="">—</option>
+                                {% for other in rooms %}{% for p in other.tables %}{% if p.table.id != t.id and p.state in ['free', 'booked'] %}<option value="{{ p.table.id }}">{{ p.table.label }}</option>{% endif %}{% endfor %}{% endfor %}
+                            </select>
+                        </label>
+                    </div>
+                {% else %}
+                    {% if place.next %}<p>{{ '@restaurant.pass.next'|trans }} : {{ place.next.time }} · {{ place.next.name }} · {{ place.next.covers }}</p>{% endif %}
+                    <button type="button" class="restaurant-button is-small" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_table', {id: t.id, action: 'open'}) }}">{{ '@restaurant.pass.open'|trans }}</button>
+                {% endif %}
+                <button type="button" class="restaurant-button is-small is-quiet" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_table', {id: t.id, action: 'ordering'}) }}">{{ t.ordering ? '@restaurant.pass.close_orders'|trans : '@restaurant.pass.open_orders'|trans }}</button>
+            </div>
+            {% endfor %}{% endfor %}
+        </section>
+
+        <section class="restaurant-pass-columns" aria-label="{{ '@restaurant.pass.tickets'|trans }}">
+            {% for key, tickets in columns %}
+            <div class="restaurant-pass-column is-{{ key }}">
+                <h2>{{ ('@restaurant.pass.column.' ~ key)|trans }} <span class="restaurant-badge">{{ tickets|length ?: '' }}</span></h2>
+                {% for ticket in tickets %}{% include '@Restaurant/client/_ticket.html.twig' %}{% else %}<p class="restaurant-muted">—</p>{% endfor %}
+            </div>
+            {% endfor %}
+        </section>
+
+        <section class="restaurant-pass-book" aria-label="{{ '@restaurant.pass.book'|trans }}">
+            <h2>{{ '@restaurant.pass.book'|trans }}</h2>
+            <ol class="restaurant-pass-reservations">
+                {% for r in reservations %}
+                <li class="is-{{ r.status.value }}">
+                    <span class="restaurant-pass-time">{{ r.time }}</span>
+                    <span class="restaurant-pass-who"><b>{{ r.name }}</b> · {{ r.covers }} · {{ r.tablesLabel ?: '—' }}{% if r.fromPlatform %} · <span class="restaurant-platform">{{ r.source }}</span>{% endif %}
+                        {% if r.allergies %}<small class="restaurant-line-note">{{ r.allergies }}</small>{% endif %}</span>
+                    <span class="restaurant-pill">{{ ('@restaurant.' ~ r.status.trans)|trans }}</span>
+                    <span class="restaurant-pass-do">
+                        {% for to in r.status.next %}
+                        {% set action = {confirmed: 'confirm', refused: 'refuse', seated: 'seat', finished: 'finish', no_show: 'no_show', cancelled: 'cancel'}[to.value] %}
+                        <button type="button" class="restaurant-button is-small{{ to.value in ['refused', 'cancelled', 'no_show'] ? ' is-quiet' }}" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_reservation', {id: r.id, action: action}) }}"{% if to.value in ['refused', 'cancelled'] %} data-confirm="{{ '@restaurant.pass.sure'|trans }}"{% endif %}>{{ ('@restaurant.pass.reservation.' ~ action)|trans }}</button>
+                        {% endfor %}
+                    </span>
+                </li>
+                {% else %}
+                <li class="restaurant-muted">{{ '@restaurant.pass.no_reservation'|trans }}</li>
+                {% endfor %}
+            </ol>
+
+            <details class="restaurant-pass-stock">
+                <summary>{{ '@restaurant.pass.stock'|trans }} <span class="restaurant-badge">{{ dishes|filter(d => d.outOfStock)|length ?: '' }}</span></summary>
+                <ul>
+                    {% for dish in dishes %}
+                    <li class="{{ dish.outOfStock ? 'is-out' }}">{{ dish.title }}
+                        <button type="button" class="restaurant-button is-small{{ dish.outOfStock ? '' : ' is-quiet' }}" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_dish', {id: dish.id, action: dish.outOfStock ? 'back' : 'out'}) }}">{{ dish.outOfStock ? '@restaurant.pass.back'|trans : '@restaurant.pass.out'|trans }}</button></li>
+                    {% endfor %}
+                </ul>
+            </details>
+        </section>
+    </div>
+</div>

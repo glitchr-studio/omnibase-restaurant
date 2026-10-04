@@ -1,0 +1,50 @@
+{# Réserver: the day and how many, the times free (asked again as they change), who, what they ask. #}
+{% extends layout %}
+{% block title %}{{ '@restaurant.book.title'|trans }}{% endblock %}
+{% block description %}{{ '@restaurant.book.lead'|trans({max: max_covers}) }}{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('bundles/restaurant/css/restaurant.css') }}">{% endblock %}
+
+{% block content %}
+<section class="restaurant restaurant-book">
+    <header class="restaurant-head">
+        <p class="restaurant-eyebrow" lang="ja">ご予約</p>
+        <h1>{{ '@restaurant.book.title'|trans }}</h1>
+        <p class="restaurant-lead">{{ '@restaurant.book.lead'|trans({max: max_covers}) }}</p>
+    </header>
+
+    {{ form_start(form, {attr: {class: 'restaurant-form', novalidate: 'novalidate', 'data-controller': 'restaurant-booking', 'data-restaurant-booking-url-value': path('restaurant_book_slots'), 'data-restaurant-booking-none-value': '@restaurant.book.none'|trans, 'data-restaurant-booking-call-value': '@restaurant.book.call'|trans({max: max_covers})}}) }}
+        <fieldset class="restaurant-step">
+            <legend><span>1</span> {{ '@restaurant.book.when'|trans }}</legend>
+            <div class="restaurant-row">
+                {{ form_row(form.day, {attr: {'data-action': 'change->restaurant-booking#refresh', 'data-restaurant-booking-target': 'day'}}) }}
+                {{ form_row(form.covers, {attr: {'data-action': 'change->restaurant-booking#refresh input->restaurant-booking#refresh', 'data-restaurant-booking-target': 'covers'}}) }}
+            </div>
+            {% if days %}
+            <p class="restaurant-days">{{ '@restaurant.book.next_days'|trans }}
+                {% for day in days|slice(0, 7) %}<button type="button" class="restaurant-chip" data-day="{{ day }}" data-action="restaurant-booking#day">{{ day|format_date(pattern: 'EEE d MMM') }}</button>{% endfor %}
+            </p>
+            {% endif %}
+            {{ form_widget(form.time, {attr: {'data-restaurant-booking-target': 'time'}}) }}
+            {% include '@Restaurant/client/_slots.html.twig' with {selected: form.time.vars.value} %}
+            {{ form_errors(form.time) }}
+            {% if error %}<p class="restaurant-flash is-danger" role="alert">{{ error }}</p>{% endif %}
+        </fieldset>
+
+        <fieldset class="restaurant-step">
+            <legend><span>2</span> {{ '@restaurant.book.who'|trans }}</legend>
+            <div class="restaurant-row">
+                {{ form_row(form.name) }}
+                {{ form_row(form.phone) }}
+            </div>
+            {{ form_row(form.email) }}
+            {{ form_row(form.allergies) }}
+            {{ form_row(form.notes) }}
+            <div class="restaurant-trap" aria-hidden="true">{{ form_row(form.website) }}</div>
+            {{ form_widget(form.startedAt) }}
+            {{ form_row(form.privacy) }}
+        </fieldset>
+
+        <p class="restaurant-submit"><button type="submit" class="restaurant-button">{{ '@restaurant.book.submit'|trans }}</button></p>
+    {{ form_end(form) }}
+</section>
+{% endblock %}

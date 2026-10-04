@@ -1,0 +1,39 @@
+{#
+ # One dish of the menu: its name and the kitchen's, its price VAT included,
+ # what it says, its allergens (the Annex II numbers, named on hover) and
+ # diets, how hot. `order` adds the stepper of the table's phones.
+ #}
+{% set price = marketplace_price_with_vat(dish) %}
+{% set out = dish.outOfStock or not dish.forSell %}
+<article class="restaurant-dish{{ out ? ' is-out' }}" id="plat-{{ dish.id }}"
+         data-allergens="{{ dish.allergens|join(' ') }}" data-diets="{{ dish.diets|join(' ') }}"
+         {% if order|default(false) %}data-restaurant-table-target="dish" data-dish="{{ dish.id }}" data-name="{{ dish.title }}" data-price="{{ price }}"{% endif %}>
+    {% if dish.illustration %}<img class="restaurant-dish-art" src="{{ asset(dish.illustration starts with '/' or dish.illustration starts with 'http' ? dish.illustration : 'assets/images/' ~ dish.illustration) }}" alt="" loading="lazy" width="120" height="120">{% endif %}
+    <div class="restaurant-dish-body">
+        <h3 class="restaurant-dish-name">
+            <span>{{ dish.title }}</span>
+            {% if dish.nativeName %}<span class="restaurant-native" lang="ja">{{ dish.nativeName }}</span>{% endif %}
+        </h3>
+        {% if dish.excerpt %}<p class="restaurant-dish-text">{{ dish.excerpt }}</p>{% endif %}
+        {% if dish.getCourses() %}
+        <ul class="restaurant-courses">{% for course in dish.getCourses() %}<li>{{ course }}</li>{% endfor %}</ul>
+        {% endif %}
+        <p class="restaurant-dish-meta">
+            {% for diet in dish.dietCases %}<span class="restaurant-pill is-diet">{{ ('@restaurant.' ~ diet.trans)|trans }}</span>{% endfor %}
+            {% if dish.spice > 0 %}<span class="restaurant-spice" title="{{ '@restaurant.menu.spice'|trans }}">{% for i in 1..dish.spice %}<i aria-hidden="true">🌶</i>{% endfor %}<span class="visually-hidden">{{ '@restaurant.menu.spice'|trans }} {{ dish.spice }}/3</span></span>{% endif %}
+            {% for a in dish.allergenCases %}<abbr class="restaurant-allergen" title="{{ ('@enums.' ~ a.trans)|trans }}">{{ a.number }}</abbr>{% endfor %}
+        </p>
+    </div>
+    <div class="restaurant-dish-side">
+        <span class="restaurant-price">{{ price|format_currency(dish.currency, {use_rate: false}) }}</span>
+        {% if out %}
+            <span class="restaurant-out">{{ '@restaurant.menu.out'|trans }}</span>
+        {% elseif order|default(false) and dish.tableOrder %}
+            <span class="restaurant-stepper">
+                <button type="button" data-action="restaurant-table#less" aria-label="{{ '@restaurant.table.less'|trans }}">−</button>
+                <output data-restaurant-table-target="count" data-dish="{{ dish.id }}">0</output>
+                <button type="button" data-action="restaurant-table#more" aria-label="{{ '@restaurant.table.more'|trans }}">+</button>
+            </span>
+        {% endif %}
+    </div>
+</article>

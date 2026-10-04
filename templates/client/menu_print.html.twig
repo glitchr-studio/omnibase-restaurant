@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|slice(0, 2) }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ '@restaurant.menu.title'|trans }}</title>
+    <link rel="stylesheet" href="{{ asset('bundles/restaurant/css/restaurant.css') }}">
+</head>
+<body class="restaurant-print">
+    <h1>{{ '@restaurant.menu.title'|trans }} <span class="restaurant-native" lang="ja">お品書き</span></h1>
+    {% for group in sections %}
+    <section class="restaurant-section">
+        <h2>{{ group.section.label ?? ('@restaurant.menu.other'|trans) }}{% if group.section and group.section.nativeName %} <span class="restaurant-native" lang="ja">{{ group.section.nativeName }}</span>{% endif %}</h2>
+        {% for dish in group.dishes %}
+        <p class="restaurant-print-dish">
+            <span class="restaurant-print-name">{{ dish.title }}{% if dish.nativeName %} <span class="restaurant-native" lang="ja">{{ dish.nativeName }}</span>{% endif %}
+                {% for a in dish.allergenCases %}<sup>{{ a.number }}</sup>{% endfor %}</span>
+            <span class="restaurant-print-dots"></span>
+            <span class="restaurant-price">{{ marketplace_price_with_vat(dish)|format_currency(dish.currency, {use_rate: false}) }}</span>
+        </p>
+        {% endfor %}
+    </section>
+    {% endfor %}
+    <footer class="restaurant-print-key">
+        {% for a in allergens %}<span><b>{{ a.number }}</b> {{ ('@enums.' ~ a.trans)|trans }}</span>{% endfor %}
+        <p>{{ '@restaurant.menu.legal'|trans }}</p>
+    </footer>
+    <script>window.addEventListener('load', function () { setTimeout(function () { window.print(); }, 300); });</script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+menu:
+    title: La carte
+    lead: "Les plats de la cuisine, leurs allergènes, et à qui ils conviennent. Les prix s'entendent TTC, service compris."
+    book: Réserver une table
+    print: Imprimer la carte
+    filter: Trier selon ce que vous mangez
+    without: Sans
+    only: Seulement
+    sections: Rubriques de la carte
+    other: Autres
+    out: Épuisé pour aujourd'hui
+    spice: Piquant
+    empty: La carte arrive bientôt.
+    legal: "Les numéros renvoient aux 14 allergènes du règlement (UE) n° 1169/2011. Une allergie ? Dites-le en commandant : la cuisine adapte ce qu'elle peut."
+
+book:
+    title: Réserver une table
+    lead: "Choisissez le jour, le nombre de couverts, puis l'heure. Au-delà de {max} personnes, appelez-nous : nous arrangeons la salle."
+    when: Quand ?
+    who: À quel nom ?
+    day: Jour
+    covers: Couverts
+    time: Heure
+    name: Nom
+    email: E-mail
+    phone: Téléphone
+    allergies: Allergies, régime
+    notes: "Une demande ? (chaise haute, anniversaire…)"
+    next_days: "Prochains jours libres :"
+    none: "Plus de table libre ce jour-là pour autant de personnes. Essayez un autre jour."
+    call: "Pour plus de {max} personnes, appelez-nous : nous arrangeons la salle pour vous."
+    submit: Réserver
+    thanks: "Merci, c'est noté."
+    privacy: "Vos coordonnées servent uniquement à cette réservation (confirmation, rappel, modification) et sont effacées après votre venue."
+    error:
+        time: Choisissez une heure.
+        phone: "Ce numéro de téléphone ne semble pas valide."
+        unavailable: "Cette heure vient d'être prise. Choisissez-en une autre."
+
+manage:
+    title: Votre réservation
+    fresh: "C'est réservé !"
+    covers: "{count, plural, one {# couvert} other {# couverts}}"
+    requested_help: "Pour un groupe, le restaurant confirme lui-même : vous recevrez un e-mail."
+    calendar: Ajouter à mon agenda
+    change: Changer de jour, d'heure ou de nombre
+    show_times: Voir les heures libres
+    move: Déplacer ma réservation
+    cancel: Annuler ma réservation
+    cancel_confirm: "Annuler cette réservation ?"
+    cancelled: Votre réservation est annulée.
+    changed: Votre réservation est modifiée.
+    too_late: "Il est trop tard pour la modifier en ligne : appelez-nous."
+    error:
+        too_late: "Il est trop tard pour la modifier en ligne : appelez-nous."
+
+reservation:
+    status:
+        requested: En attente de confirmation
+        confirmed: Confirmée
+        seated: Installée
+        finished: Terminée
+        no_show: Absent
+        cancelled: Annulée
+        refused: Refusée
+
+source:
+    site: Site
+    phone: Téléphone
+    walk_in: Sans réservation
+
+table:
+    title: "Table {table}"
+    lead: "Choisissez, envoyez : la cuisine reçoit votre commande. Commandez en plusieurs fois, quand vous voulez."
+    read_only: "La carte, à lire. Pour commander, demandez à l'équipe."
+    tab_menu: La carte
+    tab_rounds: Notre table
+    less: Un de moins
+    more: Un de plus
+    note: Un mot pour la cuisine
+    send: Envoyer en cuisine
+    sent: "C'est parti en cuisine !"
+    round: Envoi
+    nothing_yet: Rien d'envoyé pour l'instant.
+    total: Total de la table
+    call: Appeler le serveur
+    called: "Quelqu'un arrive."
+    bill: "L'addition, s'il vous plaît"
+    bill_asked: "L'addition arrive à votre table."
+    pay_till: "Le règlement se fait à la caisse."
+    pay_online: "Vous pourrez régler depuis votre téléphone."
+    shape:
+        round: Ronde
+        square: Carrée
+        rectangle: Rectangulaire
+        counter: Comptoir
+    error:
+        closed: "Cette table ne prend pas de commande pour le moment : demandez à l'équipe."
+        bill_asked: "L'addition est demandée : appelez le serveur pour ajouter quelque chose."
+        empty: Votre commande est vide.
+        unavailable: "Un des plats n'est plus disponible : retirez-le et renvoyez."
+        quantity: "Cette quantité n'est pas possible."
+        generic: "L'envoi n'a pas abouti. Réessayez, ou appelez le serveur."
+
+ticket:
+    status:
+        new: Reçue
+        accepted: Acceptée
+        preparing: En préparation
+        ready: Prête
+        served: Servie
+        refused: Refusée
+        cancelled: Annulée
+    channel:
+        table: Table
+        takeaway: À emporter
+        platform: Plateforme
+
+session:
+    status:
+        open: Ouverte
+        bill: Addition demandée
+        settled: Réglée
+
+station:
+    hot: Cuisine chaude
+    cold: Cuisine froide
+    bar: Bar
+
+diet:
+    vegetarian: Végétarien
+    vegan: Végétalien
+    no_pork: Sans porc
+    gluten_free: Sans gluten
+
+day:
+    monday: Lundi
+    tuesday: Mardi
+    wednesday: Mercredi
+    thursday: Jeudi
+    friday: Vendredi
+    saturday: Samedi
+    sunday: Dimanche
+
+pass:
+    title: Le passe
+    stations: Postes
+    all: Tout
+    arm: Activer les alertes
+    silence: Vu !
+    platforms: Plateformes
+    pause: Pause 30 min
+    resume: Reprendre
+    new: + Réservation / sans réservation
+    source: Origine
+    add: Ajouter
+    covers: couverts aujourd'hui
+    open_tickets: tickets en cours
+    to_confirm: à confirmer
+    floor: La salle
+    tickets: Les tickets
+    book: Les réservations du jour
+    no_reservation: Aucune réservation aujourd'hui.
+    table: "Table {table}"
+    close: Fermer
+    next: Prochaine
+    open: Ouvrir la table
+    answer: "J'arrive"
+    settle_card: Encaissé carte
+    settle_cash: Encaissé espèces
+    settle_confirm: "Encaisser {total} et libérer la table ?"
+    transfer: Changer de table
+    close_orders: Fermer aux commandes
+    open_orders: Rouvrir aux commandes
+    accept_within: "À accepter sous {minutes} min"
+    pickup: Retrait
+    refuse_confirm: Refuser cette commande ?
+    cancel_confirm: Annuler ce ticket ?
+    sure: Vous êtes sûr ?
+    stock: Ruptures
+    out: Rupture
+    back: De retour
+    state:
+        free: Libre
+        booked: Réservée
+        seated: Installée
+        waiting: En attente cuisine
+        ready: Plat prêt
+        call: Appel
+        bill: Addition
+        off: Hors service
+    column:
+        new: À accepter
+        kitchen: En cuisine
+        ready: Prêt
+        served: Servi
+    do:
+        accepted: Accepter
+        preparing: En préparation
+        ready: Prêt
+        served: Servi
+        refused: Refuser
+        cancelled: Annuler
+    reservation:
+        confirm: Confirmer
+        refuse: Refuser
+        seat: Installer
+        finish: Terminer
+        no_show: Absent
+        cancel: Annuler
+    error:
+        action: "Ce geste n'est pas possible."
+        no_bill: "Pas d'addition ouverte à cette table."
+        no_table: Table inconnue.
+        table_taken: "Cette table est déjà occupée."
+        platform: "Cette plateforme n'est pas configurée."
+
+mail:
+    hello: "Bonjour {name},"
+    manage: Voir ou modifier ma réservation
+    calendar_title: Réservation au restaurant
+    confirmed:
+        subject: "Votre table est réservée le {date} à {time}"
+        title: Votre table est réservée
+        body: "Nous vous attendons. Le fichier joint l'ajoute à votre agenda."
+    requested:
+        subject: "Votre demande de réservation du {date} à {time}"
+        title: Demande reçue
+        body: "Le restaurant confirme lui-même les grandes tables : vous recevrez un e-mail très vite."
+    changed:
+        subject: "Réservation modifiée : le {date} à {time}"
+        title: Réservation modifiée
+        body: "Voici votre nouvelle réservation."
+    cancelled:
+        subject: "Réservation du {date} annulée"
+        title: Réservation annulée
+        body: "Votre réservation est annulée. À une prochaine fois !"
+    refused:
+        subject: "Réservation du {date} : complet"
+        title: "Nous sommes complets"
+        body: "Nous ne pouvons pas vous recevoir à cette heure-là. Essayez une autre date sur le site."
+    staff:
+        requested:
+            subject: "À confirmer : {covers} couverts le {date} à {time} ({name})"
+        cancelled:
+            subject: "Annulée : {covers} couverts le {date} à {time} ({name})"
+
+admin:
+    position: Ordre
+    room:
+        name: Nom de la salle
+        width: Largeur (cm)
+        height: Profondeur (cm)
+    table:
+        room: Salle
+        label: Numéro
+        min: Couverts min.
+        max: Couverts max.
+        shape: Forme
+        active: En service
+        bookable: Réservable en ligne
+        ordering: Commande au QR
+    layout:
+        name: Nom de la disposition
+        default: Par défaut
+        dates: Dates où elle s'applique
+        dates_help: "Une date AAAA-MM-JJ par ligne (une privatisation) : elle prime sur celle du service."
+    service:
+        name: Service
+        first: Première table
+        last: Dernière table
+        step: "Pas (min)"
+        active: Actif
+        weekdays: Jours
+        layout: Disposition de la salle
+        max_covers: Couverts max. du service
+        auto_confirm: Confirmation automatique jusqu'à
+        auto_confirm_help: "Au-delà, la réservation attend votre confirmation sur le passe. Vide : toujours confirmée."
+        durations: Durée d'une table
+        durations_help: "« jusqu'à N couverts : minutes », une ligne par palier (2: 75, 4: 90…). Les horaires d'ouverture et les fermetures sont ceux du site."
+    reservation:
+        starts_at: Date et heure
+        covers: Couverts
+        name: Nom
+        status: Statut
+        tables: Tables
+        phone: Téléphone
+        email: E-mail
+        source: Origine
+        external: Référence plateforme
+        allergies: Allergies
+        notes: Demandes
+    ticket:
+        label: Ticket
+        platform: Plateforme
+        external: Référence
+        total: Total (centimes)
+        created_at: Reçu le
+    section:
+        label: Rubrique
+        native: Nom japonais
+    dish:
+        native: Nom japonais
+        section: Rubrique de la carte
+        station: Poste
+        allergens: Allergènes
+        diets: Régimes
+        spice: Piquant (0-3)
+        table_order: Commandable à table
+        illustration: Illustration (chemin sous assets/images)
+    set_menu:
+        courses: Ce que comprend la formule
+        courses_help: Une ligne par plat.
+        only_at: Servie seulement au
+    widget:
+        covers: couverts aujourd'hui
+        to_confirm: réservations à confirmer
+        tickets: tickets sur le passe
+    floor:
+        title: Plan de salle
+        lead: "Glissez les tables, tournez-les, dupliquez-les ; dans une disposition, jumelez-les pour les grandes tablées."
+        rooms: Salles
+        seats: places
+        base: Plan de base
+        new_layout: Nouvelle disposition
+        new_room: Nouvelle salle
+        posters: Affiches QR
+        posters_help: "Une affiche par table : scannée, elle ouvre la carte en mode commande. Renouvelez le code d'une table pour invalider son ancienne affiche."
+        poster_table: Table
+        poster_scan: "Scannez pour voir la carte et commander depuis votre téléphone."
+        no_room: Créez d'abord une salle.
+        no_table: Aucune table.
+        add_decor: + Élément
+        duplicate: Dupliquer
+        rotate: Tourner de 45°
+        remove: Supprimer
+        join: Jumeler
+        join_help: "Maj+clic pour choisir plusieurs tables, puis Jumeler : elles accueillent ensemble une grande tablée."
+        grid: Grille
+        size: Salle
+        save: Enregistrer
+        saved: Enregistré.
+        unsaved: Modifications non enregistrées
+        error: "L'enregistrement a échoué."
+        w: Largeur (cm)
+        h: Profondeur (cm)
+        rotation: Rotation (°)
+        text: Texte
+        nothing: Choisissez un élément du plan.
+        renew: Renouveler le QR
+        renew_confirm: "L'affiche imprimée de cette table ne marchera plus. Continuer ?"
+        token_renewed: Nouveau code QR pour la table.
+        base_help: "Le plan de base : où sont les tables sans disposition, et lesquelles sont en service."
+        layout_help: "Une disposition : déplacez les tables pour ce service, mettez-en hors service, jumelez-en (Maj+clic puis Jumeler)."
+        decor:
+            wall: Mur
+            counter: Comptoir
+            door: Porte
+            window: Fenêtre
+            kitchen: Cuisine
+            plant: Plante
+            label: Étiquette

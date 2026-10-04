@@ -1,0 +1,35 @@
+{
+    "name": "omnibase/restaurant",
+    "description": "A restaurant on omnibase: the dining room and its layouts (a floor-plan editor, a QR poster per table), meal services and table reservations (availability under a lock, a public form, a management link, ICS), the menu (dishes as omnibase/marketplace products, sections, set menus, EU allergens), ordering at the table by QR code (sessions, rounds, tickets), the pass for the staff, and the delivery and booking platforms through glitchr/omnifood.",
+    "type": "symfony-bundle",
+    "keywords": ["restaurant", "reservations", "floor plan", "qr code", "table ordering", "kitchen display", "omnibase", "omnifood"],
+    "license": "LGPL-3.0-or-later",
+    "authors": [{"name": "Marco Meyer", "email": "marco.meyer@glitchr.io"}],
+    "require": {
+        "php": "^8.2",
+        "doctrine/orm": "^2.15|^3.0",
+        "glitchr/omnibase": "3.0.*-dev",
+        "omnibase/admin": "dev-main",
+        "omnibase/marketplace": "dev-main",
+        "symfony/config": "^7.0|^8.0",
+        "symfony/dependency-injection": "^7.0|^8.0",
+        "symfony/form": "^7.0|^8.0",
+        "symfony/http-kernel": "^7.0|^8.0",
+        "symfony/lock": "^7.0|^8.0",
+        "symfony/mailer": "^7.0|^8.0",
+        "symfony/rate-limiter": "^7.0|^8.0",
+        "symfony/security-bundle": "^7.0|^8.0",
+        "symfony/serializer": "^7.0|^8.0",
+        "symfony/validator": "^7.0|^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0|^12.0"
+    },
+    "suggest": {
+        "glitchr/omnifood": "The delivery and booking platforms (omnifood/ubereats, omnifood/deliveroo, omnifood/justeat, omnifood/thefork): their orders become tickets on the pass, their reservations join the book, the menu and the out-of-stock dishes are pushed to them."
+    },
+    "autoload": {"psr-4": {"Base\\Restaurant\\": "./src"}},
+    "autoload-dev": {"psr-4": {"Base\\Restaurant\\Tests\\": "./tests"}},
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

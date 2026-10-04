@@ -1,0 +1,19 @@
+<div class="analytics-card card restaurant-today">
+    <div class="analytics-card-header"><h2 class="analytics-card-title">{{ widget.label|trans({}, 'admin') }}</h2></div>
+    <div class="restaurant-today-tiles">
+    {% for key, tile in tiles %}
+        <a class="restaurant-today-tile{{ tile.alert is defined and tile.value > 0 ? ' is-waiting' }}" href="{{ path(tile.route) }}">
+            <strong>{{ tile.value }}</strong><span>{{ ('@restaurant.admin.widget.' ~ key)|trans }}</span>
+        </a>
+    {% endfor %}
+    </div>
+</div>
+<style>
+    .restaurant-today-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: .75rem; padding: 0 1rem 1rem; }
+    .restaurant-today-tile { display: grid; gap: .25rem; padding: .9rem 1rem; border-radius: .75rem; background: rgba(127,127,127,.08); color: inherit; text-decoration: none; }
+    .restaurant-today-tile strong { font-size: 1.6rem; line-height: 1.1; }
+    .restaurant-today-tile span { font-size: .8rem; opacity: .75; }
+    .restaurant-today-tile:hover { background: rgba(127,127,127,.16); }
+    .restaurant-today-tile.is-waiting { background: rgba(252,104,117,.16); }
+    .restaurant-today-tile.is-waiting strong { color: #d9404e; }
+</style>

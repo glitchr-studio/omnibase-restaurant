@@ -1,0 +1,31 @@
+{# A ticket on the pass: where from, since when, what (the station's lines only when filtered), and the taps that move it. #}
+{% set lines = ticket.linesFor(station) %}
+{% set left = ticket.secondsToAccept %}
+<article class="restaurant-pass-ticket is-{{ ticket.status.value }}{{ ticket.fromPlatform ? ' is-platform is-' ~ ticket.platform }}{{ left is not null and left < accept_warning ? ' is-late' }}" data-ticket="{{ ticket.id }}">
+    <header>
+        <strong>{% if ticket.fromPlatform %}<span class="restaurant-platform">{{ ticket.platform }}</span> #{{ ticket.displayId ?? ticket.externalRef }}{% elseif ticket.table %}{{ '@restaurant.pass.table'|trans({table: ticket.table.label}) }} · {{ ticket.round }}{% else %}#{{ ticket.id }}{% endif %}</strong>
+        <time datetime="{{ ticket.createdAt|date('c') }}" data-since="{{ ticket.createdAt|date('U') }}">{{ ticket.createdAt|date('H:i') }}</time>
+    </header>
+    {% if left is not null %}<p class="restaurant-countdown" data-deadline="{{ ticket.acceptBy|date('U') }}">{{ '@restaurant.pass.accept_within'|trans({minutes: (left / 60)|round(0, 'ceil')}) }}</p>{% endif %}
+    {% if ticket.customerName %}<p class="restaurant-muted">{{ ticket.customerName }}{% if ticket.pickupAt %} · {{ '@restaurant.pass.pickup'|trans }} {{ ticket.pickupAt|date('H:i') }}{% endif %}</p>{% endif %}
+    <ul>
+        {% for line in lines %}
+        <li class="is-{{ line.station.value }}"><b>{{ line.quantity }}</b> {{ line.name }}
+            {% if line.options %}<small>{{ line.options|join(' · ') }}</small>{% endif %}
+            {% if line.note %}<small class="restaurant-line-note">« {{ line.note }} »</small>{% endif %}</li>
+        {% endfor %}
+    </ul>
+    {% if ticket.note %}<p class="restaurant-line-note">« {{ ticket.note }} »</p>{% endif %}
+    <footer>
+        {% set forward = ticket.status.forward %}
+        {% if forward %}
+        <button type="button" class="restaurant-button is-small" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_ticket', {id: ticket.id, action: 'forward'}) }}">{{ ('@restaurant.pass.do.' ~ forward.value)|trans }}</button>
+        {% endif %}
+        {% if ticket.status.value == 'new' %}
+        <button type="button" class="restaurant-button is-small is-quiet" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_ticket', {id: ticket.id, action: 'refuse'}) }}" data-confirm="{{ '@restaurant.pass.refuse_confirm'|trans }}">{{ '@restaurant.pass.do.refused'|trans }}</button>
+        {% elseif ticket.status.open %}
+        <button type="button" class="restaurant-button is-small is-quiet" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_ticket', {id: ticket.id, action: 'cancel'}) }}" data-confirm="{{ '@restaurant.pass.cancel_confirm'|trans }}">{{ '@restaurant.pass.do.cancelled'|trans }}</button>
+        {% endif %}
+        <span class="restaurant-ticket-total">{{ ticket.total|format_currency(ticket.currency, {use_rate: false}) }}</span>
+    </footer>
+</article>

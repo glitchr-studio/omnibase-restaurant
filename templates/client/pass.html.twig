@@ -1,0 +1,59 @@
+{#
+ # Le passe: the floor's one screen. The board (_pass_board.html.twig) is
+ # drawn again when the state's revision grows; a ticket to accept rings
+ # (glitchr/omnibase's poll controller, once the alerts are armed by a tap).
+ #}
+{% extends layout %}
+{% block title %}{{ '@restaurant.pass.title'|trans }}{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('bundles/restaurant/css/restaurant.css') }}">{% endblock %}
+
+{% block content %}
+<section class="restaurant restaurant-pass"
+         data-controller="restaurant-pass"
+         data-restaurant-pass-board-url-value="{{ path('restaurant_pass_board', {poste: station.value ?? null}) }}"
+         data-restaurant-pass-token-value="{{ csrf_token('restaurant-pass') }}"
+         data-restaurant-pass-revision-value="{{ state.revision }}">
+    <header class="restaurant-pass-head">
+        <h1>{{ '@restaurant.pass.title'|trans }} <span class="restaurant-native" lang="ja">パス</span></h1>
+        <nav class="restaurant-pass-stations" aria-label="{{ '@restaurant.pass.stations'|trans }}">
+            <a href="{{ path('restaurant_pass') }}" {{ station is null ? 'aria-current="true"' }}>{{ '@restaurant.pass.all'|trans }}</a>
+            {% for s in ['hot', 'cold', 'bar'] %}<a href="{{ path('restaurant_pass', {poste: s}) }}" {{ station and station.value == s ? 'aria-current="true"' }}>{{ ('@restaurant.station.' ~ s)|trans }}</a>{% endfor %}
+        </nav>
+        {# Two polls on the same state: "revision" redraws, "latest" rings. #}
+        <div class="restaurant-pass-alerts" data-controller="poll" data-poll-url-value="{{ path('restaurant_pass_state') }}" data-poll-key-value="revision" data-poll-since-value="{{ state.revision }}" data-poll-interval-value="{{ poll * 1000 }}" data-action="poll:change->restaurant-pass#refresh">
+            <div data-controller="poll" data-poll-url-value="{{ path('restaurant_pass_state') }}" data-poll-key-value="latest" data-poll-since-value="{{ state.latest }}" data-poll-interval-value="{{ poll * 1000 }}" data-poll-chime-value="true" data-poll-awake-value="true" class="restaurant-pass-bell">
+                <button type="button" class="restaurant-button is-small is-arm" data-action="poll#arm">{{ '@restaurant.pass.arm'|trans }}</button>
+                <button type="button" class="restaurant-button is-small is-silence" data-action="poll#silence">{{ '@restaurant.pass.silence'|trans }}</button>
+            </div>
+        </div>
+        {% if platforms %}
+        <details class="restaurant-pass-platforms">
+            <summary>{{ '@restaurant.pass.platforms'|trans }}</summary>
+            {% for p in platforms %}
+            <p><span class="restaurant-platform">{{ p.name }}</span>
+                <button type="button" class="restaurant-button is-small is-quiet" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_platform', {name: p.name, action: 'pause'}) }}" data-minutes="30">{{ '@restaurant.pass.pause'|trans }}</button>
+                <button type="button" class="restaurant-button is-small is-quiet" data-action="restaurant-pass#post" data-url="{{ path('restaurant_pass_platform', {name: p.name, action: 'resume'}) }}">{{ '@restaurant.pass.resume'|trans }}</button></p>
+            {% endfor %}
+        </details>
+        {% endif %}
+        <details class="restaurant-pass-new">
+            <summary>{{ '@restaurant.pass.new'|trans }}</summary>
+            <form method="post" action="{{ path('restaurant_pass_book') }}" data-action="submit->restaurant-pass#submit">
+                <input type="hidden" name="_token" value="{{ csrf_token('restaurant-pass') }}">
+                <label>{{ '@restaurant.book.name'|trans }} <input name="name" required></label>
+                <label>{{ '@restaurant.book.covers'|trans }} <input type="number" name="covers" value="2" min="1" max="40" required></label>
+                <label>{{ '@restaurant.book.day'|trans }} <input type="date" name="day" value="{{ now|date('Y-m-d') }}"></label>
+                <label>{{ '@restaurant.book.time'|trans }} <input type="time" name="time" value="{{ now|date('H:i') }}" step="300"></label>
+                <label>{{ '@restaurant.book.phone'|trans }} <input name="phone"></label>
+                <label>{{ '@restaurant.pass.source'|trans }} <select name="source"><option value="phone">{{ '@restaurant.source.phone'|trans }}</option><option value="walk_in">{{ '@restaurant.source.walk_in'|trans }}</option></select></label>
+                <button type="submit" class="restaurant-button is-small">{{ '@restaurant.pass.add'|trans }}</button>
+            </form>
+        </details>
+    </header>
+
+    {% for type, messages in app.flashes(['danger']) %}{% for message in messages %}<p class="restaurant-flash is-danger">{{ message|trans }}</p>{% endfor %}{% endfor %}
+    <p class="restaurant-toast" data-restaurant-pass-target="toast" role="status" hidden></p>
+
+    {% include '@Restaurant/client/_pass_board.html.twig' %}
+</section>
+{% endblock %}

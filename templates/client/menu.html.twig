@@ -1,0 +1,52 @@
+{# La carte: by section, filterable by allergen and diet (the filter hides what does not suit, nothing is sent anywhere). #}
+{% extends layout %}
+{% block title %}{{ '@restaurant.menu.title'|trans }}{% endblock %}
+{% block description %}{{ '@restaurant.menu.lead'|trans }}{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('bundles/restaurant/css/restaurant.css') }}">{% endblock %}
+
+{% block content %}
+<section class="restaurant restaurant-menu" data-controller="restaurant-filter">
+    <header class="restaurant-head">
+        <p class="restaurant-eyebrow" lang="ja">お品書き</p>
+        <h1>{{ '@restaurant.menu.title'|trans }}</h1>
+        <p class="restaurant-lead">{{ '@restaurant.menu.lead'|trans }}</p>
+        <p class="restaurant-actions">
+            <a class="restaurant-button" href="{{ path('restaurant_book') }}">{{ '@restaurant.menu.book'|trans }}</a>
+            <a class="restaurant-link" href="{{ path('restaurant_menu_print') }}" target="_blank" rel="noopener">{{ '@restaurant.menu.print'|trans }}</a>
+        </p>
+    </header>
+
+    <details class="restaurant-filter">
+        <summary>{{ '@restaurant.menu.filter'|trans }} <span data-restaurant-filter-target="count"></span></summary>
+        <fieldset>
+            <legend>{{ '@restaurant.menu.without'|trans }}</legend>
+            {% for a in allergens %}
+            <label class="restaurant-check"><input type="checkbox" value="{{ a.value }}" data-action="restaurant-filter#apply" data-restaurant-filter-target="allergen"> <span class="restaurant-allergen">{{ a.number }}</span> {{ ('@enums.' ~ a.trans)|trans }}</label>
+            {% endfor %}
+        </fieldset>
+        <fieldset>
+            <legend>{{ '@restaurant.menu.only'|trans }}</legend>
+            {% for d in diets %}
+            <label class="restaurant-check"><input type="checkbox" value="{{ d.value }}" data-action="restaurant-filter#apply" data-restaurant-filter-target="diet"> {{ ('@restaurant.' ~ d.trans)|trans }}</label>
+            {% endfor %}
+        </fieldset>
+    </details>
+
+    <nav class="restaurant-sections" aria-label="{{ '@restaurant.menu.sections'|trans }}">
+        {% for group in sections %}{% if group.section %}<a href="#{{ group.section.slug }}">{{ group.section.label }}</a>{% endif %}{% endfor %}
+    </nav>
+
+    {% for group in sections %}
+    <section class="restaurant-section" id="{{ group.section.slug ?? 'autres' }}">
+        <h2>{{ group.section.label ?? ('@restaurant.menu.other'|trans) }}{% if group.section and group.section.nativeName %} <span class="restaurant-native" lang="ja">{{ group.section.nativeName }}</span>{% endif %}</h2>
+        <div class="restaurant-dishes">
+            {% for dish in group.dishes %}{% include '@Restaurant/client/_dish.html.twig' %}{% endfor %}
+        </div>
+    </section>
+    {% else %}
+    <p class="restaurant-empty">{{ '@restaurant.menu.empty'|trans }}</p>
+    {% endfor %}
+
+    <p class="restaurant-legal">{{ '@restaurant.menu.legal'|trans }}</p>
+</section>
+{% endblock %}

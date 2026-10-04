@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ '@restaurant.admin.floor.posters'|trans }}</title>
+    <style>
+        @page { size: A4; margin: 0; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: "Roboto Slab", Georgia, serif; color: #241b2b; background: #eee; }
+        .poster { width: 210mm; height: 297mm; margin: 0 auto 10mm; background: #fff; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8mm; page-break-after: always; break-after: page; overflow: hidden; }
+        .poster::before { content: ""; position: absolute; inset: 0 0 auto; height: 22mm; background: var(--poster, #432B52); }
+        .poster h1 { margin: 0; font-size: 34pt; font-weight: 400; }
+        .poster h1 b { font-size: 64pt; display: block; text-align: center; line-height: 1; }
+        .poster img { width: 120mm; height: 120mm; }
+        .poster p { margin: 0; font-size: 15pt; text-align: center; max-width: 150mm; }
+        .poster .jp { font-size: 13pt; color: #6b5a78; }
+        @media print { body { background: none; } .poster { margin: 0; } }
+    </style>
+</head>
+<body>
+{% for page in pages %}{% for item in page %}
+<section class="poster">
+    <h1>{{ '@restaurant.admin.floor.poster_table'|trans }} <b>{{ item.label }}</b></h1>
+    <img src="{{ item.qr }}" alt="{{ item.data }}">
+    <p>{{ '@restaurant.admin.floor.poster_scan'|trans }}</p>
+    <p class="jp" lang="ja">QRコードを読み取って、ご注文ください</p>
+</section>
+{% endfor %}{% else %}
+<p>{{ '@restaurant.admin.floor.no_table'|trans }}</p>
+{% endfor %}
+</body>
+</html>

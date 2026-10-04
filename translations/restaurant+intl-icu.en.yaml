@@ -1,0 +1,362 @@
+menu:
+    title: The menu
+    lead: "The kitchen's dishes, their allergens, and who they suit. Prices include VAT and service."
+    book: Book a table
+    print: Print the menu
+    filter: Sort by what you eat
+    without: Without
+    only: Only
+    sections: Menu sections
+    other: Other
+    out: Sold out for today
+    spice: Spicy
+    empty: The menu is coming soon.
+    legal: "The numbers refer to the 14 allergens of Regulation (EU) No 1169/2011. An allergy? Tell us when you order: the kitchen adapts what it can."
+
+book:
+    title: Book a table
+    lead: "Pick the day, how many you are, then the time. For more than {max} people, call us: we arrange the room."
+    when: When?
+    who: In whose name?
+    day: Day
+    covers: Guests
+    time: Time
+    name: Name
+    email: Email
+    phone: Phone
+    allergies: Allergies, diet
+    notes: "A request? (high chair, birthday…)"
+    next_days: "Next free days:"
+    none: "No table left that day for that many. Try another day."
+    call: "For more than {max} people, call us: we arrange the room for you."
+    submit: Book
+    thanks: "Thank you, it's noted."
+    privacy: "Your details are used for this reservation only (confirmation, reminder, changes) and deleted after your visit."
+    error:
+        time: Choose a time.
+        phone: "This phone number does not look valid."
+        unavailable: "That time has just been taken. Choose another."
+
+manage:
+    title: Your reservation
+    fresh: "You're booked!"
+    covers: "{count, plural, one {# guest} other {# guests}}"
+    requested_help: "For a group, the restaurant confirms itself: you will get an email."
+    calendar: Add to my calendar
+    change: Change the day, time or number
+    show_times: Show the free times
+    move: Move my reservation
+    cancel: Cancel my reservation
+    cancel_confirm: "Cancel this reservation?"
+    cancelled: Your reservation is cancelled.
+    changed: Your reservation is changed.
+    too_late: "It is too late to change it online: please call us."
+    error:
+        too_late: "It is too late to change it online: please call us."
+
+reservation:
+    status:
+        requested: Awaiting confirmation
+        confirmed: Confirmed
+        seated: Seated
+        finished: Finished
+        no_show: No-show
+        cancelled: Cancelled
+        refused: Refused
+
+source:
+    site: Website
+    phone: Phone
+    walk_in: Walk-in
+
+table:
+    title: "Table {table}"
+    lead: "Choose, send: the kitchen gets your order. Order in several rounds, whenever you like."
+    read_only: "The menu, to read. To order, ask the team."
+    tab_menu: The menu
+    tab_rounds: Our table
+    less: One less
+    more: One more
+    note: A word for the kitchen
+    send: Send to the kitchen
+    sent: "Off to the kitchen!"
+    round: Round
+    nothing_yet: Nothing sent yet.
+    total: Table total
+    call: Call the waiter
+    called: "Someone is coming."
+    bill: "The bill, please"
+    bill_asked: "The bill is on its way to your table."
+    pay_till: "You pay at the till."
+    pay_online: "You can pay from your phone."
+    shape:
+        round: Round
+        square: Square
+        rectangle: Rectangular
+        counter: Counter
+    error:
+        closed: "This table is not taking orders right now: please ask the team."
+        bill_asked: "The bill has been asked for: call the waiter to add something."
+        empty: Your order is empty.
+        unavailable: "One of the dishes is no longer available: remove it and send again."
+        quantity: "That quantity is not possible."
+        generic: "The order did not go through. Try again, or call the waiter."
+
+ticket:
+    status:
+        new: Received
+        accepted: Accepted
+        preparing: Being prepared
+        ready: Ready
+        served: Served
+        refused: Refused
+        cancelled: Cancelled
+    channel:
+        table: Table
+        takeaway: Takeaway
+        platform: Platform
+
+session:
+    status:
+        open: Open
+        bill: Bill asked for
+        settled: Settled
+
+station:
+    hot: Hot kitchen
+    cold: Cold kitchen
+    bar: Bar
+
+diet:
+    vegetarian: Vegetarian
+    vegan: Vegan
+    no_pork: Pork-free
+    gluten_free: Gluten-free
+
+day:
+    monday: Monday
+    tuesday: Tuesday
+    wednesday: Wednesday
+    thursday: Thursday
+    friday: Friday
+    saturday: Saturday
+    sunday: Sunday
+
+pass:
+    title: The pass
+    stations: Stations
+    all: All
+    arm: Turn alerts on
+    silence: Seen!
+    platforms: Platforms
+    pause: Pause 30 min
+    resume: Resume
+    new: + Reservation / walk-in
+    source: Source
+    add: Add
+    covers: guests today
+    open_tickets: open tickets
+    to_confirm: to confirm
+    floor: The room
+    tickets: The tickets
+    book: Today's reservations
+    no_reservation: No reservation today.
+    table: "Table {table}"
+    close: Close
+    next: Next
+    open: Open the table
+    answer: "On my way"
+    settle_card: Paid by card
+    settle_cash: Paid in cash
+    settle_confirm: "Take {total} and free the table?"
+    transfer: Move to table
+    close_orders: Close to orders
+    open_orders: Reopen to orders
+    accept_within: "Accept within {minutes} min"
+    pickup: Pickup
+    refuse_confirm: Refuse this order?
+    cancel_confirm: Cancel this ticket?
+    sure: Are you sure?
+    stock: Sold out
+    out: Sold out
+    back: Back
+    state:
+        free: Free
+        booked: Booked
+        seated: Seated
+        waiting: Waiting on the kitchen
+        ready: Food ready
+        call: Calling
+        bill: Bill
+        off: Out of service
+    column:
+        new: To accept
+        kitchen: In the kitchen
+        ready: Ready
+        served: Served
+    do:
+        accepted: Accept
+        preparing: Start
+        ready: Ready
+        served: Served
+        refused: Refuse
+        cancelled: Cancel
+    reservation:
+        confirm: Confirm
+        refuse: Refuse
+        seat: Seat
+        finish: Finish
+        no_show: No-show
+        cancel: Cancel
+    error:
+        action: "That cannot be done."
+        no_bill: "No open bill at this table."
+        no_table: Unknown table.
+        table_taken: "That table is already taken."
+        platform: "That platform is not configured."
+
+mail:
+    hello: "Hello {name},"
+    manage: See or change my reservation
+    calendar_title: Restaurant reservation
+    confirmed:
+        subject: "Your table is booked on {date} at {time}"
+        title: Your table is booked
+        body: "We look forward to seeing you. The attached file adds it to your calendar."
+    requested:
+        subject: "Your reservation request for {date} at {time}"
+        title: Request received
+        body: "The restaurant confirms large tables itself: you will get an email very soon."
+    changed:
+        subject: "Reservation changed: {date} at {time}"
+        title: Reservation changed
+        body: "Here is your new reservation."
+    cancelled:
+        subject: "Reservation of {date} cancelled"
+        title: Reservation cancelled
+        body: "Your reservation is cancelled. See you another time!"
+    refused:
+        subject: "Reservation of {date}: fully booked"
+        title: "We are fully booked"
+        body: "We cannot welcome you at that time. Try another date on the website."
+    staff:
+        requested:
+            subject: "To confirm: {covers} guests on {date} at {time} ({name})"
+        cancelled:
+            subject: "Cancelled: {covers} guests on {date} at {time} ({name})"
+
+admin:
+    position: Order
+    room:
+        name: Room name
+        width: Width (cm)
+        height: Depth (cm)
+    table:
+        room: Room
+        label: Number
+        min: Min. guests
+        max: Max. guests
+        shape: Shape
+        active: In service
+        bookable: Bookable online
+        ordering: QR ordering
+    layout:
+        name: Layout name
+        default: Default
+        dates: Dates it applies on
+        dates_help: "One YYYY-MM-DD date per line (a private event): it wins over the service's layout."
+    service:
+        name: Service
+        first: First seating
+        last: Last seating
+        step: "Step (min)"
+        active: Active
+        weekdays: Days
+        layout: Room layout
+        max_covers: Service max. guests
+        auto_confirm: Confirmed automatically up to
+        auto_confirm_help: "Beyond, the reservation waits for your confirmation on the pass. Empty: always confirmed."
+        durations: How long a table is kept
+        durations_help: "\"up to N guests: minutes\", one line per step (2: 75, 4: 90…). Opening hours and days off are the site's."
+    reservation:
+        starts_at: Date and time
+        covers: Guests
+        name: Name
+        status: Status
+        tables: Tables
+        phone: Phone
+        email: Email
+        source: Source
+        external: Platform reference
+        allergies: Allergies
+        notes: Requests
+    ticket:
+        label: Ticket
+        platform: Platform
+        external: Reference
+        total: Total (cents)
+        created_at: Received
+    section:
+        label: Section
+        native: Japanese name
+    dish:
+        native: Japanese name
+        section: Menu section
+        station: Station
+        allergens: Allergens
+        diets: Diets
+        spice: Spicy (0-3)
+        table_order: Orderable at the table
+        illustration: Drawing (path under assets/images)
+    set_menu:
+        courses: What the set menu includes
+        courses_help: One dish per line.
+        only_at: Served only at
+    widget:
+        covers: guests today
+        to_confirm: reservations to confirm
+        tickets: tickets on the pass
+    floor:
+        title: Floor plan
+        lead: "Drag the tables, turn them, duplicate them; in a layout, join them for large parties."
+        rooms: Rooms
+        seats: seats
+        base: Base plan
+        new_layout: New layout
+        new_room: New room
+        posters: QR posters
+        posters_help: "One poster per table: scanned, it opens the menu in ordering mode. Renew a table's code to void its old poster."
+        poster_table: Table
+        poster_scan: "Scan to see the menu and order from your phone."
+        no_room: Create a room first.
+        no_table: No table.
+        add_decor: + Element
+        duplicate: Duplicate
+        rotate: Turn by 45°
+        remove: Remove
+        join: Join
+        join_help: "Shift+click to pick several tables, then Join: together they seat a large party."
+        grid: Grid
+        size: Room
+        save: Save
+        saved: Saved.
+        unsaved: Unsaved changes
+        error: "Saving failed."
+        w: Width (cm)
+        h: Depth (cm)
+        rotation: Rotation (°)
+        text: Text
+        nothing: Pick an element of the plan.
+        renew: Renew the QR code
+        renew_confirm: "This table's printed poster will stop working. Go on?"
+        token_renewed: New QR code for the table.
+        base_help: "The base plan: where the tables stand without a layout, and which are in service."
+        layout_help: "A layout: move the tables for this service, take some out of service, join some (Shift+click, then Join)."
+        decor:
+            wall: Wall
+            counter: Counter
+            door: Door
+            window: Window
+            kitchen: Kitchen
+            plant: Plant
+            label: Label

@@ -1,0 +1,35 @@
+{#
+ # A room drawn to scale (centimetres), its decor and its tables where the
+ # layout puts them; on the pass each table carries its state (data-state)
+ # and opens its card. Variables: drawing (FloorPlan::drawing(), with the
+ # pass's states merged in), interactive.
+ #}
+{% set room = drawing.room %}
+<svg class="restaurant-floor" viewBox="-20 -20 {{ room.width + 40 }} {{ room.height + 40 }}" role="img" aria-label="{{ room.name }}">
+    <rect class="restaurant-floor-room" x="0" y="0" width="{{ room.width }}" height="{{ room.height }}" rx="12"/>
+    {% for item in room.decor %}
+    <g class="restaurant-decor is-{{ item.type }}" transform="translate({{ item.x }} {{ item.y }}) rotate({{ item.rotation|default(0) }})">
+        <rect x="{{ -item.w / 2 }}" y="{{ -item.h / 2 }}" width="{{ item.w }}" height="{{ item.h }}" rx="{{ item.type == 'plant' ? item.w / 2 : 4 }}"/>
+        {% if item.label is defined %}<text y="6" text-anchor="middle">{{ item.label }}</text>{% endif %}
+    </g>
+    {% endfor %}
+    {% for group in drawing.joins %}
+        {% set first = null %}
+        {% for place in drawing.tables %}{% if place.table.id in group %}{% if first %}<line class="restaurant-floor-join" x1="{{ first.x }}" y1="{{ first.y }}" x2="{{ place.x }}" y2="{{ place.y }}"/>{% endif %}{% set first = place %}{% endif %}{% endfor %}
+    {% endfor %}
+    {% for place in drawing.tables %}
+        {% set t = place.table %}
+        {% set state = place.state ?? (place.active ? 'free' : 'off') %}
+        <g class="restaurant-floor-table is-{{ state }}{{ place.active ? '' : ' is-off' }}" data-table="{{ t.id }}" data-state="{{ state }}" transform="translate({{ place.x }} {{ place.y }}) rotate({{ place.rotation }})"
+           {% if interactive|default(false) %}tabindex="0" role="button" data-action="click->restaurant-pass#table keydown.enter->restaurant-pass#table" aria-label="{{ '@restaurant.pass.table'|trans({table: t.label}) }} – {{ ('@restaurant.pass.state.' ~ state)|trans }}"{% endif %}>
+            {% if t.shape.value == 'round' %}
+            <ellipse rx="{{ t.width / 2 }}" ry="{{ t.height / 2 }}"/>
+            {% else %}
+            <rect x="{{ -t.width / 2 }}" y="{{ -t.height / 2 }}" width="{{ t.width }}" height="{{ t.height }}" rx="{{ t.shape.value == 'counter' ? 4 : 10 }}"/>
+            {% endif %}
+            <text class="restaurant-floor-label" y="{{ place.next is defined and place.next and state == 'booked' ? -2 : 8 }}" text-anchor="middle" transform="rotate({{ -place.rotation }})">{{ t.label }}</text>
+            {% if place.next is defined and place.next and state in ['booked', 'free'] %}<text class="restaurant-floor-sub" y="24" text-anchor="middle" transform="rotate({{ -place.rotation }})">{{ place.next.time }}</text>{% endif %}
+            {% if place.session is defined and place.session %}<text class="restaurant-floor-sub" y="26" text-anchor="middle" transform="rotate({{ -place.rotation }})">{{ place.session.total|format_currency(place.session.currency, {use_rate: false}) }}</text>{% endif %}
+        </g>
+    {% endfor %}
+</svg>

@@ -1,0 +1,362 @@
+menu:
+    title: お品書き
+    lead: "厨房の料理と、そのアレルゲン、どなたに向いているかをご案内します。価格は税・サービス料込みです。"
+    book: お席を予約する
+    print: お品書きを印刷
+    filter: 召し上がれるもので絞り込む
+    without: 除外
+    only: のみ
+    sections: お品書きの項目
+    other: その他
+    out: 本日は売り切れ
+    spice: 辛口
+    empty: お品書きは近日公開予定です。
+    legal: "番号は規則 (EU) No 1169/2011 に定める14品目のアレルゲンを示します。アレルギーのある方は、ご注文の際にお申し出ください。厨房でできる限り対応いたします。"
+
+book:
+    title: お席のご予約
+    lead: "日にち、人数、お時間の順にお選びください。{max}名様を超える場合はお電話ください。お席をご用意いたします。"
+    when: いつになさいますか？
+    who: ご予約のお名前
+    day: 日にち
+    covers: 人数
+    time: お時間
+    name: お名前
+    email: メールアドレス
+    phone: 電話番号
+    allergies: アレルギー・食事制限
+    notes: "ご要望はございますか？（子ども用椅子、お誕生日など）"
+    next_days: "次の空き日："
+    none: "この日はご希望の人数でお取りできるお席がございません。別の日をお試しください。"
+    call: "{max}名様を超える場合はお電話ください。お席をご用意いたします。"
+    submit: 予約する
+    thanks: "ありがとうございます。承りました。"
+    privacy: "お客様の情報はこのご予約（確認、リマインダー、変更）にのみ使用し、ご来店後に削除いたします。"
+    error:
+        time: お時間をお選びください。
+        phone: "この電話番号は正しくないようです。"
+        unavailable: "このお時間はたった今埋まりました。別のお時間をお選びください。"
+
+manage:
+    title: ご予約内容
+    fresh: "ご予約が完了しました！"
+    covers: "{count, plural, other {#名}}"
+    requested_help: "団体でのご予約は店舗にて確認いたします。メールでご連絡いたします。"
+    calendar: カレンダーに追加
+    change: 日にち・お時間・人数を変更
+    show_times: 空き時間を見る
+    move: ご予約を変更する
+    cancel: ご予約をキャンセルする
+    cancel_confirm: "このご予約をキャンセルしますか？"
+    cancelled: ご予約はキャンセルされました。
+    changed: ご予約を変更しました。
+    too_late: "オンラインでの変更期限を過ぎています。お電話ください。"
+    error:
+        too_late: "オンラインでの変更期限を過ぎています。お電話ください。"
+
+reservation:
+    status:
+        requested: 確認待ち
+        confirmed: 確定
+        seated: 着席
+        finished: 終了
+        no_show: 無断キャンセル
+        cancelled: キャンセル
+        refused: お断り
+
+source:
+    site: ウェブサイト
+    phone: 電話
+    walk_in: 予約なし
+
+table:
+    title: "{table}番テーブル"
+    lead: "選んで送信するだけで、厨房にご注文が届きます。何度でも、お好きなときにご注文いただけます。"
+    read_only: "お品書きの閲覧のみです。ご注文はスタッフにお申し付けください。"
+    tab_menu: お品書き
+    tab_rounds: このテーブル
+    less: 1つ減らす
+    more: 1つ増やす
+    note: 厨房へのひとこと
+    send: 厨房へ送信
+    sent: "厨房に送信しました！"
+    round: ご注文
+    nothing_yet: まだ送信されたご注文はありません。
+    total: テーブル合計
+    call: スタッフを呼ぶ
+    called: "ただいま伺います。"
+    bill: "お会計をお願いします"
+    bill_asked: "お会計をお席にお持ちします。"
+    pay_till: "お会計はレジにてお願いいたします。"
+    pay_online: "お手持ちのスマートフォンからお支払いいただけます。"
+    shape:
+        round: 丸
+        square: 正方形
+        rectangle: 長方形
+        counter: カウンター
+    error:
+        closed: "このテーブルでは現在ご注文を承っておりません。スタッフにお申し付けください。"
+        bill_asked: "お会計をご依頼済みです。追加のご注文はスタッフをお呼びください。"
+        empty: ご注文が空です。
+        unavailable: "ご提供できなくなった料理があります。削除してから再度送信してください。"
+        quantity: "この数量ではご注文いただけません。"
+        generic: "送信できませんでした。もう一度お試しいただくか、スタッフをお呼びください。"
+
+ticket:
+    status:
+        new: 受付
+        accepted: 承認済み
+        preparing: 調理中
+        ready: 完成
+        served: 提供済み
+        refused: 拒否
+        cancelled: 取消
+    channel:
+        table: テーブル
+        takeaway: テイクアウト
+        platform: プラットフォーム
+
+session:
+    status:
+        open: 利用中
+        bill: 会計依頼
+        settled: 精算済み
+
+station:
+    hot: 温菜
+    cold: 冷菜
+    bar: バー
+
+diet:
+    vegetarian: ベジタリアン
+    vegan: ヴィーガン
+    no_pork: 豚肉不使用
+    gluten_free: グルテンフリー
+
+day:
+    monday: 月曜日
+    tuesday: 火曜日
+    wednesday: 水曜日
+    thursday: 木曜日
+    friday: 金曜日
+    saturday: 土曜日
+    sunday: 日曜日
+
+pass:
+    title: パス
+    stations: 持ち場
+    all: すべて
+    arm: 通知をオン
+    silence: 確認！
+    platforms: プラットフォーム
+    pause: 30分停止
+    resume: 再開
+    new: + 予約／予約なし
+    source: 経路
+    add: 追加
+    covers: 名（本日）
+    open_tickets: 件の進行中チケット
+    to_confirm: 件の確認待ち
+    floor: フロア
+    tickets: チケット
+    book: 本日の予約
+    no_reservation: 本日の予約はありません。
+    table: "{table}番テーブル"
+    close: 閉じる
+    next: 次
+    open: テーブルを開く
+    answer: "向かいます"
+    settle_card: カード精算
+    settle_cash: 現金精算
+    settle_confirm: "{total}を精算してテーブルを空けますか？"
+    transfer: テーブル移動
+    close_orders: 注文受付を停止
+    open_orders: 注文受付を再開
+    accept_within: "{minutes}分以内に承認"
+    pickup: 受け取り
+    refuse_confirm: この注文を拒否しますか？
+    cancel_confirm: このチケットを取り消しますか？
+    sure: よろしいですか？
+    stock: 品切れ
+    out: 品切れ
+    back: 再開
+    state:
+        free: 空席
+        booked: 予約済み
+        seated: 着席
+        waiting: 調理待ち
+        ready: 料理完成
+        call: 呼び出し
+        bill: 会計
+        off: 使用停止
+    column:
+        new: 承認待ち
+        kitchen: 調理中
+        ready: 完成
+        served: 提供済み
+    do:
+        accepted: 承認
+        preparing: 調理開始
+        ready: 完成
+        served: 提供済み
+        refused: 拒否
+        cancelled: 取消
+    reservation:
+        confirm: 確定
+        refuse: お断り
+        seat: 着席
+        finish: 終了
+        no_show: 無断キャンセル
+        cancel: 取消
+    error:
+        action: "この操作はできません。"
+        no_bill: "このテーブルに未精算の会計はありません。"
+        no_table: 不明なテーブルです。
+        table_taken: "このテーブルはすでに使用中です。"
+        platform: "このプラットフォームは設定されていません。"
+
+mail:
+    hello: "{name} 様"
+    manage: ご予約の確認・変更
+    calendar_title: レストランのご予約
+    confirmed:
+        subject: "{date} {time} のご予約を承りました"
+        title: ご予約を承りました
+        body: "ご来店を心よりお待ちしております。添付ファイルからカレンダーに追加できます。"
+    requested:
+        subject: "{date} {time} のご予約リクエスト"
+        title: リクエストを受け付けました
+        body: "大人数のご予約は店舗にて確認いたします。まもなくメールでご連絡いたします。"
+    changed:
+        subject: "ご予約変更：{date} {time}"
+        title: ご予約を変更しました
+        body: "新しいご予約内容は以下のとおりです。"
+    cancelled:
+        subject: "{date} のご予約をキャンセルしました"
+        title: ご予約キャンセル
+        body: "ご予約はキャンセルされました。またのご来店をお待ちしております。"
+    refused:
+        subject: "{date} のご予約：満席"
+        title: "あいにく満席です"
+        body: "申し訳ございませんが、ご希望のお時間にはお席をご用意できません。ウェブサイトから別の日程をお試しください。"
+    staff:
+        requested:
+            subject: "要確認：{date} {time} {covers}名（{name}）"
+        cancelled:
+            subject: "キャンセル：{date} {time} {covers}名（{name}）"
+
+admin:
+    position: 並び順
+    room:
+        name: フロア名
+        width: 幅（cm）
+        height: 奥行（cm）
+    table:
+        room: フロア
+        label: 番号
+        min: 最少人数
+        max: 最大人数
+        shape: 形
+        active: 稼働中
+        bookable: オンライン予約可
+        ordering: QR注文
+    layout:
+        name: レイアウト名
+        default: 既定
+        dates: 適用日
+        dates_help: "1行に1日付（YYYY-MM-DD、貸切など）。サービスのレイアウトより優先されます。"
+    service:
+        name: サービス
+        first: 最初の受付
+        last: 最終受付
+        step: "間隔（分）"
+        active: 有効
+        weekdays: 曜日
+        layout: フロアのレイアウト
+        max_covers: サービスの最大人数
+        auto_confirm: 自動確定の上限人数
+        auto_confirm_help: "これを超える予約は、パスでの確定待ちになります。空欄：常に確定。"
+        durations: 席の利用時間
+        durations_help: "「N名まで: 分」を1段階につき1行（2: 75, 4: 90…）。営業時間と定休日はサイトの設定に従います。"
+    reservation:
+        starts_at: 日時
+        covers: 人数
+        name: 名前
+        status: ステータス
+        tables: テーブル
+        phone: 電話番号
+        email: メールアドレス
+        source: 経路
+        external: プラットフォーム参照番号
+        allergies: アレルギー
+        notes: 要望
+    ticket:
+        label: チケット
+        platform: プラットフォーム
+        external: 参照番号
+        total: 合計（セント）
+        created_at: 受付日時
+    section:
+        label: 項目
+        native: 日本語名
+    dish:
+        native: 日本語名
+        section: お品書きの項目
+        station: 持ち場
+        allergens: アレルゲン
+        diets: 食事制限
+        spice: 辛さ（0-3）
+        table_order: テーブル注文可
+        illustration: イラスト（assets/images 以下のパス）
+    set_menu:
+        courses: コースの内容
+        courses_help: 1行に1品。
+        only_at: 提供はこのサービスのみ
+    widget:
+        covers: 名（本日）
+        to_confirm: 件の予約が確認待ち
+        tickets: 件のチケット（パス）
+    floor:
+        title: 座席表
+        lead: "テーブルをドラッグ、回転、複製できます。レイアウトでは大人数向けにテーブルを連結できます。"
+        rooms: フロア
+        seats: 席
+        base: 基本プラン
+        new_layout: 新しいレイアウト
+        new_room: 新しいフロア
+        posters: QRポスター
+        posters_help: "テーブルごとに1枚。スキャンするとお品書きが注文モードで開きます。テーブルのコードを更新すると、古いポスターは無効になります。"
+        poster_table: テーブル
+        poster_scan: "スキャンしてお品書きをご覧いただき、スマートフォンからご注文ください。"
+        no_room: まずフロアを作成してください。
+        no_table: テーブルがありません。
+        add_decor: + 要素
+        duplicate: 複製
+        rotate: 45°回転
+        remove: 削除
+        join: 連結
+        join_help: "Shift+クリックで複数のテーブルを選び、「連結」を押すと、大人数用にまとめて使えます。"
+        grid: グリッド
+        size: フロア
+        save: 保存
+        saved: 保存しました。
+        unsaved: 未保存の変更があります
+        error: "保存に失敗しました。"
+        w: 幅（cm）
+        h: 奥行（cm）
+        rotation: 回転（°）
+        text: テキスト
+        nothing: プランの要素を選択してください。
+        renew: QRコードを更新
+        renew_confirm: "このテーブルの印刷済みポスターは使えなくなります。続けますか？"
+        token_renewed: テーブルの新しいQRコードを発行しました。
+        base_help: "基本プラン：レイアウトがない場合のテーブル配置と、稼働中のテーブル。"
+        layout_help: "レイアウト：このサービス用にテーブルを移動、使用停止、連結（Shift+クリック後に「連結」）できます。"
+        decor:
+            wall: 壁
+            counter: カウンター
+            door: ドア
+            window: 窓
+            kitchen: 厨房
+            plant: 植物
+            label: ラベル

@@ -1,0 +1,57 @@
+<?php
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\Storage\CacheStorage;
+
+/*
+ * Autowiring over src/. Entities, enums, models, events and exceptions are
+ * not services. The back office's screens and widgets need omnibase/admin;
+ * the platforms' bridge (src/Omnifood) is loaded only when glitchr/omnifood
+ * is installed - and its keys' section only with omnibase/admin too.
+ */
+return function (ContainerConfigurator $configurator) {
+    $src = \dirname(__DIR__).'/src';
+
+    $services = $configurator->services();
+    $services->defaults()->autowire(true)->autoconfigure(true)->public(false);
+
+    $services->load('Base\\Restaurant\\', $src.'/')
+        ->exclude([
+            $src.'/DependencyInjection/',
+            $src.'/Entity/',
+            $src.'/Enum/',
+            $src.'/Model/',
+            $src.'/Event/',
+            $src.'/Exception/',
+            $src.'/Controller/',
+            $src.'/Admin/',
+            $src.'/Omnifood/',
+            $src.'/RestaurantBundle.php',
+        ]);
+
+    $services->load('Base\\Restaurant\\Controller\\Client\\', $src.'/Controller/Client/')
+        ->tag('controller.service_arguments');
+
+    // A table's phones: so many requests a minute, by table and address
+    // (TableController). The cache keeps the count: no configuration asked of the site.
+    $services->set('restaurant.table_limiter.storage', CacheStorage::class)->args([service('cache.app')]);
+    $services->set('restaurant.table_limiter', RateLimiterFactory::class)
+        ->args([
+            ['id' => 'restaurant_table', 'policy' => 'sliding_window', 'limit' => param('restaurant.table.rate_limit'), 'interval' => '1 minute'],
+            service('restaurant.table_limiter.storage'),
+            service('lock.factory')->nullOnInvalid(),
+        ]);
+
+    if (class_exists('Base\\Admin\\Controller\\AbstractCrudController')) {
+        $services->load('Base\\Restaurant\\Controller\\Admin\\', $src.'/Controller/Admin/')
+            ->tag('controller.service_arguments');
+        $services->load('Base\\Restaurant\\Admin\\', $src.'/Admin/');
+    }
+
+    if (class_exists('Omnifood\\Registry')) {
+        $services->load('Base\\Restaurant\\Omnifood\\', $src.'/Omnifood/')
+            ->exclude(interface_exists('Base\\Admin\\Settings\\SettingsSectionInterface') ? [] : [$src.'/Omnifood/FoodKeysSection.php']);
+    }
+};

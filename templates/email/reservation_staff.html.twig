@@ -1,0 +1,11 @@
+{% set r = reservation %}
+<!DOCTYPE html>
+<html lang="fr">
+<body style="font-family:Georgia,serif;color:#241b2b">
+<p><strong>{{ ('mail.staff.' ~ what ~ '.subject')|trans({date: r.startsAt|date('d/m'), time: r.time, covers: r.covers, name: r.name}, 'restaurant', 'fr') }}</strong></p>
+<p>{{ r.startsAt|date('d/m/Y') }} {{ r.time }} · {{ r.covers }} · {{ r.name }} · {{ r.phone }} · {{ r.email }}</p>
+{% if r.allergies %}<p>{{ r.allergies }}</p>{% endif %}
+{% if r.notes %}<p>{{ r.notes }}</p>{% endif %}
+<p><a href="{{ url('restaurant_pass') }}">{{ 'pass.title'|trans({}, 'restaurant', 'fr') }}</a></p>
+</body>
+</html>

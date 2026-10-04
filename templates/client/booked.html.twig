@@ -1,0 +1,8 @@
+{% extends layout %}
+{% block title %}{{ '@restaurant.book.title'|trans }}{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('bundles/restaurant/css/restaurant.css') }}">{% endblock %}
+{% block content %}
+<section class="restaurant restaurant-book">
+    <header class="restaurant-head"><h1>{{ '@restaurant.book.thanks'|trans }}</h1></header>
+</section>
+{% endblock %}

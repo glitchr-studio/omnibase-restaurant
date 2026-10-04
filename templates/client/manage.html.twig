@@ -1,0 +1,51 @@
+{# The guest's reservation, through its link: where it stands, when, the calendar file, and while there is time, another time or a cancellation. #}
+{% extends layout %}
+{% block title %}{{ '@restaurant.manage.title'|trans }}{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('bundles/restaurant/css/restaurant.css') }}">{% endblock %}
+
+{% block content %}
+{% set r = reservation %}
+<section class="restaurant restaurant-manage">
+    <header class="restaurant-head">
+        <p class="restaurant-eyebrow" lang="ja">ご予約</p>
+        <h1>{{ fresh ? '@restaurant.manage.fresh'|trans : '@restaurant.manage.title'|trans }}</h1>
+    </header>
+
+    {% for type, messages in app.flashes(['success', 'danger']) %}{% for message in messages %}<p class="restaurant-flash is-{{ type }}">{{ message|trans }}</p>{% endfor %}{% endfor %}
+    {% if error %}<p class="restaurant-flash is-danger">{{ ('@restaurant.' ~ error)|trans }}</p>{% endif %}
+
+    <div class="restaurant-ticket is-{{ r.status.value }}">
+        <p class="restaurant-status">{{ ('@restaurant.' ~ r.status.trans)|trans }}</p>
+        <p class="restaurant-when"><strong>{{ r.startsAt|format_date('full') }}</strong></p>
+        <p class="restaurant-when-time">{{ r.time }} · {{ '@restaurant.manage.covers'|trans({count: r.covers}) }}</p>
+        <p>{{ r.name }}{% if r.phone %} · {{ r.phone }}{% endif %}</p>
+        {% if r.allergies %}<p class="restaurant-muted">{{ '@restaurant.book.allergies'|trans }} : {{ r.allergies }}</p>{% endif %}
+        {% if r.notes %}<p class="restaurant-muted">{{ r.notes }}</p>{% endif %}
+        {% if r.status.value == 'requested' %}<p class="restaurant-muted">{{ '@restaurant.manage.requested_help'|trans }}</p>{% endif %}
+        {% if r.holds %}<p><a class="restaurant-link" href="{{ path('restaurant_manage_ics', {token: r.token}) }}">{{ '@restaurant.manage.calendar'|trans }}</a></p>{% endif %}
+    </div>
+
+    {% if changeable %}
+    <form method="get" class="restaurant-form restaurant-change" data-controller="restaurant-booking" data-restaurant-booking-url-value="{{ path('restaurant_book_slots') }}" data-restaurant-booking-none-value="{{ '@restaurant.book.none'|trans }}" data-restaurant-booking-call-value="{{ '@restaurant.book.call'|trans({max: max_covers}) }}">
+        <h2>{{ '@restaurant.manage.change'|trans }}</h2>
+        <div class="restaurant-row">
+            <label>{{ '@restaurant.book.day'|trans }} <input type="date" name="jour" value="{{ day }}" min="{{ min }}" max="{{ max }}" data-restaurant-booking-target="day" data-action="change->restaurant-booking#refresh"></label>
+            <label>{{ '@restaurant.book.covers'|trans }} <input type="number" name="couverts" value="{{ covers }}" min="1" max="{{ max_covers }}" data-restaurant-booking-target="covers" data-action="change->restaurant-booking#refresh"></label>
+        </div>
+        {% include '@Restaurant/client/_slots.html.twig' with {selected: day == r.day ? r.time : null} %}
+        <input type="hidden" data-restaurant-booking-target="time" value="">
+        <noscript><button type="submit">{{ '@restaurant.manage.show_times'|trans }}</button></noscript>
+    </form>
+    <form method="post" class="restaurant-manage-actions" data-restaurant-booking-confirm>
+        <input type="hidden" name="_token" value="{{ csrf_token('restaurant-manage-' ~ r.token) }}">
+        <input type="hidden" name="day" value="{{ day }}" data-manage-day>
+        <input type="hidden" name="time" value="" data-manage-time>
+        <input type="hidden" name="covers" value="{{ covers }}" data-manage-covers>
+        <button type="submit" name="action" value="change" class="restaurant-button" data-manage-submit disabled>{{ '@restaurant.manage.move'|trans }}</button>
+        <button type="submit" name="action" value="cancel" class="restaurant-button is-quiet" onclick="return confirm('{{ '@restaurant.manage.cancel_confirm'|trans|e('js') }}')">{{ '@restaurant.manage.cancel'|trans }}</button>
+    </form>
+    {% elseif r.holds %}
+    <p class="restaurant-muted">{{ '@restaurant.manage.too_late'|trans }}</p>
+    {% endif %}
+</section>
+{% endblock %}

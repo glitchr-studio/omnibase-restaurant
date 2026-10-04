@@ -1,0 +1,362 @@
+menu:
+    title: Die Speisekarte
+    lead: "Die Gerichte unserer Küche, ihre Allergene und für wen sie sich eignen. Alle Preise inkl. MwSt. und Bedienung."
+    book: Tisch reservieren
+    print: Speisekarte drucken
+    filter: Nach Ihrer Ernährung sortieren
+    without: Ohne
+    only: Nur
+    sections: Rubriken der Speisekarte
+    other: Weitere
+    out: Für heute ausverkauft
+    spice: Scharf
+    empty: Die Speisekarte folgt in Kürze.
+    legal: "Die Nummern verweisen auf die 14 Allergene der Verordnung (EU) Nr. 1169/2011. Eine Allergie? Sagen Sie es uns bei der Bestellung: Die Küche passt an, was sie kann."
+
+book:
+    title: Tisch reservieren
+    lead: "Wählen Sie den Tag, die Personenzahl und dann die Uhrzeit. Bei mehr als {max} Personen rufen Sie uns bitte an: Wir richten den Raum für Sie ein."
+    when: Wann?
+    who: Auf welchen Namen?
+    day: Tag
+    covers: Personen
+    time: Uhrzeit
+    name: Name
+    email: E-Mail
+    phone: Telefon
+    allergies: Allergien, Ernährungsweise
+    notes: "Ein Wunsch? (Kinderstuhl, Geburtstag…)"
+    next_days: "Nächste freie Tage:"
+    none: "An diesem Tag ist für so viele Personen kein Tisch mehr frei. Versuchen Sie es an einem anderen Tag."
+    call: "Bei mehr als {max} Personen rufen Sie uns bitte an: Wir richten den Raum für Sie ein."
+    submit: Reservieren
+    thanks: "Vielen Dank, wir haben es notiert."
+    privacy: "Ihre Angaben dienen ausschließlich dieser Reservierung (Bestätigung, Erinnerung, Änderung) und werden nach Ihrem Besuch gelöscht."
+    error:
+        time: Bitte wählen Sie eine Uhrzeit.
+        phone: "Diese Telefonnummer scheint nicht gültig zu sein."
+        unavailable: "Diese Uhrzeit wurde gerade vergeben. Bitte wählen Sie eine andere."
+
+manage:
+    title: Ihre Reservierung
+    fresh: "Reserviert!"
+    covers: "{count, plural, one {# Gast} other {# Gäste}}"
+    requested_help: "Bei Gruppen bestätigt das Restaurant selbst: Sie erhalten eine E-Mail."
+    calendar: Zu meinem Kalender hinzufügen
+    change: Tag, Uhrzeit oder Personenzahl ändern
+    show_times: Freie Uhrzeiten anzeigen
+    move: Meine Reservierung verschieben
+    cancel: Meine Reservierung stornieren
+    cancel_confirm: "Diese Reservierung stornieren?"
+    cancelled: Ihre Reservierung wurde storniert.
+    changed: Ihre Reservierung wurde geändert.
+    too_late: "Für eine Änderung online ist es zu spät: Bitte rufen Sie uns an."
+    error:
+        too_late: "Für eine Änderung online ist es zu spät: Bitte rufen Sie uns an."
+
+reservation:
+    status:
+        requested: Wartet auf Bestätigung
+        confirmed: Bestätigt
+        seated: Platziert
+        finished: Beendet
+        no_show: Nicht erschienen
+        cancelled: Storniert
+        refused: Abgelehnt
+
+source:
+    site: Website
+    phone: Telefon
+    walk_in: Ohne Reservierung
+
+table:
+    title: "Tisch {table}"
+    lead: "Auswählen, absenden: Die Küche erhält Ihre Bestellung. Bestellen Sie gern in mehreren Runden, wann immer Sie möchten."
+    read_only: "Die Speisekarte zum Lesen. Zum Bestellen wenden Sie sich bitte an unser Team."
+    tab_menu: Die Speisekarte
+    tab_rounds: Unser Tisch
+    less: Eins weniger
+    more: Eins mehr
+    note: Eine Notiz für die Küche
+    send: An die Küche senden
+    sent: "Ab in die Küche!"
+    round: Runde
+    nothing_yet: Noch nichts gesendet.
+    total: Gesamt für den Tisch
+    call: Bedienung rufen
+    called: "Es kommt gleich jemand."
+    bill: "Die Rechnung, bitte"
+    bill_asked: "Die Rechnung kommt gleich an Ihren Tisch."
+    pay_till: "Bezahlt wird an der Kasse."
+    pay_online: "Sie können mit Ihrem Smartphone bezahlen."
+    shape:
+        round: Rund
+        square: Quadratisch
+        rectangle: Rechteckig
+        counter: Theke
+    error:
+        closed: "Dieser Tisch nimmt gerade keine Bestellungen an: Bitte wenden Sie sich an unser Team."
+        bill_asked: "Die Rechnung ist angefordert: Rufen Sie die Bedienung, um noch etwas hinzuzufügen."
+        empty: Ihre Bestellung ist leer.
+        unavailable: "Eines der Gerichte ist nicht mehr verfügbar: Entfernen Sie es und senden Sie erneut."
+        quantity: "Diese Menge ist nicht möglich."
+        generic: "Die Bestellung ist nicht angekommen. Versuchen Sie es erneut oder rufen Sie die Bedienung."
+
+ticket:
+    status:
+        new: Eingegangen
+        accepted: Angenommen
+        preparing: In Zubereitung
+        ready: Fertig
+        served: Serviert
+        refused: Abgelehnt
+        cancelled: Storniert
+    channel:
+        table: Tisch
+        takeaway: Zum Mitnehmen
+        platform: Plattform
+
+session:
+    status:
+        open: Offen
+        bill: Rechnung angefordert
+        settled: Bezahlt
+
+station:
+    hot: Warme Küche
+    cold: Kalte Küche
+    bar: Bar
+
+diet:
+    vegetarian: Vegetarisch
+    vegan: Vegan
+    no_pork: Ohne Schweinefleisch
+    gluten_free: Glutenfrei
+
+day:
+    monday: Montag
+    tuesday: Dienstag
+    wednesday: Mittwoch
+    thursday: Donnerstag
+    friday: Freitag
+    saturday: Samstag
+    sunday: Sonntag
+
+pass:
+    title: Der Pass
+    stations: Posten
+    all: Alle
+    arm: Alarme einschalten
+    silence: Gesehen!
+    platforms: Plattformen
+    pause: Pause 30 Min.
+    resume: Fortsetzen
+    new: + Reservierung / ohne Reservierung
+    source: Herkunft
+    add: Hinzufügen
+    covers: Gäste heute
+    open_tickets: offene Bons
+    to_confirm: zu bestätigen
+    floor: Der Gastraum
+    tickets: Die Bons
+    book: Reservierungen heute
+    no_reservation: Heute keine Reservierung.
+    table: "Tisch {table}"
+    close: Schließen
+    next: Nächste
+    open: Tisch öffnen
+    answer: "Komme!"
+    settle_card: Mit Karte bezahlt
+    settle_cash: Bar bezahlt
+    settle_confirm: "{total} kassieren und den Tisch freigeben?"
+    transfer: Tisch wechseln
+    close_orders: Bestellungen schließen
+    open_orders: Bestellungen wieder öffnen
+    accept_within: "Innerhalb von {minutes} Min. annehmen"
+    pickup: Abholung
+    refuse_confirm: Diese Bestellung ablehnen?
+    cancel_confirm: Diesen Bon stornieren?
+    sure: Sind Sie sicher?
+    stock: Ausverkauft
+    out: Aus
+    back: Wieder da
+    state:
+        free: Frei
+        booked: Reserviert
+        seated: Platziert
+        waiting: Wartet auf Küche
+        ready: Essen fertig
+        call: Ruft
+        bill: Rechnung
+        off: Außer Betrieb
+    column:
+        new: Anzunehmen
+        kitchen: In der Küche
+        ready: Fertig
+        served: Serviert
+    do:
+        accepted: Annehmen
+        preparing: Zubereiten
+        ready: Fertig
+        served: Serviert
+        refused: Ablehnen
+        cancelled: Stornieren
+    reservation:
+        confirm: Bestätigen
+        refuse: Ablehnen
+        seat: Platzieren
+        finish: Beenden
+        no_show: Nicht erschienen
+        cancel: Stornieren
+    error:
+        action: "Diese Aktion ist nicht möglich."
+        no_bill: "Keine offene Rechnung an diesem Tisch."
+        no_table: Unbekannter Tisch.
+        table_taken: "Dieser Tisch ist bereits besetzt."
+        platform: "Diese Plattform ist nicht eingerichtet."
+
+mail:
+    hello: "Guten Tag {name},"
+    manage: Meine Reservierung ansehen oder ändern
+    calendar_title: Restaurantreservierung
+    confirmed:
+        subject: "Ihr Tisch ist für den {date} um {time} reserviert"
+        title: Ihr Tisch ist reserviert
+        body: "Wir freuen uns auf Sie. Mit der angehängten Datei tragen Sie den Termin in Ihren Kalender ein."
+    requested:
+        subject: "Ihre Reservierungsanfrage für den {date} um {time}"
+        title: Anfrage erhalten
+        body: "Große Tische bestätigt das Restaurant selbst: Sie erhalten in Kürze eine E-Mail."
+    changed:
+        subject: "Reservierung geändert: {date} um {time}"
+        title: Reservierung geändert
+        body: "Hier ist Ihre neue Reservierung."
+    cancelled:
+        subject: "Reservierung vom {date} storniert"
+        title: Reservierung storniert
+        body: "Ihre Reservierung wurde storniert. Bis zum nächsten Mal!"
+    refused:
+        subject: "Reservierung vom {date}: ausgebucht"
+        title: "Wir sind ausgebucht"
+        body: "Zu dieser Uhrzeit können wir Sie leider nicht empfangen. Versuchen Sie ein anderes Datum auf der Website."
+    staff:
+        requested:
+            subject: "Zu bestätigen: {covers} Gäste am {date} um {time} ({name})"
+        cancelled:
+            subject: "Storniert: {covers} Gäste am {date} um {time} ({name})"
+
+admin:
+    position: Reihenfolge
+    room:
+        name: Name des Raums
+        width: Breite (cm)
+        height: Tiefe (cm)
+    table:
+        room: Raum
+        label: Nummer
+        min: Min. Gäste
+        max: Max. Gäste
+        shape: Form
+        active: In Betrieb
+        bookable: Online reservierbar
+        ordering: QR-Bestellung
+    layout:
+        name: Name der Anordnung
+        default: Standard
+        dates: Gilt an diesen Tagen
+        dates_help: "Ein Datum JJJJ-MM-TT pro Zeile (eine geschlossene Gesellschaft): Es hat Vorrang vor der Anordnung des Service."
+    service:
+        name: Service
+        first: Früheste Uhrzeit
+        last: Späteste Uhrzeit
+        step: "Takt (Min.)"
+        active: Aktiv
+        weekdays: Tage
+        layout: Anordnung des Raums
+        max_covers: Max. Gäste pro Service
+        auto_confirm: Automatisch bestätigt bis
+        auto_confirm_help: "Darüber wartet die Reservierung auf Ihre Bestätigung am Pass. Leer: immer bestätigt."
+        durations: Verweildauer am Tisch
+        durations_help: "„bis N Gäste: Minuten“, eine Zeile pro Stufe (2: 75, 4: 90…). Öffnungszeiten und Ruhetage sind die der Website."
+    reservation:
+        starts_at: Datum und Uhrzeit
+        covers: Gäste
+        name: Name
+        status: Status
+        tables: Tische
+        phone: Telefon
+        email: E-Mail
+        source: Herkunft
+        external: Plattform-Referenz
+        allergies: Allergien
+        notes: Wünsche
+    ticket:
+        label: Bon
+        platform: Plattform
+        external: Referenz
+        total: Summe (Cent)
+        created_at: Eingegangen am
+    section:
+        label: Rubrik
+        native: Japanischer Name
+    dish:
+        native: Japanischer Name
+        section: Rubrik der Speisekarte
+        station: Posten
+        allergens: Allergene
+        diets: Ernährungsweisen
+        spice: Schärfe (0-3)
+        table_order: Am Tisch bestellbar
+        illustration: Illustration (Pfad unter assets/images)
+    set_menu:
+        courses: Was das Menü umfasst
+        courses_help: Ein Gericht pro Zeile.
+        only_at: Nur serviert beim
+    widget:
+        covers: Gäste heute
+        to_confirm: Reservierungen zu bestätigen
+        tickets: Bons am Pass
+    floor:
+        title: Tischplan
+        lead: "Ziehen, drehen und duplizieren Sie die Tische; in einer Anordnung verbinden Sie sie für große Gesellschaften."
+        rooms: Räume
+        seats: Plätze
+        base: Grundplan
+        new_layout: Neue Anordnung
+        new_room: Neuer Raum
+        posters: QR-Plakate
+        posters_help: "Ein Plakat pro Tisch: Gescannt öffnet es die Speisekarte im Bestellmodus. Erneuern Sie den Code eines Tisches, um sein altes Plakat ungültig zu machen."
+        poster_table: Tisch
+        poster_scan: "Scannen Sie, um die Speisekarte zu sehen und mit Ihrem Smartphone zu bestellen."
+        no_room: Legen Sie zuerst einen Raum an.
+        no_table: Kein Tisch.
+        add_decor: + Element
+        duplicate: Duplizieren
+        rotate: Um 45° drehen
+        remove: Löschen
+        join: Verbinden
+        join_help: "Umschalt+Klick, um mehrere Tische zu wählen, dann Verbinden: Zusammen bieten sie Platz für eine große Gesellschaft."
+        grid: Raster
+        size: Raum
+        save: Speichern
+        saved: Gespeichert.
+        unsaved: Nicht gespeicherte Änderungen
+        error: "Speichern fehlgeschlagen."
+        w: Breite (cm)
+        h: Tiefe (cm)
+        rotation: Drehung (°)
+        text: Text
+        nothing: Wählen Sie ein Element des Plans.
+        renew: QR-Code erneuern
+        renew_confirm: "Das gedruckte Plakat dieses Tisches funktioniert dann nicht mehr. Fortfahren?"
+        token_renewed: Neuer QR-Code für den Tisch.
+        base_help: "Der Grundplan: wo die Tische ohne Anordnung stehen und welche in Betrieb sind."
+        layout_help: "Eine Anordnung: Verschieben Sie die Tische für diesen Service, nehmen Sie einige außer Betrieb, verbinden Sie welche (Umschalt+Klick, dann Verbinden)."
+        decor:
+            wall: Wand
+            counter: Theke
+            door: Tür
+            window: Fenster
+            kitchen: Küche
+            plant: Pflanze
+            label: Beschriftung

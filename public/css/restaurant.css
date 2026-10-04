@@ -1,0 +1,282 @@
+/*
+ * omnibase/restaurant's public pages: the menu, the reservation, the table's
+ * phones, the pass. A site paints them through these properties, on :root
+ * (and again for its dark theme):
+ *
+ *   --restaurant-ink, --restaurant-soft      text, quieter text
+ *   --restaurant-bg, --restaurant-paper      the page, a card
+ *   --restaurant-line                        rules and borders
+ *   --restaurant-accent, --restaurant-on-accent   buttons, links, the selected
+ *   --restaurant-hot                         what matters now (late, ready, call)
+ *   --restaurant-font, --restaurant-display, --restaurant-native   type
+ *   --restaurant-radius
+ *
+ * Every element of the bundle reads them itself (the pass's board is
+ * swapped in on its own), with the defaults below.
+ */
+:where([class^="restaurant"], [class*=" restaurant"]) {
+    --_ink: var(--restaurant-ink, #241b2b);
+    --_soft: var(--restaurant-soft, #6b5a78);
+    --_bg: var(--restaurant-bg, #ffffff);
+    --_paper: var(--restaurant-paper, #f7f3f9);
+    --_line: var(--restaurant-line, rgba(67, 43, 82, .18));
+    --_accent: var(--restaurant-accent, #432B52);
+    --_on: var(--restaurant-on-accent, #ffffff);
+    --_hot: var(--restaurant-hot, #E07A2F);
+    --_font: var(--restaurant-font, Georgia, serif);
+    --_display: var(--restaurant-display, var(--_font));
+    --_native: var(--restaurant-native, "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif);
+    --_radius: var(--restaurant-radius, 14px);
+}
+
+:where([class^="restaurant"], [class*=" restaurant"])[hidden] { display: none !important; }
+
+.restaurant { box-sizing: border-box; max-width: 64rem; margin: 0 auto; padding: 1.5rem clamp(1rem, 4vw, 2rem) 4rem; color: var(--_ink); font-family: var(--_font); }
+.restaurant *, .restaurant *::before, .restaurant *::after { box-sizing: border-box; }
+.restaurant-head { margin: 0 0 1.5rem; }
+.restaurant-head h1 { margin: .1em 0 .3em; font: 400 clamp(1.8rem, 1.3rem + 2vw, 2.6rem)/1.1 var(--_display); color: var(--_accent); }
+.restaurant-eyebrow { margin: 0; font-family: var(--_native); color: var(--_soft); letter-spacing: .15em; }
+.restaurant-lead { margin: 0; max-width: 40rem; color: var(--_soft); }
+.restaurant-native { font-family: var(--_native); font-size: .8em; color: var(--_soft); font-weight: 400; }
+.restaurant-muted { color: var(--_soft); font-size: .92em; }
+.restaurant-actions { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; margin: 1rem 0 0; }
+.restaurant-link { color: var(--_accent); }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.restaurant-button {
+    display: inline-flex; align-items: center; justify-content: center; gap: .4em;
+    min-height: 2.6rem; padding: .5rem 1.25rem; border: 2px solid var(--_accent); border-radius: 999px;
+    background: var(--_accent); color: var(--_on); font: 600 1rem/1.1 var(--_font); text-decoration: none; cursor: pointer;
+    transition: translate .12s ease, box-shadow .12s ease, background .15s ease;
+}
+.restaurant-button:hover { translate: 0 -1px; box-shadow: 0 3px 0 color-mix(in srgb, var(--_accent) 60%, #000); }
+.restaurant-button:disabled { opacity: .45; cursor: default; translate: none; box-shadow: none; }
+.restaurant-button.is-quiet { background: transparent; color: var(--_accent); }
+.restaurant-button.is-small { min-height: 2rem; padding: .25rem .8rem; font-size: .88rem; }
+.restaurant-pill { display: inline-block; padding: .1em .65em; border-radius: 999px; background: var(--_paper); border: 1px solid var(--_line); font-size: .8rem; color: var(--_soft); white-space: nowrap; }
+.restaurant-pill.is-diet { color: #2f6b3a; border-color: rgba(47, 107, 58, .3); background: rgba(47, 107, 58, .08); }
+.restaurant-badge { display: inline-grid; place-items: center; min-width: 1.4em; height: 1.4em; padding: 0 .35em; border-radius: 999px; background: var(--_hot); color: #fff; font-size: .75em; font-weight: 700; }
+.restaurant-badge:empty { display: none; }
+.restaurant-flash { padding: .7rem 1rem; border-radius: var(--_radius); background: var(--_paper); border-left: 4px solid var(--_accent); }
+.restaurant-flash.is-danger { border-left-color: #c62828; }
+.restaurant-toast { position: fixed; left: 50%; bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); translate: -50% 0; z-index: 80; margin: 0; padding: .6rem 1.1rem; border-radius: 999px; background: var(--_ink); color: var(--_bg); font-size: .95rem; box-shadow: 0 6px 20px rgba(0, 0, 0, .25); }
+
+/* ── The menu ─────────────────────────────────────────────────── */
+.restaurant-sections { display: flex; gap: .5rem; overflow-x: auto; padding: .5rem 0; margin: 0 0 1rem; scrollbar-width: none; }
+.restaurant-sections a { flex: none; padding: .35rem .9rem; border-radius: 999px; background: var(--_paper); color: var(--_accent); text-decoration: none; white-space: nowrap; }
+.restaurant-sections.is-sticky { position: sticky; top: var(--restaurant-sticky-top, 0); z-index: 5; background: var(--_bg); }
+.restaurant-section { margin: 0 0 2rem; scroll-margin-top: var(--restaurant-scroll-margin, 5rem); }
+.restaurant-section > h2 { margin: 0 0 .75rem; padding-bottom: .35rem; border-bottom: 2px solid var(--_line); font: 400 1.5rem/1.2 var(--_display); color: var(--_accent); }
+.restaurant-dishes { display: grid; gap: .75rem; }
+.restaurant-dish { display: grid; grid-template-columns: auto 1fr auto; gap: .9rem; align-items: start; padding: .8rem; border-radius: var(--_radius); background: var(--_paper); }
+.restaurant-dish:not(:has(.restaurant-dish-art)) { grid-template-columns: 1fr auto; }
+.restaurant-dish.is-out { opacity: .55; }
+.restaurant-dish.is-filtered { display: none; }
+.restaurant-dish-art { width: 4.5rem; height: 4.5rem; object-fit: contain; }
+.restaurant-dish-name { margin: 0; font: 600 1.05rem/1.25 var(--_font); display: flex; flex-wrap: wrap; gap: .1rem .5rem; align-items: baseline; }
+.restaurant-dish-text { margin: .25rem 0 0; color: var(--_soft); font-size: .92rem; }
+.restaurant-courses { margin: .3rem 0 0; padding-left: 1.1rem; color: var(--_soft); font-size: .9rem; }
+.restaurant-dish-meta { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; margin: .4rem 0 0; }
+.restaurant-allergen { display: inline-grid; place-items: center; width: 1.45rem; height: 1.45rem; border-radius: 50%; border: 1px solid var(--_line); font-size: .72rem; color: var(--_soft); text-decoration: none; cursor: help; }
+.restaurant-spice { font-size: .85rem; }
+.restaurant-dish-side { display: grid; justify-items: end; gap: .45rem; }
+.restaurant-price { font-weight: 700; color: var(--_accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.restaurant-out { font-size: .8rem; color: #c62828; }
+.restaurant-filter { margin: 0 0 1rem; padding: .6rem .9rem; border-radius: var(--_radius); border: 1px solid var(--_line); }
+.restaurant-filter summary { cursor: pointer; color: var(--_accent); font-weight: 600; }
+.restaurant-filter fieldset { border: 0; margin: .6rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem 1rem; }
+.restaurant-filter legend { font-size: .85rem; color: var(--_soft); margin-bottom: .3rem; }
+.restaurant-check { display: inline-flex; align-items: center; gap: .35rem; font-size: .9rem; }
+.restaurant-legal, .restaurant-empty { color: var(--_soft); font-size: .85rem; }
+
+/* The printed menu */
+.restaurant-print { max-width: 180mm; margin: 0 auto; padding: 12mm 0; font-family: Georgia, serif; color: #111; }
+.restaurant-print h1 { font-weight: 400; text-align: center; }
+.restaurant-print-dish { display: flex; gap: .4rem; align-items: baseline; margin: .25rem 0; }
+.restaurant-print-dots { flex: 1; border-bottom: 1px dotted #888; }
+.restaurant-print-key { margin-top: 1.5rem; font-size: 9pt; display: flex; flex-wrap: wrap; gap: .2rem 1rem; }
+@media print { .restaurant-print { padding: 0; } }
+
+/* ── Booking ──────────────────────────────────────────────────── */
+.restaurant-form { display: grid; gap: 1.25rem; max-width: 42rem; }
+.restaurant-step { border: 0; margin: 0; padding: 1.1rem; border-radius: var(--_radius); background: var(--_paper); display: grid; gap: .8rem; }
+.restaurant-step legend { float: left; width: 100%; margin: 0 0 .4rem; font: 400 1.25rem/1.2 var(--_display); color: var(--_accent); }
+.restaurant-step legend span { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; margin-right: .3em; border-radius: 50%; background: var(--_accent); color: var(--_on); font-size: .8em; }
+.restaurant-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: .8rem; }
+.restaurant-form label, .restaurant-step label { font-size: .9rem; color: var(--_soft); }
+.restaurant-form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), .restaurant-form textarea, .restaurant-form select,
+.restaurant-pass input:not([type="hidden"]), .restaurant-pass select {
+    width: 100%; min-height: 2.6rem; padding: .45rem .75rem; border: 1px solid var(--_line); border-radius: 10px;
+    background: var(--_bg); color: var(--_ink); font: 1rem/1.3 var(--_font);
+}
+.restaurant-days { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; margin: 0; font-size: .9rem; color: var(--_soft); }
+.restaurant-chip { padding: .25rem .7rem; border-radius: 999px; border: 1px solid var(--_line); background: var(--_bg); color: var(--_accent); font: .85rem var(--_font); cursor: pointer; }
+.restaurant-chip.is-selected { background: var(--_accent); color: var(--_on); }
+.restaurant-slots { display: grid; gap: .8rem; min-height: 3rem; }
+.restaurant-slots.is-loading { opacity: .5; }
+.restaurant-service h3 { margin: 0 0 .4rem; font: 600 .95rem/1.2 var(--_font); color: var(--_ink); }
+.restaurant-times { display: flex; flex-wrap: wrap; gap: .4rem; }
+.restaurant-time { min-width: 4.2rem; padding: .45rem .7rem; border: 2px solid var(--_accent); border-radius: 10px; background: var(--_bg); color: var(--_accent); font: 600 1rem/1 var(--_font); font-variant-numeric: tabular-nums; cursor: pointer; }
+.restaurant-time:hover { background: color-mix(in srgb, var(--_accent) 10%, var(--_bg)); }
+.restaurant-time.is-selected { background: var(--_accent); color: var(--_on); }
+.restaurant-none { margin: 0; color: var(--_soft); }
+.restaurant-trap { position: absolute !important; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.restaurant-submit { margin: 0; }
+.restaurant-form .form-privacy, .restaurant-form .form-privacy-notice { font-size: .82rem; color: var(--_soft); }
+.restaurant-form ul li, .restaurant-form .form-error-message, .restaurant-form .invalid-feedback { color: #c62828; font-size: .85rem; }
+
+.restaurant-ticket { padding: 1.2rem 1.4rem; border-radius: var(--_radius); background: var(--_paper); border-left: 6px solid var(--_accent); max-width: 34rem; }
+.restaurant-ticket.is-requested { border-left-color: var(--_hot); }
+.restaurant-ticket.is-cancelled, .restaurant-ticket.is-refused { border-left-color: #999; opacity: .8; }
+.restaurant-ticket p { margin: .2rem 0; }
+.restaurant-status { font-weight: 700; color: var(--_accent); text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; }
+.restaurant-when { font-size: 1.15rem; }
+.restaurant-when-time { font-size: 1.5rem; font-family: var(--_display); color: var(--_accent); }
+.restaurant-change { margin-top: 1.5rem; }
+.restaurant-change h2 { margin: 0; font: 400 1.25rem/1.2 var(--_display); color: var(--_accent); }
+.restaurant-manage-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+
+/* ── The table's phones ───────────────────────────────────────── */
+.restaurant-table { padding-bottom: 8rem; }
+.restaurant-table-head h1 { font-size: clamp(1.6rem, 1.2rem + 2vw, 2.2rem); }
+.restaurant-tabs { display: flex; gap: .4rem; margin: 0 0 1rem; }
+.restaurant-tabs button { flex: 1; padding: .55rem .8rem; border: 0; border-bottom: 3px solid var(--_line); background: none; color: var(--_soft); font: 600 1rem var(--_font); cursor: pointer; }
+.restaurant-tabs button.is-on { border-bottom-color: var(--_accent); color: var(--_accent); }
+.restaurant-stepper { display: inline-flex; align-items: center; gap: .3rem; }
+.restaurant-stepper button { width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 2px solid var(--_accent); background: var(--_bg); color: var(--_accent); font: 700 1.2rem/1 var(--_font); cursor: pointer; }
+.restaurant-stepper button:last-child { background: var(--_accent); color: var(--_on); }
+.restaurant-stepper output { min-width: 1.4rem; text-align: center; font-weight: 700; }
+.restaurant-dish.is-picked { outline: 2px solid var(--_accent); }
+.restaurant-cart {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+    display: grid; grid-template-columns: 1fr auto; gap: .6rem; align-items: end;
+    padding: .7rem clamp(1rem, 4vw, 2rem) calc(.7rem + env(safe-area-inset-bottom, 0px));
+    background: var(--_bg); border-top: 1px solid var(--_line); box-shadow: 0 -6px 20px rgba(0, 0, 0, .12);
+}
+.restaurant-cart summary { cursor: pointer; font-size: 1rem; }
+.restaurant-cart ul { margin: .4rem 0; padding: 0; list-style: none; max-height: 30vh; overflow: auto; }
+.restaurant-cart li { display: flex; justify-content: space-between; gap: .5rem; padding: .2rem 0; border-bottom: 1px dashed var(--_line); }
+.restaurant-note { display: grid; gap: .2rem; font-size: .85rem; color: var(--_soft); }
+.restaurant-note input { min-height: 2.2rem; padding: .3rem .6rem; border: 1px solid var(--_line); border-radius: 8px; font: inherit; }
+.restaurant-rounds { display: grid; gap: .6rem; }
+.restaurant-round { padding: .7rem .9rem; border-radius: var(--_radius); background: var(--_paper); border-left: 5px solid var(--_line); }
+.restaurant-round p { margin: 0; display: flex; justify-content: space-between; gap: .5rem; }
+.restaurant-round ul { margin: .35rem 0 0; padding-left: 1rem; }
+.restaurant-round.is-new { border-left-color: var(--_hot); }
+.restaurant-round.is-accepted, .restaurant-round.is-preparing { border-left-color: #c79a2b; }
+.restaurant-round.is-ready { border-left-color: #2e7d32; }
+.restaurant-round.is-served { border-left-color: var(--_accent); opacity: .8; }
+.restaurant-total { display: flex; justify-content: space-between; margin: 1rem 0; font-size: 1.1rem; }
+.restaurant-table-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+/* ── The pass ─────────────────────────────────────────────────── */
+.restaurant-pass { max-width: none; padding: 1rem clamp(.75rem, 2vw, 1.5rem) 3rem; }
+.restaurant-pass-head { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; margin-bottom: .75rem; }
+.restaurant-pass-head h1 { margin: 0; font: 400 1.7rem/1 var(--_display); color: var(--_accent); }
+.restaurant-pass-stations { display: flex; gap: .3rem; }
+.restaurant-pass-stations a { padding: .3rem .8rem; border-radius: 999px; background: var(--_paper); color: var(--_accent); text-decoration: none; }
+.restaurant-pass-stations a[aria-current] { background: var(--_accent); color: var(--_on); }
+.restaurant-pass-bell { display: flex; gap: .4rem; }
+.restaurant-pass-bell .restaurant-button.is-silence { display: none; }
+.restaurant-pass-bell.is-armed .restaurant-button.is-arm { display: none; }
+.restaurant-pass-bell.is-ringing .restaurant-button.is-silence { display: inline-flex; background: var(--_hot); border-color: var(--_hot); color: #fff; animation: restaurant-ring .8s ease-in-out infinite; }
+@keyframes restaurant-ring { 50% { scale: 1.08; } }
+.restaurant-pass-new, .restaurant-pass-platforms { position: relative; }
+.restaurant-pass-new summary, .restaurant-pass-platforms summary { cursor: pointer; color: var(--_accent); font-weight: 600; }
+.restaurant-pass-new form { position: absolute; z-index: 30; right: 0; top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; width: min(26rem, 90vw); padding: 1rem; border-radius: var(--_radius); background: var(--_bg); box-shadow: 0 10px 30px rgba(0, 0, 0, .2); }
+.restaurant-pass-new label { display: grid; gap: .2rem; font-size: .8rem; color: var(--_soft); }
+.restaurant-pass-platforms > p { display: flex; gap: .4rem; align-items: center; margin: .3rem 0; }
+.restaurant-pass-summary { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; align-items: baseline; padding: .5rem .9rem; margin-bottom: .75rem; border-radius: var(--_radius); background: var(--_paper); }
+.restaurant-pass-summary b { font-size: 1.3rem; color: var(--_accent); }
+.restaurant-pass-summary .is-alert b { color: var(--_hot); }
+.restaurant-pass-clock { margin-left: auto; font: 700 1.3rem/1 var(--_font); font-variant-numeric: tabular-nums; }
+.restaurant-pass-grid { display: grid; grid-template-columns: minmax(18rem, 1.15fr) minmax(0, 2fr) minmax(16rem, .9fr); gap: 1rem; align-items: start; }
+.restaurant-pass-floor { position: relative; }
+.restaurant-pass-floor figure { margin: 0 0 .75rem; }
+.restaurant-pass-floor figcaption { font-size: .85rem; color: var(--_soft); margin-bottom: .25rem; }
+.restaurant-floor { width: 100%; height: auto; display: block; }
+.restaurant-floor-room { fill: var(--_paper); stroke: var(--_line); stroke-width: 6; }
+.restaurant-decor rect { fill: color-mix(in srgb, var(--_ink) 14%, transparent); }
+.restaurant-decor.is-wall rect { fill: color-mix(in srgb, var(--_ink) 65%, transparent); }
+.restaurant-decor.is-counter rect { fill: #a9805b; }
+.restaurant-decor.is-kitchen rect { fill: none; stroke: var(--_soft); stroke-dasharray: 10 8; stroke-width: 3; }
+.restaurant-decor.is-plant rect { fill: #8fb07a; }
+.restaurant-decor.is-label rect { fill: none; }
+.restaurant-decor text { font: 600 18px/1 sans-serif; fill: var(--_soft); }
+.restaurant-floor-join { stroke: var(--_hot); stroke-width: 6; stroke-dasharray: 2 12; stroke-linecap: round; }
+.restaurant-floor-table { cursor: pointer; outline: none; }
+.restaurant-floor-table rect, .restaurant-floor-table ellipse { fill: var(--_bg); stroke: var(--_accent); stroke-width: 3; transition: fill .2s ease; }
+.restaurant-floor-label { font: 700 24px/1 sans-serif; fill: var(--_ink); pointer-events: none; }
+.restaurant-floor-sub { font: 600 15px/1 sans-serif; fill: var(--_soft); pointer-events: none; }
+.restaurant-floor-table:focus-visible rect, .restaurant-floor-table:focus-visible ellipse, .restaurant-floor-table.is-selected rect, .restaurant-floor-table.is-selected ellipse { stroke-width: 7; }
+.restaurant-floor-table.is-off { opacity: .3; }
+.restaurant-floor-table.is-booked rect, .restaurant-floor-table.is-booked ellipse { fill: #e9e1f0; stroke-dasharray: 8 5; }
+.restaurant-floor-table.is-seated rect, .restaurant-floor-table.is-seated ellipse { fill: #d9c8e6; }
+.restaurant-floor-table.is-waiting rect, .restaurant-floor-table.is-waiting ellipse { fill: #f5dcb1; stroke: #b07a1c; }
+.restaurant-floor-table.is-ready rect, .restaurant-floor-table.is-ready ellipse { fill: #bfe3c3; stroke: #2e7d32; }
+.restaurant-floor-table.is-call rect, .restaurant-floor-table.is-call ellipse, .restaurant-floor-table.is-bill rect, .restaurant-floor-table.is-bill ellipse { fill: #f8c3a2; stroke: var(--_hot); animation: restaurant-blink 1.2s ease-in-out infinite; }
+@keyframes restaurant-blink { 50% { fill: #fde6d7; } }
+.restaurant-pass-legend { display: flex; flex-wrap: wrap; gap: .3rem .9rem; margin: 0; padding: 0; list-style: none; font-size: .78rem; color: var(--_soft); }
+.restaurant-pass-legend i { display: inline-block; width: .85rem; height: .85rem; margin-right: .3rem; border-radius: 3px; border: 2px solid var(--_accent); vertical-align: -2px; background: var(--_bg); }
+.restaurant-pass-legend .is-booked i { background: #e9e1f0; border-style: dashed; }
+.restaurant-pass-legend .is-seated i { background: #d9c8e6; }
+.restaurant-pass-legend .is-waiting i { background: #f5dcb1; border-color: #b07a1c; }
+.restaurant-pass-legend .is-ready i { background: #bfe3c3; border-color: #2e7d32; }
+.restaurant-pass-legend .is-call i, .restaurant-pass-legend .is-bill i { background: #f8c3a2; border-color: var(--_hot); }
+.restaurant-pass-card { position: absolute; z-index: 20; top: 2rem; left: 0; right: 0; padding: 1rem; border-radius: var(--_radius); background: var(--_bg); box-shadow: 0 12px 34px rgba(0, 0, 0, .25); display: grid; gap: .5rem; }
+.restaurant-pass-card header { display: flex; gap: .6rem; align-items: center; }
+.restaurant-pass-card h3 { margin: 0; font: 400 1.3rem/1 var(--_display); color: var(--_accent); }
+.restaurant-pass-card p { margin: 0; }
+.restaurant-close { margin-left: auto; width: 2rem; height: 2rem; border: 0; border-radius: 50%; background: var(--_paper); color: var(--_ink); font-size: 1.3rem; cursor: pointer; }
+.restaurant-card-actions { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; }
+.restaurant-transfer { display: inline-flex; gap: .3rem; align-items: center; font-size: .85rem; }
+.restaurant-transfer select { width: auto; min-height: 2rem; padding: .15rem .4rem; }
+.restaurant-pass-columns { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; }
+.restaurant-pass-column { display: grid; gap: .5rem; align-content: start; min-height: 10rem; padding: .5rem; border-radius: var(--_radius); background: var(--_paper); }
+.restaurant-pass-column h2 { margin: 0; font: 600 .95rem/1.2 var(--_font); color: var(--_accent); display: flex; justify-content: space-between; }
+.restaurant-pass-column.is-new { background: color-mix(in srgb, var(--_hot) 12%, var(--_paper)); }
+.restaurant-pass-ticket { padding: .6rem .7rem; border-radius: 10px; background: var(--_bg); border-top: 5px solid var(--_accent); box-shadow: 0 1px 3px rgba(0, 0, 0, .12); font-size: .92rem; }
+.restaurant-pass-ticket header { display: flex; justify-content: space-between; gap: .4rem; }
+.restaurant-pass-ticket time { color: var(--_soft); font-variant-numeric: tabular-nums; }
+.restaurant-pass-ticket ul { margin: .4rem 0; padding: 0; list-style: none; }
+.restaurant-pass-ticket li { padding: .15rem 0; border-bottom: 1px dashed var(--_line); }
+.restaurant-pass-ticket li b { display: inline-block; min-width: 1.4rem; color: var(--_accent); }
+.restaurant-pass-ticket li.is-bar b { color: #1f6f8b; }
+.restaurant-pass-ticket li.is-cold b { color: #2f6b3a; }
+.restaurant-pass-ticket small { display: block; color: var(--_soft); padding-left: 1.4rem; }
+.restaurant-pass-ticket footer { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; }
+.restaurant-ticket-total { margin-left: auto; font-weight: 700; color: var(--_soft); font-size: .85rem; }
+.restaurant-pass-ticket.is-new { border-top-color: var(--_hot); }
+.restaurant-pass-ticket.is-ready { border-top-color: #2e7d32; }
+.restaurant-pass-ticket.is-served { opacity: .6; }
+.restaurant-pass-ticket.is-platform { border-top-color: #111; }
+.restaurant-pass-ticket.is-late { box-shadow: 0 0 0 3px var(--_hot); }
+.restaurant-countdown { margin: .2rem 0; font-weight: 700; color: var(--_hot); }
+.restaurant-platform { display: inline-block; padding: 0 .4em; border-radius: 4px; background: #111; color: #fff; font-size: .78em; text-transform: uppercase; letter-spacing: .05em; }
+.restaurant-line-note { color: var(--_hot) !important; font-style: italic; }
+.restaurant-pass-book h2 { margin: 0 0 .5rem; font: 600 1rem/1.2 var(--_font); color: var(--_accent); }
+.restaurant-pass-reservations { display: grid; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+.restaurant-pass-reservations li { display: grid; grid-template-columns: auto 1fr auto; gap: .2rem .6rem; align-items: center; padding: .5rem .6rem; border-radius: 10px; background: var(--_paper); font-size: .9rem; }
+.restaurant-pass-reservations li.is-requested { box-shadow: inset 4px 0 0 var(--_hot); }
+.restaurant-pass-reservations li.is-seated { box-shadow: inset 4px 0 0 var(--_accent); }
+.restaurant-pass-reservations li.is-finished, .restaurant-pass-reservations li.is-cancelled, .restaurant-pass-reservations li.is-no_show, .restaurant-pass-reservations li.is-refused { opacity: .5; }
+.restaurant-pass-time { font: 700 1.05rem/1 var(--_font); font-variant-numeric: tabular-nums; color: var(--_accent); }
+.restaurant-pass-who small { display: block; }
+.restaurant-pass-do { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: .3rem; }
+.restaurant-pass-do:empty { display: none; }
+.restaurant-pass-stock { margin-top: 1rem; }
+.restaurant-pass-stock summary { cursor: pointer; color: var(--_accent); font-weight: 600; }
+.restaurant-pass-stock ul { margin: .5rem 0 0; padding: 0; list-style: none; display: grid; gap: .25rem; max-height: 40vh; overflow: auto; }
+.restaurant-pass-stock li { display: flex; justify-content: space-between; gap: .4rem; align-items: center; font-size: .88rem; }
+.restaurant-pass-stock li.is-out { color: #c62828; }
+
+@media (max-width: 1200px) {
+    .restaurant-pass-grid { grid-template-columns: minmax(16rem, 1fr) minmax(0, 1.6fr); }
+    .restaurant-pass-book { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+    .restaurant-pass-grid { grid-template-columns: 1fr; }
+    .restaurant-pass-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .restaurant-dish { grid-template-columns: 1fr auto; }
+    .restaurant-dish-art { display: none; }
+}

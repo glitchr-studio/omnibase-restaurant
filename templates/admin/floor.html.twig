@@ -1,0 +1,115 @@
+{% extends '@Admin/layout.html.twig' %}
+
+{% block page_title %}{{ '@restaurant.admin.floor.title'|trans }}{% endblock %}
+
+{% block content_header %}
+<div class="admin-header">
+    <span class="admin-header-icon"><i class="fa-solid fa-border-all"></i></span>
+    <div class="admin-header-titles">
+        <h1>{{ '@restaurant.admin.floor.title'|trans }}{% if room %} · {{ room.name }}{% endif %}{% if layout %} · {{ layout.name }}{% endif %}</h1>
+        <div class="admin-header-subtitle">{{ '@restaurant.admin.floor.lead'|trans }}</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ asset('bundles/restaurant/css/floor.css') }}">
+<div class="restaurant-editor">
+    <aside class="restaurant-editor-side card">
+        <h2>{{ '@restaurant.admin.floor.rooms'|trans }}</h2>
+        <ul class="restaurant-editor-list">
+            {% for r in rooms %}
+            <li class="{{ room and r.id == room.id ? 'is-current' }}"><a href="{{ path('restaurant_admin_floor', {salle: r.id}) }}">{{ r.name }}</a> <small>{{ r.tables|length }} · {{ r.capacity }} {{ '@restaurant.admin.floor.seats'|trans }}</small>
+                {% if room and r.id == room.id %}
+                <ul>
+                    <li class="{{ layout is null ? 'is-current' }}"><a href="{{ path('restaurant_admin_floor', {salle: r.id}) }}">{{ '@restaurant.admin.floor.base'|trans }}</a></li>
+                    {% for l in r.layouts %}<li class="{{ layout and l.id == layout.id ? 'is-current' }}"><a href="{{ path('restaurant_admin_floor', {salle: r.id, disposition: l.id}) }}">{{ l.name }}</a>{% if l.default %} <small>★</small>{% endif %}</li>{% endfor %}
+                </ul>
+                <form method="post" action="{{ path('restaurant_admin_floor_layout', {room: r.id}) }}" class="restaurant-editor-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('restaurant-floor') }}">
+                    <input class="form-control" name="name" placeholder="{{ '@restaurant.admin.floor.new_layout'|trans }}" required>
+                    <button class="btn btn-secondary" type="submit"><i class="fa-solid fa-plus"></i></button>
+                </form>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        <form method="post" action="{{ path('restaurant_admin_floor_room') }}" class="restaurant-editor-inline">
+            <input type="hidden" name="_token" value="{{ csrf_token('restaurant-floor') }}">
+            <input class="form-control" name="name" placeholder="{{ '@restaurant.admin.floor.new_room'|trans }}" required>
+            <button class="btn btn-secondary" type="submit"><i class="fa-solid fa-plus"></i></button>
+        </form>
+        <h2>{{ '@restaurant.admin.floor.posters'|trans }}</h2>
+        <p><a class="btn btn-secondary" href="{{ path('restaurant_admin_posters', {salle: room.id ?? null}) }}" target="_blank" rel="noopener"><i class="fa-solid fa-qrcode"></i> A4</a>
+           <a class="btn btn-secondary" href="{{ path('restaurant_admin_posters', {salle: room.id ?? null, format: 'L7121'}) }}" target="_blank" rel="noopener">Avery L7121</a></p>
+        <p class="muted">{{ '@restaurant.admin.floor.posters_help'|trans }}</p>
+    </aside>
+
+    {% if room %}
+    {% set data = {
+        save: path('restaurant_admin_floor_save', {room: room.id}),
+        token: csrf_token('restaurant-floor'),
+        layout: layout.id ?? null,
+        room: {id: room.id, name: room.name, width: room.width, height: room.height, decor: room.decor},
+        joins: drawing.joins,
+        tables: drawing.tables|map(p => {id: p.table.id, label: p.table.label, min: p.table.minCovers, max: p.table.maxCovers, shape: p.table.shape.value, x: p.x, y: p.y, w: p.table.width, h: p.table.height, rotation: p.rotation, active: p.active, token: path('restaurant_admin_table_token', {id: p.table.id})}),
+        texts: {
+            saved: '@restaurant.admin.floor.saved'|trans, unsaved: '@restaurant.admin.floor.unsaved'|trans, error: '@restaurant.admin.floor.error'|trans,
+            label: '@restaurant.admin.table.label'|trans, min: '@restaurant.admin.table.min'|trans, max: '@restaurant.admin.table.max'|trans, shape: '@restaurant.admin.table.shape'|trans,
+            width: '@restaurant.admin.floor.w'|trans, height: '@restaurant.admin.floor.h'|trans, rotation: '@restaurant.admin.floor.rotation'|trans, active: '@restaurant.admin.table.active'|trans,
+            text: '@restaurant.admin.floor.text'|trans, nothing: '@restaurant.admin.floor.nothing'|trans, renew: '@restaurant.admin.floor.renew'|trans, renew_confirm: '@restaurant.admin.floor.renew_confirm'|trans,
+            shapes: {round: '@restaurant.table.shape.round'|trans, square: '@restaurant.table.shape.square'|trans, rectangle: '@restaurant.table.shape.rectangle'|trans, counter: '@restaurant.table.shape.counter'|trans},
+            decor: {wall: '@restaurant.admin.floor.decor.wall'|trans, counter: '@restaurant.admin.floor.decor.counter'|trans, door: '@restaurant.admin.floor.decor.door'|trans, window: '@restaurant.admin.floor.decor.window'|trans, kitchen: '@restaurant.admin.floor.decor.kitchen'|trans, plant: '@restaurant.admin.floor.decor.plant'|trans, label: '@restaurant.admin.floor.decor.label'|trans},
+        },
+    } %}
+    <section class="restaurant-editor-main card" data-restaurant-floor>
+        <script type="application/json" data-floor-data>{{ data|json_encode|raw }}</script>
+        <div class="restaurant-editor-toolbar" role="toolbar">
+            <span class="restaurant-editor-group">
+                <button type="button" class="btn btn-secondary" data-add="table" data-shape="square" title="{{ '@restaurant.table.shape.square'|trans }}"><i class="fa-regular fa-square"></i></button>
+                <button type="button" class="btn btn-secondary" data-add="table" data-shape="round" title="{{ '@restaurant.table.shape.round'|trans }}"><i class="fa-regular fa-circle"></i></button>
+                <button type="button" class="btn btn-secondary" data-add="table" data-shape="rectangle" title="{{ '@restaurant.table.shape.rectangle'|trans }}"><i class="fa-solid fa-grip-lines"></i></button>
+                <button type="button" class="btn btn-secondary" data-add="table" data-shape="counter" title="{{ '@restaurant.table.shape.counter'|trans }}"><i class="fa-solid fa-ellipsis"></i></button>
+            </span>
+            <span class="restaurant-editor-group">
+                <select class="form-select" data-add-decor aria-label="{{ '@restaurant.admin.floor.add_decor'|trans }}">
+                    <option value="">{{ '@restaurant.admin.floor.add_decor'|trans }}</option>
+                    {% for d in ['wall', 'counter', 'door', 'window', 'kitchen', 'plant', 'label'] %}<option value="{{ d }}">{{ ('@restaurant.admin.floor.decor.' ~ d)|trans }}</option>{% endfor %}
+                </select>
+            </span>
+            <span class="restaurant-editor-group">
+                <button type="button" class="btn btn-secondary" data-do="duplicate" title="{{ '@restaurant.admin.floor.duplicate'|trans }} (D)"><i class="fa-regular fa-clone"></i></button>
+                <button type="button" class="btn btn-secondary" data-do="rotate" title="{{ '@restaurant.admin.floor.rotate'|trans }} (R)"><i class="fa-solid fa-rotate-right"></i></button>
+                <button type="button" class="btn btn-secondary" data-do="remove" title="{{ '@restaurant.admin.floor.remove'|trans }} (Suppr)"><i class="fa-regular fa-trash-can"></i></button>
+                {% if layout %}
+                <button type="button" class="btn btn-secondary" data-do="join" title="{{ '@restaurant.admin.floor.join_help'|trans }}"><i class="fa-solid fa-link"></i> {{ '@restaurant.admin.floor.join'|trans }}</button>
+                <button type="button" class="btn btn-secondary" data-do="unjoin"><i class="fa-solid fa-link-slash"></i></button>
+                {% endif %}
+            </span>
+            <span class="restaurant-editor-group">
+                <label class="restaurant-editor-snap">{{ '@restaurant.admin.floor.grid'|trans }}
+                    <select class="form-select" data-snap><option value="5">5 cm</option><option value="10" selected>10 cm</option><option value="25">25 cm</option><option value="1">—</option></select></label>
+                <label class="restaurant-editor-snap">{{ '@restaurant.admin.floor.size'|trans }}
+                    <input class="form-control" type="number" data-room="width" value="{{ room.width }}" step="10" min="300"> × <input class="form-control" type="number" data-room="height" value="{{ room.height }}" step="10" min="300"> cm</label>
+            </span>
+            <span class="restaurant-editor-group is-end">
+                <span class="restaurant-editor-status" data-status></span>
+                <button type="button" class="btn btn-primary" data-do="save"><i class="fa-solid fa-floppy-disk"></i> {{ '@restaurant.admin.floor.save'|trans }}</button>
+            </span>
+        </div>
+        <div class="restaurant-editor-stage">
+            <svg class="restaurant-editor-svg" data-svg xmlns="http://www.w3.org/2000/svg"></svg>
+            <form class="restaurant-editor-props" data-props onsubmit="return false"></form>
+        </div>
+        <p class="muted">{{ layout ? '@restaurant.admin.floor.layout_help'|trans : '@restaurant.admin.floor.base_help'|trans }}</p>
+    </section>
+    {% else %}
+    <section class="restaurant-editor-main card"><p>{{ '@restaurant.admin.floor.no_room'|trans }}</p></section>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block body_javascript %}
+{{ parent() }}
+<script src="{{ asset('bundles/restaurant/js/floor.js') }}"></script>
+{% endblock %}
