@@ -2,7 +2,9 @@
 
 namespace Base\Restaurant\Service;
 
+use Base\Marketplace\Service\CartException;
 use Base\Marketplace\Service\Pricing;
+use Base\Marketplace\Service\ProductOptions;
 use Base\Restaurant\Entity\Menu\Dish;
 use Base\Restaurant\Entity\Order\Session;
 use Base\Restaurant\Entity\Order\Ticket;
@@ -35,6 +37,7 @@ class TableOrders
         private readonly DishRepository $dishes,
         private readonly Pricing $pricing,
         private readonly EventDispatcherInterface $dispatcher,
+        private readonly ProductOptions $options,
         #[Autowire('%restaurant.table.max_lines%')] private readonly int $maxLines = 40,
         #[Autowire('%restaurant.table.max_quantity%')] private readonly int $maxQuantity = 20,
     ) {
@@ -59,7 +62,7 @@ class TableOrders
      *
      * @throws RestaurantException with a key of the "restaurant" translations (table.error.*)
      */
-    public function send(Session $session, Round $round): Ticket
+    public function send(Session $session, Round $round, ?string $locale = null): Ticket
     {
         $table = $session->getTable();
         if (!$table->isActive() || !$table->isOrdering()) {
@@ -82,8 +85,16 @@ class TableOrders
             if ($line->quantity < 1 || $line->quantity > $this->maxQuantity) {
                 throw new RestaurantException('table.error.quantity');
             }
-            $ticketLine = TicketLine::of($dish, $line->quantity, $this->pricing->priceWithVat($dish))
-                ->setOptions($line->options)->setNote($line->note);
+            // The dish's options (a cooking, extras): checked - a required choice missing, one too many -
+            // and their surcharge, with the dish's VAT, in the line's price.
+            try {
+                $selection = $this->options->select($dish, $line->optionIds());
+            } catch (CartException $e) {
+                throw new RestaurantException('@marketplace.'.$e->getMessage(), $e->getParameters(), $e);
+            }
+            $price = $this->pricing->priceWithVat($dish) + (int) round($selection->surcharge() * (1 + $this->pricing->vatRateFor($dish)));
+            $ticketLine = TicketLine::of($dish, $line->quantity, $price)
+                ->setOptions([...$selection->labels($locale), ...$line->optionWords()])->setNote($line->note);
             $ticket->addLine($ticketLine);
             $ticket->setCurrency((string) $dish->getCurrency());
         }

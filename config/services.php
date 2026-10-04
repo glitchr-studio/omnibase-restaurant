@@ -14,6 +14,9 @@ use Symfony\Component\RateLimiter\Storage\CacheStorage;
 return function (ContainerConfigurator $configurator) {
     $src = \dirname(__DIR__).'/src';
 
+    // omnibase/marketplace's quick order (Service\QuickOrder): what orders without an account and takes a bill's payment.
+    $quickOrder = class_exists('Base\\Marketplace\\Service\\QuickOrder');
+
     $services = $configurator->services();
     $services->defaults()->autowire(true)->autoconfigure(true)->public(false);
 
@@ -29,9 +32,12 @@ return function (ContainerConfigurator $configurator) {
             $src.'/Admin/',
             $src.'/Omnifood/',
             $src.'/RestaurantBundle.php',
+            // An order without an account, a bill paid from a phone: on omnibase/marketplace's quick order.
+            ...($quickOrder ? [] : [$src.'/Service/TakeHomeOrders.php', $src.'/Service/TablePayments.php', $src.'/EventListener/QuickOrderListener.php']),
         ]);
 
     $services->load('Base\\Restaurant\\Controller\\Client\\', $src.'/Controller/Client/')
+        ->exclude($quickOrder ? [] : [$src.'/Controller/Client/TakeHomeOrderController.php', $src.'/Controller/Client/TablePaymentController.php'])
         ->tag('controller.service_arguments');
 
     // A table's phones: so many requests a minute, by table and address

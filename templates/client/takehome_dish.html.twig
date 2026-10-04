@@ -1,0 +1,36 @@
+{# A fresh dish of the take-home shop: what it is, how it keeps, how to cook it at home. #}
+{% extends layout %}
+{% block title %}{{ dish.title }} · {{ '@restaurant.takehome.title'|trans }}{% endblock %}
+{% block description %}{{ dish.excerpt }}{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('bundles/restaurant/css/restaurant.css') }}">{% endblock %}
+
+{% block content %}
+{% set steps = dish.cookingSteps(app.request.locale) %}
+<section class="restaurant restaurant-takehome restaurant-takehome-page">
+    <p class="restaurant-crumb"><a href="{{ path('restaurant_takehome') }}">← {{ '@restaurant.takehome.title'|trans }}</a></p>
+    <header class="restaurant-head">
+        {% if dish.nativeName %}<p class="restaurant-eyebrow" lang="ja">{{ dish.nativeName }}</p>{% endif %}
+        <h1>{{ dish.title }}</h1>
+        {% if dish.excerpt %}<p class="restaurant-lead">{{ dish.excerpt }}</p>{% endif %}
+    </header>
+    {% if dish.illustration %}<img class="restaurant-takehome-art" src="{{ asset(dish.illustration starts with '/' or dish.illustration starts with 'http' ? dish.illustration : 'assets/images/' ~ dish.illustration) }}" alt="" width="220" height="220">{% endif %}
+
+    <dl class="restaurant-facts">
+        <div><dt>{{ '@restaurant.takehome.fact.price'|trans }}</dt><dd>{{ marketplace_price_with_vat(dish)|format_currency(dish.currency, {use_rate: false}) }}</dd></div>
+        <div><dt>{{ '@restaurant.takehome.fact.portions'|trans }}</dt><dd>{{ '@restaurant.takehome.portions'|trans({count: dish.portions}) }}{% if dish.netWeight %} · {{ dish.netWeight }} g{% endif %}</dd></div>
+        <div><dt>{{ '@restaurant.takehome.fact.keeping'|trans }}</dt><dd>{{ '@restaurant.takehome.keeps'|trans({days: dish.shelfLife, temperature: dish.storageTemperature}) }}</dd></div>
+        {% if dish.cookingTime %}<div><dt>{{ '@restaurant.takehome.fact.cooking'|trans }}</dt><dd>{{ '@restaurant.takehome.cooking_time'|trans({minutes: dish.cookingTime}) }}</dd></div>{% endif %}
+        <div><dt>{{ '@restaurant.takehome.fact.parcel'|trans }}</dt><dd>{{ dish.parcel ? '@restaurant.takehome.travels'|trans : '@restaurant.takehome.no_parcel'|trans }}</dd></div>
+        {% if dish.allergenCases %}<div><dt>{{ '@restaurant.takehome.fact.allergens'|trans }}</dt><dd>{% for a in dish.allergenCases %}{{ ('@enums.' ~ a.trans)|trans }}{{ not loop.last ? ', ' }}{% endfor %}</dd></div>{% endif %}
+    </dl>
+
+    {% if dish.content %}<div class="restaurant-prose">{{ dish.content|raw }}</div>{% endif %}
+
+    {% if steps %}
+    <h2>{{ '@restaurant.takehome.cooking'|trans }}</h2>
+    <ol class="restaurant-steps">{% for step in steps %}<li>{{ step }}</li>{% endfor %}</ol>
+    {% endif %}
+
+    <p class="restaurant-submit"><a class="restaurant-button" href="{{ path('restaurant_takehome') }}#frais-{{ dish.id }}">{{ '@restaurant.takehome.order_it'|trans }}</a></p>
+</section>
+{% endblock %}

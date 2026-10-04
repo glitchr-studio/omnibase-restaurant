@@ -1,0 +1,33 @@
+{#
+ # One fresh dish of the take-home shop: its name and the kitchen's, what it
+ # is, how it keeps, its price VAT included. `order` adds the quantity field
+ # of the order form (lines[<id>]).
+ #}
+{% set price = marketplace_price_with_vat(dish) %}
+{% set out = not dish.available %}
+<article class="restaurant-dish restaurant-takehome-dish{{ out ? ' is-out' }}" id="frais-{{ dish.id }}">
+    {% if dish.illustration %}<img class="restaurant-dish-art" src="{{ asset(dish.illustration starts with '/' or dish.illustration starts with 'http' ? dish.illustration : 'assets/images/' ~ dish.illustration) }}" alt="" loading="lazy" width="120" height="120">{% endif %}
+    <div class="restaurant-dish-body">
+        <h3 class="restaurant-dish-name">
+            <a href="{{ path('restaurant_takehome_dish', {slug: dish.slug}) }}">{{ dish.title }}</a>
+            {% if dish.nativeName %}<span class="restaurant-native" lang="ja">{{ dish.nativeName }}</span>{% endif %}
+        </h3>
+        {% if dish.excerpt %}<p class="restaurant-dish-text">{{ dish.excerpt }}</p>{% endif %}
+        <p class="restaurant-dish-meta">
+            <span class="restaurant-pill">{{ '@restaurant.takehome.portions'|trans({count: dish.portions}) }}</span>
+            {% if dish.chilled %}<span class="restaurant-pill">{{ '@restaurant.takehome.keeps'|trans({days: dish.shelfLife, temperature: dish.storageTemperature}) }}</span>{% endif %}
+            {% if dish.cookingTime %}<span class="restaurant-pill">{{ '@restaurant.takehome.cooking_time'|trans({minutes: dish.cookingTime}) }}</span>{% endif %}
+            {% if not dish.parcel %}<span class="restaurant-pill is-diet">{{ '@restaurant.takehome.no_parcel'|trans }}</span>{% endif %}
+            {% for a in dish.allergenCases %}<abbr class="restaurant-allergen" title="{{ ('@enums.' ~ a.trans)|trans }}">{{ a.number }}</abbr>{% endfor %}
+        </p>
+    </div>
+    <div class="restaurant-dish-side">
+        <span class="restaurant-price">{{ price|format_currency(dish.currency, {use_rate: false}) }}</span>
+        {% if out %}
+            <span class="restaurant-out">{{ '@restaurant.menu.out'|trans }}</span>
+        {% elseif order|default(false) %}
+            <label class="restaurant-quantity"><span class="visually-hidden">{{ '@restaurant.takehome.quantity'|trans({dish: dish.title}) }}</span>
+                <input type="number" name="lines[{{ dish.id }}]" min="0" max="{{ max_quantity|default(20) }}" step="1" inputmode="numeric" value="{{ (posted.lines[dish.id] ?? 0)|default(0) }}"></label>
+        {% endif %}
+    </div>
+</article>

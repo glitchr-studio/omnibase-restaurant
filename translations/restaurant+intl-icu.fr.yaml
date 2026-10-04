@@ -89,6 +89,11 @@ table:
     bill_asked: "L'addition arrive à votre table."
     pay_till: "Le règlement se fait à la caisse."
     pay_online: "Vous pourrez régler depuis votre téléphone."
+    options: Cuisson, suppléments
+    option_required: à choisir
+    pay: Payer depuis mon téléphone
+    pay_email: "Votre adresse e-mail, pour le reçu"
+    paid: "C'est réglé, merci !"
     shape:
         round: Ronde
         square: Carrée
@@ -101,6 +106,7 @@ table:
         unavailable: "Un des plats n'est plus disponible : retirez-le et renvoyez."
         quantity: "Cette quantité n'est pas possible."
         generic: "L'envoi n'a pas abouti. Réessayez, ou appelez le serveur."
+        pay_till: "Cette addition se règle à la caisse."
 
 ticket:
     status:
@@ -246,6 +252,19 @@ mail:
             subject: "Annulée : {covers} couverts le {date} à {time} ({name})"
 
 admin:
+    takehome:
+        native: Nom japonais
+        chilled: Réfrigéré
+        temperature: "Conservation (°C max.)"
+        shelf_life: "DLC (jours après fabrication)"
+        weight: Poids net (g)
+        portions: Portions
+        cooking_time: Cuisson (min)
+        cooking: "Étapes de cuisson (une par ligne)"
+        parcel: Voyage en colis frais
+        position: Ordre
+        allergens: Allergènes
+        illustration: Illustration
     position: Ordre
     room:
         name: Nom de la salle
@@ -360,3 +379,82 @@ admin:
             kitchen: Cuisine
             plant: Plante
             label: Étiquette
+
+takehome:
+    title: Le traiteur
+    lead: "Nos plats frais, préparés ici, à cuire chez vous. À retirer au restaurant, livrés près d'ici, ou en colis frais."
+    empty: "Les plats à emporter arrivent bientôt."
+    how: Comment la recevoir
+    mode:
+        pickup: Retrait au restaurant
+        delivery: Livraison près d'ici
+        shipping: Colis frais
+    mode_help:
+        pickup: "Sur un créneau, au comptoir."
+        delivery: "Par nos soins, dans les communes voisines."
+        shipping: "Sous température dirigée, remis au transporteur du lundi au mercredi, livré le lendemain."
+    day: Pour quel jour
+    days_pickup: Retrait ou livraison
+    days_parcel: Colis frais
+    parcel_day: "départ {day}, livré le lendemain"
+    slot: Créneau
+    address_help: "Pour une livraison ou un colis :"
+    address: Adresse
+    postcode: Code postal
+    city: Ville
+    name: Votre nom
+    phone: Téléphone
+    email: Adresse e-mail
+    note: Un mot pour la cuisine
+    no_account: "Pas de compte à créer : le suivi de la commande arrive à cette adresse."
+    submit: Commander et payer
+    at_counter: "Ces plats se commandent au comptoir, ou par téléphone."
+    ways: Retrait, livraison, colis
+    portions: "{count, plural, one {# portion} other {# portions}}"
+    keeps: "{days, plural, one {se garde # jour} other {se garde # jours}} à {temperature} °C au plus"
+    cooking_time: "{minutes} min de cuisson"
+    no_parcel: Ne voyage pas en colis
+    travels: Voyage en colis frais
+    quantity: "Combien de {dish}"
+    cooking: À la maison
+    order_it: Commander
+    fact:
+        price: Prix
+        portions: Pour
+        keeping: Conservation
+        cooking: Cuisson
+        parcel: Colis
+        allergens: Allergènes
+    error:
+        empty: "Votre commande est vide : indiquez une quantité."
+        mode: "Ce mode de remise n'est pas proposé."
+        out_of_zone: "Nous ne livrons pas au {postcode} : choisissez le retrait ou le colis frais."
+        delivery_minimum: "La livraison se fait à partir de {minimum} € de commande."
+        parcel_dish: "{dish} ne voyage pas en colis : choisissez le retrait ou la livraison."
+        parcel_day: "Les colis frais partent du lundi au mercredi : un colis parti plus tard passerait le week-end en dépôt."
+        parcel_shelf_life: "Un de ces plats se garde trop peu de temps pour voyager."
+        too_soon: "Ce jour est trop proche : la cuisine prépare chaque commande."
+        no_day: "Ce jour n'est pas possible."
+        unavailable: "Un des plats n'est plus disponible."
+        quantity: "Nous n'avons pas autant de {dish}."
+        slot: "Choisissez un créneau encore libre ce jour-là."
+        address: "Il manque l'adresse, le code postal ou la ville."
+
+tracking:
+    title: Votre commande
+    status:
+        checkout: En attente de paiement
+        received: Reçue
+        accepted: Acceptée
+        preparing: En préparation
+        ready: Prête
+        out_for_delivery: En route
+        done: Remise
+        cancelled: Annulée
+        refused: Refusée
+        refunded: Remboursée
+    unpaid: "Le paiement n'est pas encore confirmé : la page se met à jour."
+    parcel: "Colis n° {number}"
+    total: Total
+    use_by: "À consommer jusqu'au {date}, conservé au frais."
+    keep_link: "Gardez cette adresse : elle suit votre commande, sans compte."

@@ -7,8 +7,8 @@ import { Controller } from '@hotwired/stimulus';
  * redrawn when the state changes (poll:change, glitchr/omnibase's poll).
  */
 export default class extends Controller {
-    static targets = ['dish', 'count', 'cart', 'cartList', 'cartCount', 'cartTotal', 'note', 'sendButton', 'rounds', 'roundCount', 'total', 'toast', 'callButton', 'billButton'];
-    static values = { roundUrl: String, callUrl: String, billUrl: String, stateUrl: String, key: String, currency: String, locale: String, statuses: Object, texts: Object };
+    static targets = ['dish', 'count', 'cart', 'cartList', 'cartCount', 'cartTotal', 'note', 'sendButton', 'rounds', 'roundCount', 'total', 'toast', 'callButton', 'billButton', 'pay', 'payEmail', 'payButton'];
+    static values = { roundUrl: String, callUrl: String, billUrl: String, payUrl: String, stateUrl: String, key: String, currency: String, locale: String, statuses: Object, texts: Object };
 
     connect() {
         try { this.cart = JSON.parse(localStorage.getItem(this.keyValue) || '{}'); } catch (e) { this.cart = {}; }
@@ -23,12 +23,47 @@ export default class extends Controller {
     more(event) { this.change(this.dishOf(event.currentTarget), 1); }
     less(event) { this.change(this.dishOf(event.currentTarget), -1); }
 
+    /** The options ticked on a dish (omnibase/marketplace's Product\Option): ids, labels, what they add. */
+    optionsOf(dish) {
+        const inputs = Array.from(dish.querySelectorAll('.restaurant-dish-options input:checked'));
+        return {
+            ids: inputs.map((input) => parseInt(input.value, 10)).sort((a, b) => a - b),
+            labels: inputs.map((input) => input.dataset.label),
+            price: inputs.reduce((sum, input) => sum + (parseInt(input.dataset.price, 10) || 0), 0),
+        };
+    }
+
+    /** A group that asks for a choice and has none: its name. */
+    missingOf(dish) {
+        const group = Array.from(dish.querySelectorAll('.restaurant-dish-options fieldset')).find((fieldset) => (parseInt(fieldset.dataset.minimum, 10) || 0) > fieldset.querySelectorAll('input:checked').length);
+        return group ? group.dataset.label : null;
+    }
+
+    /** A line of the round: a dish and its options - the same dish cooked another way is another line. */
+    keysOf(id) {
+        return Object.keys(this.cart).filter((key) => String(this.cart[key].dish ?? key) === String(id));
+    }
+
     change(dish, by) {
         if (!dish) return;
         const id = dish.dataset.dish;
-        const line = this.cart[id] || { quantity: 0, name: dish.dataset.name, price: parseInt(dish.dataset.price, 10) || 0 };
+        const options = this.optionsOf(dish);
+        let key = options.ids.length ? `${id}:${options.ids.join('-')}` : id;
+        if (by > 0) {
+            const missing = this.missingOf(dish);
+            if (missing) {
+                const details = dish.querySelector('.restaurant-dish-options');
+                if (details) details.open = true;
+                this.toast(`${missing} : ${this.textsValue.choose || ''}`);
+                return;
+            }
+        } else if (!this.cart[key]) {
+            // One less of a dish whose options changed since: its last line.
+            key = this.keysOf(id).pop() || key;
+        }
+        const line = this.cart[key] || { dish: id, quantity: 0, name: dish.dataset.name, price: (parseInt(dish.dataset.price, 10) || 0) + options.price, options: options.ids, labels: options.labels };
         line.quantity = Math.max(0, Math.min(20, line.quantity + by));
-        if (line.quantity) this.cart[id] = line; else delete this.cart[id];
+        if (line.quantity) this.cart[key] = line; else delete this.cart[key];
         this.save();
         this.render();
     }
@@ -40,8 +75,9 @@ export default class extends Controller {
     render() {
         let count = 0;
         let total = 0;
-        this.countTargets.forEach((output) => { output.value = this.cart[output.dataset.dish]?.quantity || 0; output.textContent = output.value; });
-        this.dishTargets.forEach((dish) => dish.classList.toggle('is-picked', !!this.cart[dish.dataset.dish]));
+        const taken = (id) => this.keysOf(id).reduce((sum, key) => sum + this.cart[key].quantity, 0);
+        this.countTargets.forEach((output) => { output.value = taken(output.dataset.dish); output.textContent = output.value; });
+        this.dishTargets.forEach((dish) => dish.classList.toggle('is-picked', taken(dish.dataset.dish) > 0));
         if (this.hasCartListTarget) this.cartListTarget.textContent = '';
         Object.entries(this.cart).forEach(([, line]) => {
             count += line.quantity;
@@ -49,7 +85,7 @@ export default class extends Controller {
             if (this.hasCartListTarget) {
                 const li = document.createElement('li');
                 const name = document.createElement('span');
-                name.textContent = `${line.quantity} × ${line.name}`;
+                name.textContent = `${line.quantity} × ${line.name}${line.labels && line.labels.length ? ` (${line.labels.join(', ')})` : ''}`;
                 const price = document.createElement('span');
                 price.textContent = this.money.format(line.quantity * line.price / 100);
                 li.append(name, price);
@@ -62,7 +98,7 @@ export default class extends Controller {
     }
 
     send() {
-        const lines = Object.entries(this.cart).map(([dish, line]) => ({ dish: parseInt(dish, 10), quantity: line.quantity }));
+        const lines = Object.entries(this.cart).map(([key, line]) => ({ dish: parseInt(line.dish ?? key, 10), quantity: line.quantity, options: line.options || [] }));
         if (!lines.length) return;
         this.sendButtonTarget.disabled = true;
         this.post(this.roundUrlValue, { lines, note: this.hasNoteTarget ? this.noteTarget.value : null })
@@ -85,6 +121,23 @@ export default class extends Controller {
 
     bill() {
         this.post(this.billUrlValue, {}).then((state) => { this.show({ detail: state }); this.toast(this.textsValue.bill); }).catch((m) => this.toast(m || this.textsValue.error));
+    }
+
+    /** The bill paid from this phone: an address for the receipt, then the shop's payment page - or done at once. */
+    pay(event) {
+        if (event) event.preventDefault();
+        if (!this.hasPayEmailTarget || !this.payEmailTarget.reportValidity()) return;
+        if (this.hasPayButtonTarget) this.payButtonTarget.disabled = true;
+        this.post(this.payUrlValue, { email: this.payEmailTarget.value })
+            .then((answer) => {
+                if (answer.redirect) { window.location.assign(answer.redirect); return; }
+                this.toast(this.textsValue.paid);
+                window.setTimeout(() => window.location.reload(), 1200);
+            })
+            .catch((message) => {
+                this.toast(message || this.textsValue.error);
+                if (this.hasPayButtonTarget) this.payButtonTarget.disabled = false;
+            });
     }
 
     post(url, body) {
@@ -127,13 +180,14 @@ export default class extends Controller {
             pill.textContent = this.statusesValue[ticket.status] || ticket.status;
             p.append(strong, ' ', pill);
             const ul = document.createElement('ul');
-            ticket.lines.forEach((line) => { const li = document.createElement('li'); li.textContent = `${line.quantity} × ${line.name}`; ul.appendChild(li); });
+            ticket.lines.forEach((line) => { const li = document.createElement('li'); li.textContent = `${line.quantity} × ${line.name}${line.options && line.options.length ? ` (${line.options.join(', ')})` : ''}`; ul.appendChild(li); });
             div.append(p, ul);
             box.appendChild(div);
         });
         if (this.hasRoundCountTarget) this.roundCountTarget.textContent = state.tickets.length || '';
         if (this.hasTotalTarget) this.totalTarget.textContent = this.money.format((state.total || 0) / 100);
         if (this.hasBillButtonTarget) this.billButtonTarget.disabled = state.status !== 'open';
+        if (this.hasPayTarget) this.payTarget.hidden = !(state.total > 0);
         if (state.status && state.status !== 'open' && this.hasCartTarget) this.cartTarget.hidden = true;
     }
 

@@ -18,6 +18,14 @@ one screen for the floor.
   cancel; a platform's order shows its countdown and turns red
   `accept_warning` seconds before its deadline. `?poste=hot|cold|bar` keeps
   one station's lines.
+  Settling a table leaves none of its rounds on the pass: what was still
+  open - waiting, on the stove, ready - is served (`Session::closeTickets()`,
+  a `TicketMovedEvent` each). Settling never changes what is billed: a round
+  that was not made is cancelled before.
+- **The shop's orders**: a paid take-home order is a ticket of the
+  `takeaway` channel - "Retrait", "Livraison" or "Colis", the customer, the
+  time - and moving it moves the hand-over its customer follows
+  ([The take-home shop](take-home.md)).
 - **The day's book**: confirm or refuse a request, seat (the table's bill
   opens, tied to the reservation), finish, absent; a form for a reservation
   taken on the phone or a walk-in seated now.

@@ -172,18 +172,48 @@ class Session
         return $this;
     }
 
-    /** Paid: the table is free for the next guests. */
+    /**
+     * The bill is being settled: none of its rounds stays on the pass. What
+     * was still open - waiting, on the stove, ready - is served: the guests
+     * pay for it and leave. Settling never changes what is billed; a round
+     * that was not made is cancelled on the pass before the bill is settled.
+     *
+     * @return list<Ticket> those it closed
+     */
+    public function closeTickets(?\DateTimeImmutable $at = null): array
+    {
+        $at = Instant::from($at) ?? Instant::now();
+        $closed = [];
+        foreach ($this->tickets as $ticket) {
+            if ($ticket->getStatus()->isOpen()) {
+                $closed[] = $ticket->close(TicketStatus::SERVED, $at);
+            }
+        }
+
+        return $closed;
+    }
+
+    /** Paid: its open rounds closed (closeTickets()), the table is free for the next guests. */
     public function settle(string $with, ?int $amount = null): self
     {
+        $amount ??= $this->getTotal();
+        $this->closeTickets();
         $this->status = SessionStatus::SETTLED;
         $this->settledAt = Instant::now();
         $this->settledWith = $with;
-        $this->settledAmount = $amount ?? $this->getTotal();
+        $this->settledAmount = $amount;
         $this->waiterCalledAt = null;
         $this->touch();
 
         return $this;
     }
+
+    /** The marketplace order the bill is paid with, when it is paid from a phone (restaurant.table.pay_online). */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $orderReference = null;
+
+    public function getOrderReference(): ?string { return $this->orderReference; }
+    public function setOrderReference(?string $reference): self { $this->orderReference = $reference ?: null; return $this; }
 
     public function getSettledAt(): ?\DateTimeImmutable { return Instant::read($this->settledAt); }
     public function getSettledWith(): ?string { return $this->settledWith; }

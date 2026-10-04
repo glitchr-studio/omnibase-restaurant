@@ -89,6 +89,11 @@ table:
     bill_asked: "お会計をお席にお持ちします。"
     pay_till: "お会計はレジにてお願いいたします。"
     pay_online: "お手持ちのスマートフォンからお支払いいただけます。"
+    options: 焼き加減・追加
+    option_required: お選びください
+    pay: スマートフォンで支払う
+    pay_email: "領収書をお送りするメールアドレス"
+    paid: "お支払いありがとうございました。"
     shape:
         round: 丸
         square: 正方形
@@ -101,6 +106,7 @@ table:
         unavailable: "ご提供できなくなった料理があります。削除してから再度送信してください。"
         quantity: "この数量ではご注文いただけません。"
         generic: "送信できませんでした。もう一度お試しいただくか、スタッフをお呼びください。"
+        pay_till: "こちらのお会計はレジでお願いいたします。"
 
 ticket:
     status:
@@ -246,6 +252,19 @@ mail:
             subject: "キャンセル：{date} {time} {covers}名（{name}）"
 
 admin:
+    takehome:
+        native: 日本語名
+        chilled: 要冷蔵
+        temperature: "保存温度（最高 °C）"
+        shelf_life: "消費期限（製造後の日数）"
+        weight: 内容量（g）
+        portions: 何人前
+        cooking_time: 調理時間（分）
+        cooking: "調理手順（1行に1つ）"
+        parcel: クール便で発送可
+        position: 順序
+        allergens: アレルゲン
+        illustration: イラスト
     position: 並び順
     room:
         name: フロア名
@@ -360,3 +379,82 @@ admin:
             kitchen: 厨房
             plant: 植物
             label: ラベル
+
+takehome:
+    title: お持ち帰り
+    lead: "当店で仕込んだ生のお料理を、ご自宅で仕上げて。店頭受け取り、近隣配達、クール便でお届けします。"
+    empty: "お持ち帰りのお料理は準備中です。"
+    how: お受け取り方法
+    mode:
+        pickup: 店頭受け取り
+        delivery: 近隣配達
+        shipping: クール便
+    mode_help:
+        pickup: "お時間を選んで、カウンターでお渡しします。"
+        delivery: "近隣の町へ当店がお届けします。"
+        shipping: "温度管理便。月曜から水曜に発送し、翌日お届けします。"
+    day: ご希望日
+    days_pickup: 受け取り・配達
+    days_parcel: クール便
+    parcel_day: "{day} 発送、翌日お届け"
+    slot: お時間
+    address_help: "配達・クール便の場合："
+    address: ご住所
+    postcode: 郵便番号
+    city: 市区町村
+    name: お名前
+    phone: お電話番号
+    email: メールアドレス
+    note: 厨房へのひとこと
+    no_account: "会員登録は不要です。ご注文の確認ページをこのアドレスにお送りします。"
+    submit: 注文して支払う
+    at_counter: "これらのお料理はカウンターまたはお電話でご注文ください。"
+    ways: 受け取り・配達・クール便
+    portions: "{count}人前"
+    keeps: "{temperature} °C以下で{days}日間保存可"
+    cooking_time: "調理 {minutes} 分"
+    no_parcel: クール便不可
+    travels: クール便可
+    quantity: "{dish} の数量"
+    cooking: ご自宅で
+    order_it: 注文する
+    fact:
+        price: 価格
+        portions: 分量
+        keeping: 保存
+        cooking: 調理
+        parcel: 発送
+        allergens: アレルゲン
+    error:
+        empty: "ご注文が空です。数量をご入力ください。"
+        mode: "この受け取り方法はご利用いただけません。"
+        out_of_zone: "{postcode} には配達しておりません。店頭受け取りかクール便をお選びください。"
+        delivery_minimum: "配達は {minimum} € 以上のご注文から承ります。"
+        parcel_dish: "{dish} はクール便でお送りできません。店頭受け取りか配達をお選びください。"
+        parcel_day: "クール便の発送は月曜から水曜です。それ以降は週末を倉庫で過ごしてしまいます。"
+        parcel_shelf_life: "消費期限が短く、発送できないお料理が含まれています。"
+        too_soon: "この日は近すぎます。ご注文ごとに仕込みます。"
+        no_day: "この日はお受けできません。"
+        unavailable: "ご注文のお料理の一部が品切れです。"
+        quantity: "{dish} はその数量をご用意できません。"
+        slot: "その日の空いているお時間をお選びください。"
+        address: "ご住所、郵便番号、市区町村をご入力ください。"
+
+tracking:
+    title: ご注文の状況
+    status:
+        checkout: お支払い待ち
+        received: 受付済み
+        accepted: 承りました
+        preparing: 準備中
+        ready: ご用意できました
+        out_for_delivery: お届け中
+        done: お渡し済み
+        cancelled: キャンセル
+        refused: お断り
+        refunded: 返金済み
+    unpaid: "お支払いの確認中です。ページは自動で更新されます。"
+    parcel: "お荷物番号 {number}"
+    total: 合計
+    use_by: "{date} までに、冷蔵保存でお召し上がりください。"
+    keep_link: "このページのアドレスを保存してください。会員登録なしでご注文を確認できます。"

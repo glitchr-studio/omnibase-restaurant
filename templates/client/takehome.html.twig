@@ -1,0 +1,104 @@
+{#
+ # The take-home shop (/traiteur): the fresh dishes to cook at home and, where
+ # the shop takes orders without an account, one form for the whole order -
+ # how many of each, how it leaves (collected, brought nearby, a chilled
+ # parcel), for when, who. It works without JavaScript.
+ #}
+{% extends layout %}
+{% block title %}{{ '@restaurant.takehome.title'|trans }}{% endblock %}
+{% block description %}{{ '@restaurant.takehome.lead'|trans }}{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('bundles/restaurant/css/restaurant.css') }}">{% endblock %}
+
+{% block content %}
+{% set pickup = options.pickup ?? null %}
+{% set delivery = options.delivery ?? null %}
+{% set shipping = options.shipping ?? null %}
+{% set can_order = ordering and dishes|length and ((pickup and pickup.available) or (delivery and delivery.available) or (shipping and shipping.available)) %}
+<section class="restaurant restaurant-takehome">
+    <header class="restaurant-head">
+        <p class="restaurant-eyebrow" lang="ja">お持ち帰り</p>
+        <h1>{{ '@restaurant.takehome.title'|trans }}</h1>
+        <p class="restaurant-lead">{{ '@restaurant.takehome.lead'|trans }}</p>
+    </header>
+
+    {# Shown here where the site's frame does not show its flashes itself. #}
+    {% for message in app.flashes('error') %}<p class="restaurant-flash is-danger" role="alert">{{ message }}</p>{% endfor %}
+
+    {% if dishes is empty %}<p class="restaurant-muted">{{ '@restaurant.takehome.empty'|trans }}</p>{% endif %}
+
+    {% if can_order %}<form method="post" action="{{ path('restaurant_takehome_order') }}" class="restaurant-form restaurant-takehome-form">
+        <input type="hidden" name="_token" value="{{ csrf_token('restaurant_takehome') }}">{% endif %}
+
+    <div class="restaurant-dishes">
+        {% for dish in dishes %}{% include '@Restaurant/client/_takehome_dish.html.twig' with {order: can_order} %}{% endfor %}
+    </div>
+
+    {% if can_order %}
+        <fieldset class="restaurant-step" id="commander">
+            <legend><span>1</span> {{ '@restaurant.takehome.how'|trans }}</legend>
+            {% set chosen = posted.mode ?? ((pickup and pickup.available) ? 'pickup' : ((delivery and delivery.available) ? 'delivery' : 'shipping')) %}
+            <div class="restaurant-modes">
+                {% for mode, option in options %}{% if option.available %}
+                <label class="restaurant-mode"><input type="radio" name="mode" value="{{ mode }}" required {{ chosen == mode ? 'checked' }}>
+                    <strong>{{ ('@restaurant.takehome.mode.' ~ mode)|trans }}</strong>
+                    <small>{{ ('@restaurant.takehome.mode_help.' ~ mode)|trans }}</small></label>
+                {% endif %}{% endfor %}
+            </div>
+            <div class="restaurant-row">
+                <label>{{ '@restaurant.takehome.day'|trans }}
+                    <select name="day" required>
+                        {% if (pickup and pickup.available) or (delivery and delivery.available) %}
+                        <optgroup label="{{ '@restaurant.takehome.days_pickup'|trans }}">
+                            {% for day in pickup_days %}<option value="{{ day|date('Y-m-d') }}" {{ (posted.day ?? '') == day|date('Y-m-d') ? 'selected' }}>{{ day|format_date(pattern: 'EEEE d MMMM') }}</option>{% endfor %}
+                        </optgroup>
+                        {% endif %}
+                        {% if shipping and shipping.available %}
+                        <optgroup label="{{ '@restaurant.takehome.days_parcel'|trans }}">
+                            {% for day in shipping_days %}<option value="{{ day|date('Y-m-d') }}">{{ '@restaurant.takehome.parcel_day'|trans({day: day|format_date(pattern: 'EEEE d MMMM')}) }}</option>{% endfor %}
+                        </optgroup>
+                        {% endif %}
+                    </select></label>
+                <label>{{ '@restaurant.takehome.slot'|trans }}
+                    <select name="slot">
+                        <option value="">—</option>
+                        {% for slot in slots %}<option value="{{ slot }}" {{ (posted.slot ?? '') == slot ? 'selected' }}>{{ slot|replace({'-': ' – '}) }}</option>{% endfor %}
+                    </select></label>
+            </div>
+            {% if (delivery and delivery.available) or (shipping and shipping.available) %}
+            <p class="restaurant-muted">{{ '@restaurant.takehome.address_help'|trans }}</p>
+            <label>{{ '@restaurant.takehome.address'|trans }} <input type="text" name="address" maxlength="500" autocomplete="street-address" value="{{ posted.address ?? '' }}"></label>
+            <div class="restaurant-row">
+                <label>{{ '@restaurant.takehome.postcode'|trans }} <input type="text" name="postcode" maxlength="16" autocomplete="postal-code" inputmode="numeric" value="{{ posted.postcode ?? '' }}"></label>
+                <label>{{ '@restaurant.takehome.city'|trans }} <input type="text" name="city" maxlength="120" autocomplete="address-level2" value="{{ posted.city ?? '' }}"></label>
+            </div>
+            {% endif %}
+        </fieldset>
+
+        <fieldset class="restaurant-step">
+            <legend><span>2</span> {{ '@restaurant.book.who'|trans }}</legend>
+            <div class="restaurant-row">
+                <label>{{ '@restaurant.takehome.name'|trans }} <input type="text" name="name" required maxlength="120" autocomplete="name" value="{{ posted.name ?? '' }}"></label>
+                <label>{{ '@restaurant.takehome.phone'|trans }} <input type="tel" name="phone" required maxlength="32" autocomplete="tel" value="{{ posted.phone ?? '' }}"></label>
+            </div>
+            <label>{{ '@restaurant.takehome.email'|trans }} <input type="email" name="email" required maxlength="180" autocomplete="email" value="{{ posted.email ?? (app.user ? app.user.email : '') }}"></label>
+            <label>{{ '@restaurant.takehome.note'|trans }} <input type="text" name="note" maxlength="500" value="{{ posted.note ?? '' }}"></label>
+            <div class="restaurant-trap" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+            <p class="restaurant-muted">{{ '@restaurant.takehome.no_account'|trans }}</p>
+        </fieldset>
+
+        <p class="restaurant-submit"><button type="submit" class="restaurant-button">{{ '@restaurant.takehome.submit'|trans }}</button></p>
+    </form>
+    {% elseif dishes|length %}
+        <p class="restaurant-muted">{{ '@restaurant.takehome.at_counter'|trans }}</p>
+    {% endif %}
+
+    <aside class="restaurant-takehome-ways">
+        <h2>{{ '@restaurant.takehome.ways'|trans }}</h2>
+        <ul>
+            {% for mode, option in options %}
+            <li class="{{ option.available ? '' : 'is-off' }}"><strong>{{ ('@restaurant.takehome.mode.' ~ mode)|trans }}</strong> — {{ ('@restaurant.takehome.mode_help.' ~ mode)|trans }}{% if not option.available and option.reason and option.reason != 'takehome.error.mode' %} <em>{{ ('@restaurant.' ~ option.reason)|trans(option.parameters) }}</em>{% endif %}</li>
+            {% endfor %}
+        </ul>
+    </aside>
+</section>
+{% endblock %}

@@ -170,4 +170,48 @@ class EntitiesTest extends TestCase
         $booking->website = 'https://spam.example';
         self::assertTrue($booking->isRobot(3, 1010), 'the trap filled');
     }
+
+    public function testSettlingATableLeavesNoneOfItsRoundsOnThePass(): void
+    {
+        $session = new Session($this->table(12, 4));
+        $rounds = [];
+        foreach (['served' => 4, 'ready' => 3, 'preparing' => 2, 'accepted' => 1, 'new' => 0] as $name => $steps) {
+            $ticket = new Ticket(TicketChannel::TABLE);
+            $ticket->addLine(new TicketLine('Ramen', 1, 1400));
+            for ($i = 0; $i < $steps; ++$i) {
+                $ticket->advance();
+            }
+            $session->addTicket($ticket);
+            $rounds[$name] = $ticket;
+        }
+        $refused = (new Ticket(TicketChannel::TABLE))->addLine(new TicketLine('Gyoza', 1, 700));
+        $refused->moveTo(TicketStatus::REFUSED);
+        $session->addTicket($refused);
+        self::assertSame(7000, $session->getTotal(), 'five rounds billed');
+
+        $session->settle('card');
+
+        self::assertSame(SessionStatus::SETTLED, $session->getStatus());
+        foreach ($rounds as $name => $ticket) {
+            self::assertSame(TicketStatus::SERVED, $ticket->getStatus(), $name);
+            self::assertNotNull($ticket->getServedAt(), $name);
+            self::assertNotNull($ticket->getAcceptedAt(), $name);
+            self::assertNotNull($ticket->getReadyAt(), $name);
+        }
+        self::assertSame(TicketStatus::REFUSED, $refused->getStatus(), 'a round refused stays refused');
+        self::assertSame(7000, $session->getSettledAmount(), 'settling changes nothing of what is billed');
+        foreach ($session->getTickets() as $ticket) {
+            self::assertFalse($ticket->getStatus()->isOpen());
+        }
+        self::assertSame([], $session->closeTickets(), 'nothing left to close');
+    }
+
+    public function testARoundsOptionsAreIdsAndWords(): void
+    {
+        $line = new \Base\Restaurant\Model\RoundLine();
+        $line->options = [12, '15', 'sans oignons', ''];
+
+        self::assertSame([12, 15], $line->optionIds());
+        self::assertSame(['sans oignons'], $line->optionWords());
+    }
 }

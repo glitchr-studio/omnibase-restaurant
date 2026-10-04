@@ -174,20 +174,29 @@ class Pass
         $this->dispatcher->dispatch(new TicketMovedEvent($ticket, $from, \in_array($to, [TicketStatus::REFUSED, TicketStatus::CANCELLED], true) ? ($reason ?: 'too_busy') : null));
     }
 
-    /** The bill paid at the till: the table is free. */
-    public function settle(Session $session, string $with = 'till'): void
+    /**
+     * The bill paid (at the till, or from a phone): the table is free, and
+     * none of its rounds stays on the pass - what was still open is served
+     * (Session::closeTickets()), and the listeners are told of each.
+     */
+    public function settle(Session $session, string $with = 'till', ?int $amount = null): void
     {
-        $session->settle($with);
+        $before = [];
         foreach ($session->getTickets() as $ticket) {
-            if (TicketStatus::READY === $ticket->getStatus()) {
-                $ticket->moveTo(TicketStatus::SERVED);
-            }
+            $before[spl_object_id($ticket)] = $ticket->getStatus();
         }
+        $session->settle($with, $amount);
         $reservation = $session->getReservation();
         if ($reservation && ReservationStatus::SEATED === $reservation->getStatus()) {
             $reservation->setStatus(ReservationStatus::FINISHED);
         }
         $this->entityManager->flush();
+        foreach ($session->getTickets() as $ticket) {
+            $from = $before[spl_object_id($ticket)] ?? null;
+            if ($from !== $ticket->getStatus()) {
+                $this->dispatcher->dispatch(new TicketMovedEvent($ticket, $from));
+            }
+        }
     }
 
     /** The guests (and their bill, their reservation) moved to another table. */

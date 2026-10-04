@@ -1,0 +1,42 @@
+{#
+ # An order followed through its link (/suivi/{token}), without an account:
+ # how it leaves, for when, where the kitchen is, what it holds, and how to
+ # keep it. Asked again every half minute while the order is open.
+ #}
+{% extends layout %}
+{% block title %}{{ '@restaurant.tracking.title'|trans }}{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('bundles/restaurant/css/restaurant.css') }}">{% if open %}<meta http-equiv="refresh" content="30">{% endif %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block content %}
+<section class="restaurant restaurant-tracking">
+    <header class="restaurant-head">
+        <p class="restaurant-eyebrow" lang="ja">ご注文</p>
+        <h1>{{ '@restaurant.tracking.title'|trans }}</h1>
+    </header>
+    {% for row in rows %}
+    {% set pickup = row.pickup %}
+    <article class="restaurant-tracked is-{{ pickup.status.value }}">
+        <h2>{{ pickup.order.reference }} <span class="restaurant-pill">{{ ('@restaurant.tracking.status.' ~ pickup.status.value)|trans }}</span></h2>
+        <p class="restaurant-lead">{{ ('@restaurant.takehome.mode.' ~ pickup.mode.value)|trans }} · {{ pickup.day|format_date(pattern: 'EEEE d MMMM') }}{% if pickup.slot %} · {{ pickup.slot|replace({'-': ' – '}) }}{% endif %}</p>
+        {% if pickup.step >= 0 %}
+        <ol class="restaurant-track">
+            {% for step in pickup.flow %}{% if step.value != 'checkout' %}
+            <li class="{{ loop.index0 < pickup.step ? 'is-done' : (loop.index0 == pickup.step ? 'is-now') }}">{{ ('@restaurant.tracking.status.' ~ step.value)|trans }}</li>
+            {% endif %}{% endfor %}
+        </ol>
+        {% endif %}
+        {% if pickup.status.value == 'checkout' %}<p class="restaurant-flash">{{ '@restaurant.tracking.unpaid'|trans }}</p>{% endif %}
+        {% if pickup.mode.needsAddress and pickup.address %}<p>{{ pickup.contactName }}<br>{{ pickup.address }}<br>{{ pickup.postcode }} {{ pickup.city }}</p>{% endif %}
+        {% if pickup.trackingNumber %}<p>{{ '@restaurant.tracking.parcel'|trans({number: pickup.trackingNumber}) }}</p>{% endif %}
+        <ul class="restaurant-tracked-lines">
+            {% for line in pickup.order.items %}
+            <li><span>{{ line.quantity }} × {{ line.product ? line.product.title : line }}</span> <span>{{ line.netPrice|format_currency(pickup.order.currency, {use_rate: false}) }}</span></li>
+            {% endfor %}
+        </ul>
+        <p class="restaurant-total">{{ '@restaurant.tracking.total'|trans }} <strong>{{ pickup.order.netPrice|format_currency(pickup.order.currency, {use_rate: false}) }}</strong></p>
+        {% if row.use_by %}<p class="restaurant-muted">{{ '@restaurant.tracking.use_by'|trans({date: row.use_by|format_date(pattern: 'EEEE d MMMM')}) }}</p>{% endif %}
+    </article>
+    {% endfor %}
+    <p class="restaurant-muted">{{ '@restaurant.tracking.keep_link'|trans }}</p>
+</section>
+{% endblock %}

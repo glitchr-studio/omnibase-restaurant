@@ -39,9 +39,32 @@ waiter, ask for the bill; the bill asked for, the phones send no more rounds.
 | Route | |
 |---|---|
 | `restaurant_table` | the page |
-| `restaurant_table_round` `POST /t/{token}/tournee` | JSON, bound with `#[MapRequestPayload]` to `Model\Round` (`{lines: [{dish, quantity, note?, options?}], note?, covers?}`) |
+| `restaurant_table_round` `POST /t/{token}/tournee` | JSON, bound with `#[MapRequestPayload]` to `Model\Round` (`{lines: [{dish, quantity, note?, options?: [option ids]}], note?, covers?}`) |
 | `restaurant_table_call`, `restaurant_table_bill` | the waiter, the bill |
 | `restaurant_table_state` | the table's state, for the poll |
+
+## A dish's options
+
+A dish's options are omnibase/marketplace's (`Product\OptionGroup`, `Option`:
+a cooking, extras - one or several, a minimum, a maximum, a surcharge before
+VAT). The table's page shows them under the dish; a line of a round names
+those chosen by id (`options: [12, 15]`; a text stays a word for the
+kitchen). `TableOrders::send()` checks them (`Service\ProductOptions`: a
+choice missing or one too many is refused in the guest's words), a group
+left untouched takes its preselected option, and the surcharge - with the
+dish's VAT - is in the line's price; the ticket shows their labels.
+
+## Paying from the phone
+
+With `restaurant.table.pay_online: true` and omnibase/marketplace's quick
+order, the "Notre table" tab offers "Payer depuis mon téléphone": an e-mail
+address for the receipt, then the shop's payment
+(`restaurant_table_pay` `POST /t/{token}/payer`, `Service\TablePayments`).
+The bill's rounds become the lines of an order (no account), paid through
+the shop's gateways; paid, the bill is settled `online` for the order's
+amount and the table is free, as at the till. A bill the shop would not
+price the same from its dishes - a round with paid options, a dish since
+removed - is settled at the till (`table.error.pay_till`).
 
 Guards: the token is the only key (a renewed token locks the old poster
 out); posts are JSON only; `symfony/rate-limiter` counts per table and

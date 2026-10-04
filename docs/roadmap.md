@@ -3,16 +3,22 @@ title: Roadmap
 order: 9
 ---
 
-# What waits for omnibase/marketplace
+# Where it stands
 
-These parts need changes in omnibase/marketplace, written elsewhere; the
-bundle leaves a hook for each and does not work around them.
+Done with omnibase/marketplace's third pass (`Entity\Order\Pickup`,
+`Product\OptionGroup`): the take-home dishes, the cold chain, the tracking
+page, the shop's orders on the pass, the dishes' options at the table
+([The take-home shop](take-home.md), [The menu and ordering at the table](menu-and-table.md)).
 
-| To come | Needs in omnibase/marketplace | Hook here |
-|---|---|---|
-| Take-home dishes: `Entity\Product\TakeHome` (chilled, storage temperature, use-by days, portions, cooking steps) | - | a product class beside `Dish`; `DishCrudController::menuFields()` is reusable |
-| Pickup on a slot, local delivery, chilled parcels | `Entity\Order\Pickup` | `Service\ColdChain` to filter the hand-over modes (zip codes in `restaurant.delivery.zip_codes`, parcels only when the whole basket travels and the use-by date covers the delay, shipped Monday to Wednesday); `/suivi/{token}` |
-| Take-away orders on the pass | `QuickOrder` published, `QuickOrderDoneEvent` | `TicketChannel::TAKEAWAY` exists; a listener turns a paid order into a ticket |
-| Dish options (cooking, extras) | `Product\OptionGroup`, `Option` | `TicketLine::$options` and `Model\RoundLine::$options` already carry the choices as texts |
-| Paying a table's bill from the phone | `QuickOrder::buy()` (an order without an account) | `restaurant.table.pay_online` (off); the `Session`'s billed tickets give the lines (`TicketLine::getDish()`, quantity); settled, call `Session::settle('online')` |
-| Chilled parcels | Chronofresh products in `omnibus/chronopost` | - |
+On omnibase/marketplace's quick order (`Service\QuickOrder`), loaded only
+where it exists: the order without an account, the bill paid from a phone.
+
+# What is left
+
+| To come | Why not yet |
+|---|---|
+| A bill with paid options, paid from the phone | `QuickOrder::buy()` prices lines from the products alone: it takes neither options nor a prepared line. Such a bill is settled at the till. |
+| A hand-over charge as a charge, not a line | `QuickOrder::buy()` offers nothing between the order's making and its payment: the delivery and the parcel are sold as a product (`fee_product`). |
+| The chilled parcel booked by itself | The label is the staff's to book (`Shipping::book()`); booking it when the ticket is ready, with the basket's use-by date, waits for a Chronofresh contract to try it on. |
+| Options on take-home dishes | same limit of `buy()`. |
+| `Model\Instant` replaced by glitchr/omnibase's `utc_datetime_immutable` | the type is not published yet (it is in the core's checkout, ahead of its remote); the columns and `Instant` stay as they are until it is. |

@@ -18,6 +18,22 @@
         {% if dish.getCourses() %}
         <ul class="restaurant-courses">{% for course in dish.getCourses() %}<li>{{ course }}</li>{% endfor %}</ul>
         {% endif %}
+        {% if order|default(false) and dish.tableOrder and not out and dish.hasOptions %}
+        {# The dish's options (omnibase/marketplace's Product\OptionGroup): chosen before the "+", sent with the line. #}
+        {% set vat = 1 + marketplace_vat_rate(dish) %}
+        <details class="restaurant-dish-options">
+            <summary>{{ '@restaurant.table.options'|trans }}</summary>
+            {% for group in dish.optionGroups %}
+            <fieldset data-group="{{ group.id }}" data-minimum="{{ group.minimum }}" data-label="{{ group.label(app.request.locale) }}">
+                <legend>{{ group.label(app.request.locale) }}{% if group.required %} <small>{{ '@restaurant.table.option_required'|trans }}</small>{% endif %}</legend>
+                {% for option in group.availableOptions %}
+                <label><input type="{{ group.multiple ? 'checkbox' : 'radio' }}" name="o-{{ dish.id }}-{{ group.id }}" value="{{ option.id }}" data-label="{{ option.label(app.request.locale) }}" data-price="{{ (option.price * vat)|round }}"{{ option.default ? ' checked' }}>
+                    {{ option.label(app.request.locale) }}{% if option.price > 0 %} <small>+ {{ (option.price * vat)|round|format_currency(dish.currency, {use_rate: false}) }}</small>{% endif %}</label>
+                {% endfor %}
+            </fieldset>
+            {% endfor %}
+        </details>
+        {% endif %}
         <p class="restaurant-dish-meta">
             {% for diet in dish.dietCases %}<span class="restaurant-pill is-diet">{{ ('@restaurant.' ~ diet.trans)|trans }}</span>{% endfor %}
             {% if dish.spice > 0 %}<span class="restaurant-spice" title="{{ '@restaurant.menu.spice'|trans }}">{% for i in 1..dish.spice %}<i aria-hidden="true">🌶</i>{% endfor %}<span class="visually-hidden">{{ '@restaurant.menu.spice'|trans }} {{ dish.spice }}/3</span></span>{% endif %}

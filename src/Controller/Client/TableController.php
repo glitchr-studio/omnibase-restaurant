@@ -40,6 +40,7 @@ class TableController extends AbstractController
         #[Autowire('%restaurant.table.ordering%')] private readonly bool $ordering = true,
         #[Autowire('%restaurant.table.pay_online%')] private readonly bool $payOnline = false,
         #[Autowire('%restaurant.pass.poll%')] private readonly int $poll = 6,
+        private readonly ?\Base\Restaurant\Service\TablePayments $payments = null,
     ) {
     }
 
@@ -58,6 +59,7 @@ class TableController extends AbstractController
             'sections' => $this->dishes->bySection(),
             'ordering' => $this->ordering,
             'pay_online' => $this->payOnline,
+            'pay_form' => $this->payOnline && true === $this->payments?->isEnabled(),
             'poll' => $this->poll,
         ]);
     }
@@ -75,9 +77,9 @@ class TableController extends AbstractController
     {
         $table = $this->limited($request, $token);
         try {
-            $ticket = $this->orders->send($this->orders->session($table), $round);
+            $ticket = $this->orders->send($this->orders->session($table), $round, $request->getLocale());
         } catch (RestaurantException $e) {
-            return $this->json(['error' => $this->translator->trans($e->getMessage(), [], 'restaurant')], 422);
+            return $this->json(['error' => $this->say($e)], 422);
         }
         $session = $ticket->getSession();
 
@@ -100,6 +102,14 @@ class TableController extends AbstractController
         $this->orders->requestBill($session);
 
         return $this->json($this->orders->state($session));
+    }
+
+    /** A refusal in the guest's words: a key of the "restaurant" translations, or one of another domain ("@marketplace.options.error.minimum"). */
+    private function say(RestaurantException $e): string
+    {
+        return str_starts_with($e->getMessage(), '@')
+            ? $this->translator->trans($e->getMessage(), $e->parameters)
+            : $this->translator->trans($e->getMessage(), $e->parameters, 'restaurant');
     }
 
     private function table(string $token): Table

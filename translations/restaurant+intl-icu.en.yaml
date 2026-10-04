@@ -89,6 +89,11 @@ table:
     bill_asked: "The bill is on its way to your table."
     pay_till: "You pay at the till."
     pay_online: "You can pay from your phone."
+    options: Cooking, extras
+    option_required: to choose
+    pay: Pay from my phone
+    pay_email: "Your e-mail address, for the receipt"
+    paid: "Paid, thank you!"
     shape:
         round: Round
         square: Square
@@ -101,6 +106,7 @@ table:
         unavailable: "One of the dishes is no longer available: remove it and send again."
         quantity: "That quantity is not possible."
         generic: "The order did not go through. Try again, or call the waiter."
+        pay_till: "This bill is settled at the till."
 
 ticket:
     status:
@@ -246,6 +252,19 @@ mail:
             subject: "Cancelled: {covers} guests on {date} at {time} ({name})"
 
 admin:
+    takehome:
+        native: Japanese name
+        chilled: Chilled
+        temperature: "Kept at (°C max.)"
+        shelf_life: "Use-by (days after it is made)"
+        weight: Net weight (g)
+        portions: Portions
+        cooking_time: Cooking (min)
+        cooking: "Cooking steps (one a line)"
+        parcel: Travels in a chilled parcel
+        position: Order
+        allergens: Allergens
+        illustration: Illustration
     position: Order
     room:
         name: Room name
@@ -360,3 +379,82 @@ admin:
             kitchen: Kitchen
             plant: Plant
             label: Label
+
+takehome:
+    title: Take home
+    lead: "Our fresh dishes, made here, to cook at home. Collected at the restaurant, delivered nearby, or sent in a chilled parcel."
+    empty: "The take-home dishes are coming soon."
+    how: How to get it
+    mode:
+        pickup: Collect at the restaurant
+        delivery: Delivery nearby
+        shipping: Chilled parcel
+    mode_help:
+        pickup: "On a slot, at the counter."
+        delivery: "By ourselves, in the neighbouring towns."
+        shipping: "Under controlled temperature, handed to the carrier Monday to Wednesday, delivered the next day."
+    day: For which day
+    days_pickup: Collection or delivery
+    days_parcel: Chilled parcel
+    parcel_day: "leaves {day}, delivered the next day"
+    slot: Slot
+    address_help: "For a delivery or a parcel:"
+    address: Address
+    postcode: Postcode
+    city: Town
+    name: Your name
+    phone: Phone
+    email: E-mail address
+    note: A word for the kitchen
+    no_account: "No account to open: the order's tracking link goes to this address."
+    submit: Order and pay
+    at_counter: "These dishes are ordered at the counter, or by phone."
+    ways: Collection, delivery, parcel
+    portions: "{count, plural, one {# portion} other {# portions}}"
+    keeps: "{days, plural, one {keeps # day} other {keeps # days}} at {temperature} °C at most"
+    cooking_time: "{minutes} min to cook"
+    no_parcel: Does not travel by parcel
+    travels: Travels in a chilled parcel
+    quantity: "How many {dish}"
+    cooking: At home
+    order_it: Order
+    fact:
+        price: Price
+        portions: Serves
+        keeping: Keeping
+        cooking: Cooking
+        parcel: Parcel
+        allergens: Allergens
+    error:
+        empty: "Your order is empty: give a quantity."
+        mode: "This way is not offered."
+        out_of_zone: "We do not deliver to {postcode}: choose collection or the chilled parcel."
+        delivery_minimum: "We deliver orders from {minimum} €."
+        parcel_dish: "{dish} does not travel by parcel: choose collection or delivery."
+        parcel_day: "Chilled parcels leave Monday to Wednesday: one that left later would spend the weekend in a depot."
+        parcel_shelf_life: "One of these dishes does not keep long enough to travel."
+        too_soon: "This day is too close: the kitchen makes each order."
+        no_day: "This day is not possible."
+        unavailable: "One of the dishes is no longer available."
+        quantity: "We do not have that many {dish}."
+        slot: "Choose a slot still free that day."
+        address: "The address, the postcode or the town is missing."
+
+tracking:
+    title: Your order
+    status:
+        checkout: Waiting for payment
+        received: Received
+        accepted: Accepted
+        preparing: Being prepared
+        ready: Ready
+        out_for_delivery: On its way
+        done: Handed over
+        cancelled: Cancelled
+        refused: Refused
+        refunded: Refunded
+    unpaid: "The payment is not confirmed yet: the page updates."
+    parcel: "Parcel no. {number}"
+    total: Total
+    use_by: "Use by {date}, kept chilled."
+    keep_link: "Keep this address: it follows your order, without an account."

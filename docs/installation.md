@@ -18,7 +18,7 @@ Omnifood\Bridge\Symfony\OmnifoodBundle::class => ['all' => true],   // with glit
 
 ```yaml
 # config/routes.yaml
-restaurant_controller:                 # /carte, /reserver, /reservation/{token}, /t/{token}, /service, the platforms' webhook
+restaurant_controller:                 # /carte, /reserver, /reservation/{token}, /t/{token}, /service, /traiteur, /suivi/{token}, the platforms' webhook
     resource: "@RestaurantBundle/src/Controller/Client"
     type: attribute
 restaurant_admin_controller:           # /admin/restaurant/salle, /admin/restaurant/affiches
@@ -54,10 +54,13 @@ restaurant:
         cancel_until: 120            # minutes before: the guest may still change or cancel online
     table:
         ordering: true               # false: the QR code shows the menu only
-        pay_online: false            # see the roadmap
+        pay_online: false            # "pay from my phone": needs omnibase/marketplace's quick order
         rate_limit: 20               # requests a minute per table and address
         max_lines: 40
         max_quantity: 20
+    takehome: { enabled: true, pickup: true, notice_days: 1, max_quantity: 20 }   # the take-home shop: see take-home.md
+    delivery: { zip_codes: [], minimum: 0, fee_product: ~ }
+    parcel: { enabled: true, shipping_method: ~, fee_product: ~, ship_days: [1, 2, 3], transit_days: 1, margin_days: 2, cutoff: '12:00' }
     pass:
         poll: 6                      # seconds between two looks at the state
         accept_warning: 180          # seconds before a platform's deadline the ticket turns red

@@ -3,11 +3,11 @@
 {% set left = ticket.secondsToAccept %}
 <article class="restaurant-pass-ticket is-{{ ticket.status.value }}{{ ticket.fromPlatform ? ' is-platform is-' ~ ticket.platform }}{{ left is not null and left < accept_warning ? ' is-late' }}" data-ticket="{{ ticket.id }}">
     <header>
-        <strong>{% if ticket.fromPlatform %}<span class="restaurant-platform">{{ ticket.platform }}</span> #{{ ticket.displayId ?? ticket.externalRef }}{% elseif ticket.table %}{{ '@restaurant.pass.table'|trans({table: ticket.table.label}) }} · {{ ticket.round }}{% else %}#{{ ticket.id }}{% endif %}</strong>
+        <strong>{% if ticket.fromPlatform %}<span class="restaurant-platform">{{ ticket.platform }}</span> #{{ ticket.displayId ?? ticket.externalRef }}{% elseif ticket.table %}{{ '@restaurant.pass.table'|trans({table: ticket.table.label}) }} · {{ ticket.round }}{% elseif ticket.channel.value == 'takeaway' %}<span class="restaurant-platform">{{ ticket.platform ? ('@restaurant.takehome.mode.' ~ ticket.platform)|trans : '@restaurant.ticket.channel.takeaway'|trans }}</span> #{{ ticket.displayId ?? ticket.id }}{% else %}#{{ ticket.id }}{% endif %}</strong>
         <time datetime="{{ ticket.createdAt|date('c') }}" data-since="{{ ticket.createdAt|date('U') }}">{{ ticket.createdAt|date('H:i') }}</time>
     </header>
     {% if left is not null %}<p class="restaurant-countdown" data-deadline="{{ ticket.acceptBy|date('U') }}">{{ '@restaurant.pass.accept_within'|trans({minutes: (left / 60)|round(0, 'ceil')}) }}</p>{% endif %}
-    {% if ticket.customerName %}<p class="restaurant-muted">{{ ticket.customerName }}{% if ticket.pickupAt %} · {{ '@restaurant.pass.pickup'|trans }} {{ ticket.pickupAt|date('H:i') }}{% endif %}</p>{% endif %}
+    {% if ticket.customerName %}<p class="restaurant-muted">{{ ticket.customerName }}{% if ticket.pickupAt %} · {{ '@restaurant.pass.pickup'|trans }} {{ ticket.pickupAt|date(ticket.channel.value == 'takeaway' ? 'd/m H:i' : 'H:i') }}{% endif %}</p>{% endif %}
     <ul>
         {% for line in lines %}
         <li class="is-{{ line.station.value }}"><b>{{ line.quantity }}</b> {{ line.name }}

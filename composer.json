@@ -23,7 +23,7 @@
         "symfony/validator": "^7.0|^8.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^11.0|^12.0"
+        "phpunit/phpunit": "^12.5"
     },
     "suggest": {
         "glitchr/omnifood": "The delivery and booking platforms (omnifood/ubereats, omnifood/deliveroo, omnifood/justeat, omnifood/thefork): their orders become tickets on the pass, their reservations join the book, the menu and the out-of-stock dishes are pushed to them."

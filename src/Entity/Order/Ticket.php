@@ -196,6 +196,25 @@ class Ticket
         return $this->moveTo($this->status->forward() ?? throw new TransitionException(sprintf('A ticket %s goes no further.', $this->status->value)));
     }
 
+    /**
+     * Closed with its table's bill, wherever it stood (Session::closeTickets()):
+     * served, its times filled in for the steps it skipped. Not a step of
+     * the pass: moveTo() would refuse it.
+     */
+    public function close(TicketStatus $status, ?\DateTimeImmutable $at = null): self
+    {
+        $at = Instant::from($at) ?? Instant::now();
+        if (TicketStatus::SERVED === $status) {
+            $this->acceptedAt ??= $at;
+            $this->readyAt ??= $at;
+            $this->servedAt = $at;
+        }
+        $this->status = $status;
+        $this->touch();
+
+        return $this;
+    }
+
     /** As the platform says it now is, without asking whether the pass would have gone that way. */
     public function force(TicketStatus $status): self
     {

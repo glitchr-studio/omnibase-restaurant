@@ -89,6 +89,11 @@ table:
     bill_asked: "Die Rechnung kommt gleich an Ihren Tisch."
     pay_till: "Bezahlt wird an der Kasse."
     pay_online: "Sie können mit Ihrem Smartphone bezahlen."
+    options: Garstufe, Extras
+    option_required: bitte wählen
+    pay: Mit dem Handy bezahlen
+    pay_email: "Ihre E-Mail-Adresse, für den Beleg"
+    paid: "Bezahlt, vielen Dank!"
     shape:
         round: Rund
         square: Quadratisch
@@ -101,6 +106,7 @@ table:
         unavailable: "Eines der Gerichte ist nicht mehr verfügbar: Entfernen Sie es und senden Sie erneut."
         quantity: "Diese Menge ist nicht möglich."
         generic: "Die Bestellung ist nicht angekommen. Versuchen Sie es erneut oder rufen Sie die Bedienung."
+        pay_till: "Diese Rechnung wird an der Kasse beglichen."
 
 ticket:
     status:
@@ -246,6 +252,19 @@ mail:
             subject: "Storniert: {covers} Gäste am {date} um {time} ({name})"
 
 admin:
+    takehome:
+        native: Japanischer Name
+        chilled: Gekühlt
+        temperature: "Lagerung (°C max.)"
+        shelf_life: "Haltbarkeit (Tage nach Herstellung)"
+        weight: Nettogewicht (g)
+        portions: Portionen
+        cooking_time: Garzeit (Min.)
+        cooking: "Zubereitung (ein Schritt pro Zeile)"
+        parcel: Reist im Kühlpaket
+        position: Reihenfolge
+        allergens: Allergene
+        illustration: Illustration
     position: Reihenfolge
     room:
         name: Name des Raums
@@ -360,3 +379,82 @@ admin:
             kitchen: Küche
             plant: Pflanze
             label: Beschriftung
+
+takehome:
+    title: Zum Mitnehmen
+    lead: "Unsere frischen Gerichte, hier zubereitet, zu Hause fertig gegart. Abholung im Restaurant, Lieferung in der Nähe oder im Kühlpaket."
+    empty: "Die Gerichte zum Mitnehmen kommen bald."
+    how: So erhalten Sie sie
+    mode:
+        pickup: Abholung im Restaurant
+        delivery: Lieferung in der Nähe
+        shipping: Kühlpaket
+    mode_help:
+        pickup: "Zu einem Zeitfenster, an der Theke."
+        delivery: "Durch uns, in die Nachbargemeinden."
+        shipping: "Temperaturgeführt, Übergabe an den Versender von Montag bis Mittwoch, Zustellung am Folgetag."
+    day: Für welchen Tag
+    days_pickup: Abholung oder Lieferung
+    days_parcel: Kühlpaket
+    parcel_day: "Versand {day}, Zustellung am Folgetag"
+    slot: Zeitfenster
+    address_help: "Für eine Lieferung oder ein Paket:"
+    address: Adresse
+    postcode: Postleitzahl
+    city: Ort
+    name: Ihr Name
+    phone: Telefon
+    email: E-Mail-Adresse
+    note: Ein Wort an die Küche
+    no_account: "Kein Konto nötig: Der Link zur Bestellung kommt an diese Adresse."
+    submit: Bestellen und bezahlen
+    at_counter: "Diese Gerichte bestellen Sie an der Theke oder telefonisch."
+    ways: Abholung, Lieferung, Paket
+    portions: "{count, plural, one {# Portion} other {# Portionen}}"
+    keeps: "{days, plural, one {# Tag haltbar} other {# Tage haltbar}} bei höchstens {temperature} °C"
+    cooking_time: "{minutes} Min. Garzeit"
+    no_parcel: Nicht im Paket
+    travels: Reist im Kühlpaket
+    quantity: "Wie viele {dish}"
+    cooking: Zu Hause
+    order_it: Bestellen
+    fact:
+        price: Preis
+        portions: Für
+        keeping: Haltbarkeit
+        cooking: Garzeit
+        parcel: Paket
+        allergens: Allergene
+    error:
+        empty: "Ihre Bestellung ist leer: Bitte eine Menge angeben."
+        mode: "Diese Art der Übergabe wird nicht angeboten."
+        out_of_zone: "Nach {postcode} liefern wir nicht: Wählen Sie Abholung oder Kühlpaket."
+        delivery_minimum: "Wir liefern ab {minimum} € Bestellwert."
+        parcel_dish: "{dish} reist nicht im Paket: Wählen Sie Abholung oder Lieferung."
+        parcel_day: "Kühlpakete gehen von Montag bis Mittwoch auf die Reise: Später würden sie das Wochenende im Depot verbringen."
+        parcel_shelf_life: "Eines dieser Gerichte hält nicht lange genug für den Versand."
+        too_soon: "Dieser Tag ist zu nah: Die Küche bereitet jede Bestellung frisch zu."
+        no_day: "Dieser Tag ist nicht möglich."
+        unavailable: "Eines der Gerichte ist nicht mehr verfügbar."
+        quantity: "So viele {dish} haben wir nicht."
+        slot: "Wählen Sie ein Zeitfenster, das an diesem Tag noch frei ist."
+        address: "Adresse, Postleitzahl oder Ort fehlt."
+
+tracking:
+    title: Ihre Bestellung
+    status:
+        checkout: Zahlung ausstehend
+        received: Eingegangen
+        accepted: Angenommen
+        preparing: In Zubereitung
+        ready: Bereit
+        out_for_delivery: Unterwegs
+        done: Übergeben
+        cancelled: Storniert
+        refused: Abgelehnt
+        refunded: Erstattet
+    unpaid: "Die Zahlung ist noch nicht bestätigt: Die Seite aktualisiert sich."
+    parcel: "Paket Nr. {number}"
+    total: Gesamt
+    use_by: "Zu verbrauchen bis {date}, gekühlt gelagert."
+    keep_link: "Bewahren Sie diese Adresse auf: Sie verfolgt Ihre Bestellung, ohne Konto."

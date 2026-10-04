@@ -14,12 +14,13 @@
          data-restaurant-table-round-url-value="{{ path('restaurant_table_round', {token: table.token}) }}"
          data-restaurant-table-call-url-value="{{ path('restaurant_table_call', {token: table.token}) }}"
          data-restaurant-table-bill-url-value="{{ path('restaurant_table_bill', {token: table.token}) }}"
+         {% if pay_form|default(false) %}data-restaurant-table-pay-url-value="{{ path('restaurant_table_pay', {token: table.token}) }}"{% endif %}
          data-restaurant-table-state-url-value="{{ path('restaurant_table_state', {token: table.token}) }}"
          data-restaurant-table-key-value="restaurant/table/{{ table.token }}/{{ session.id ?? 0 }}"
          data-restaurant-table-currency-value="{{ state.currency ?? 'EUR' }}"
          data-restaurant-table-locale-value="{{ app.request.locale }}"
          data-restaurant-table-statuses-value="{{ {new: '@restaurant.ticket.status.new'|trans, accepted: '@restaurant.ticket.status.accepted'|trans, preparing: '@restaurant.ticket.status.preparing'|trans, ready: '@restaurant.ticket.status.ready'|trans, served: '@restaurant.ticket.status.served'|trans, refused: '@restaurant.ticket.status.refused'|trans, cancelled: '@restaurant.ticket.status.cancelled'|trans}|json_encode }}"
-         data-restaurant-table-texts-value="{{ {round: '@restaurant.table.round'|trans, sent: '@restaurant.table.sent'|trans, called: '@restaurant.table.called'|trans, bill: '@restaurant.table.bill_asked'|trans, error: '@restaurant.table.error.generic'|trans, empty: '@restaurant.table.nothing_yet'|trans}|json_encode }}"
+         data-restaurant-table-texts-value="{{ {round: '@restaurant.table.round'|trans, sent: '@restaurant.table.sent'|trans, called: '@restaurant.table.called'|trans, bill: '@restaurant.table.bill_asked'|trans, error: '@restaurant.table.error.generic'|trans, empty: '@restaurant.table.nothing_yet'|trans, choose: '@restaurant.table.option_required'|trans, paid: '@restaurant.table.paid'|trans}|json_encode }}"
          data-poll-url-value="{{ path('restaurant_table_state', {token: table.token}) }}"
          data-poll-key-value="revision" data-poll-since-value="0" data-poll-interval-value="{{ poll * 1000 }}"
          data-action="poll:change->restaurant-table#show">
@@ -52,7 +53,7 @@
         <div data-restaurant-table-target="rounds" class="restaurant-rounds">
             {% for ticket in state.tickets|default([]) %}
             <div class="restaurant-round is-{{ ticket.status }}"><p><strong>{{ '@restaurant.table.round'|trans }} {{ ticket.round }}</strong> <span class="restaurant-pill">{{ ('@restaurant.ticket.status.' ~ ticket.status)|trans }}</span></p>
-                <ul>{% for line in ticket.lines %}<li>{{ line.quantity }} × {{ line.name }}</li>{% endfor %}</ul></div>
+                <ul>{% for line in ticket.lines %}<li>{{ line.quantity }} × {{ line.name }}{% if line.options %} ({{ line.options|join(', ') }}){% endif %}</li>{% endfor %}</ul></div>
             {% else %}
             <p class="restaurant-muted">{{ '@restaurant.table.nothing_yet'|trans }}</p>
             {% endfor %}
@@ -63,7 +64,16 @@
             <button type="button" class="restaurant-button is-quiet" data-action="restaurant-table#call" data-restaurant-table-target="callButton">{{ '@restaurant.table.call'|trans }}</button>
             <button type="button" class="restaurant-button is-quiet" data-action="restaurant-table#bill" data-restaurant-table-target="billButton" {{ session and session.status.value != 'open' ? 'disabled' }}>{{ '@restaurant.table.bill'|trans }}</button>
         </div>
-        <p class="restaurant-muted">{{ pay_online ? '@restaurant.table.pay_online'|trans : '@restaurant.table.pay_till'|trans }}</p>
+        {% if pay_form|default(false) %}
+        {# "Payer depuis mon téléphone" (restaurant.table.pay_online): the receipt's address, then the shop's payment. #}
+        <form class="restaurant-pay" data-restaurant-table-target="pay" data-action="submit->restaurant-table#pay" {{ (state.total ?? 0) > 0 ? '' : 'hidden' }}>
+            <p class="restaurant-muted">{{ '@restaurant.table.pay_online'|trans }}</p>
+            <label>{{ '@restaurant.table.pay_email'|trans }} <input type="email" required maxlength="180" autocomplete="email" data-restaurant-table-target="payEmail"></label>
+            <button type="submit" class="restaurant-button" data-restaurant-table-target="payButton">{{ '@restaurant.table.pay'|trans }}</button>
+        </form>
+        {% else %}
+        <p class="restaurant-muted">{{ '@restaurant.table.pay_till'|trans }}</p>
+        {% endif %}
         {% endif %}
     </div>
 
