@@ -32,7 +32,7 @@ class TicketRepository extends ServiceEntityRepository
             ->where('t.status IN (:open) OR (t.status = :served AND t.servedAt >= :since)')
             ->setParameter('open', [TicketStatus::NEW, TicketStatus::ACCEPTED, TicketStatus::PREPARING, TicketStatus::READY])
             ->setParameter('served', TicketStatus::SERVED)
-            ->setParameter('since', \Base\Restaurant\Model\Instant::now()->modify(sprintf('-%d minutes', $servedFor)))
+            ->setParameter('since', \Base\Database\Type\Utc::now()->modify(sprintf('-%d minutes', $servedFor)))
             ->orderBy('t.createdAt', 'ASC')->addOrderBy('t.id', 'ASC')
             ->getQuery()->getResult();
     }

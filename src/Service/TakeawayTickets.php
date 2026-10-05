@@ -2,6 +2,7 @@
 
 namespace Base\Restaurant\Service;
 
+use Base\Database\Type\Utc;
 use Base\Marketplace\Entity\Order;
 use Base\Marketplace\Entity\Order\Pickup;
 use Base\Marketplace\Enum\PickupMode;
@@ -15,7 +16,6 @@ use Base\Restaurant\Enum\Station;
 use Base\Restaurant\Enum\TicketChannel;
 use Base\Restaurant\Enum\TicketStatus;
 use Base\Restaurant\Event\TicketMovedEvent;
-use Base\Restaurant\Model\Instant;
 use Base\Restaurant\Repository\TicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -123,6 +123,6 @@ class TakeawayTickets
             return null;
         }
 
-        return Instant::from(new \DateTimeImmutable($pickup->getDay()->format('Y-m-d').' '.$m[1], $this->pickups->now()->getTimezone()));
+        return Utc::from(new \DateTimeImmutable($pickup->getDay()->format('Y-m-d').' '.$m[1], $this->pickups->now()->getTimezone()));
     }
 }

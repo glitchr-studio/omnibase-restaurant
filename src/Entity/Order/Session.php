@@ -2,7 +2,8 @@
 
 namespace Base\Restaurant\Entity\Order;
 
-use Base\Restaurant\Model\Instant;
+use Base\Database\Type\Utc;
+use Base\Database\Type\UtcDateTimeImmutableType;
 use Base\Restaurant\Entity\Reservation;
 use Base\Restaurant\Entity\Table;
 use Base\Restaurant\Enum\SessionStatus;
@@ -48,16 +49,16 @@ class Session
     #[ORM\OrderBy(['id' => 'ASC'])]
     private Collection $tickets;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME)]
     private \DateTimeImmutable $openedAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME, nullable: true)]
     private ?\DateTimeImmutable $waiterCalledAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME, nullable: true)]
     private ?\DateTimeImmutable $billRequestedAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME, nullable: true)]
     private ?\DateTimeImmutable $settledAt = null;
 
     /** "cash", "card", "online"...: how the bill was paid */
@@ -68,7 +69,7 @@ class Session
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $settledAmount = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME)]
     private \DateTimeImmutable $updatedAt;
 
     public function __construct(Table $table, ?int $covers = null)
@@ -76,13 +77,13 @@ class Session
         $this->table = $table;
         $this->covers = $covers;
         $this->tickets = new ArrayCollection();
-        $this->openedAt = $this->updatedAt = Instant::now();
+        $this->openedAt = $this->updatedAt = Utc::now();
     }
 
     #[ORM\PreUpdate]
     public function touch(): void
     {
-        $this->updatedAt = Instant::now();
+        $this->updatedAt = Utc::now();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -155,17 +156,17 @@ class Session
         return false;
     }
 
-    public function getOpenedAt(): \DateTimeImmutable { return Instant::read($this->openedAt); }
-    public function getWaiterCalledAt(): ?\DateTimeImmutable { return Instant::read($this->waiterCalledAt); }
-    public function callWaiter(): self { $this->waiterCalledAt = Instant::now(); $this->touch(); return $this; }
+    public function getOpenedAt(): \DateTimeImmutable { return $this->openedAt; }
+    public function getWaiterCalledAt(): ?\DateTimeImmutable { return $this->waiterCalledAt; }
+    public function callWaiter(): self { $this->waiterCalledAt = Utc::now(); $this->touch(); return $this; }
     public function answerCall(): self { $this->waiterCalledAt = null; $this->touch(); return $this; }
-    public function getBillRequestedAt(): ?\DateTimeImmutable { return Instant::read($this->billRequestedAt); }
+    public function getBillRequestedAt(): ?\DateTimeImmutable { return $this->billRequestedAt; }
 
     public function requestBill(): self
     {
         if (SessionStatus::OPEN === $this->status) {
             $this->status = SessionStatus::BILL;
-            $this->billRequestedAt = Instant::now();
+            $this->billRequestedAt = Utc::now();
             $this->touch();
         }
 
@@ -182,7 +183,7 @@ class Session
      */
     public function closeTickets(?\DateTimeImmutable $at = null): array
     {
-        $at = Instant::from($at) ?? Instant::now();
+        $at = Utc::from($at) ?? Utc::now();
         $closed = [];
         foreach ($this->tickets as $ticket) {
             if ($ticket->getStatus()->isOpen()) {
@@ -199,7 +200,7 @@ class Session
         $amount ??= $this->getTotal();
         $this->closeTickets();
         $this->status = SessionStatus::SETTLED;
-        $this->settledAt = Instant::now();
+        $this->settledAt = Utc::now();
         $this->settledWith = $with;
         $this->settledAmount = $amount;
         $this->waiterCalledAt = null;
@@ -215,8 +216,8 @@ class Session
     public function getOrderReference(): ?string { return $this->orderReference; }
     public function setOrderReference(?string $reference): self { $this->orderReference = $reference ?: null; return $this; }
 
-    public function getSettledAt(): ?\DateTimeImmutable { return Instant::read($this->settledAt); }
+    public function getSettledAt(): ?\DateTimeImmutable { return $this->settledAt; }
     public function getSettledWith(): ?string { return $this->settledWith; }
     public function getSettledAmount(): ?int { return $this->settledAmount; }
-    public function getUpdatedAt(): \DateTimeImmutable { return Instant::read($this->updatedAt); }
+    public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
 }

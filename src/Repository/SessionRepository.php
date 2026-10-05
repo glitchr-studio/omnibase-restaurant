@@ -50,7 +50,7 @@ class SessionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->where('s.status = :settled AND s.settledAt >= :since')
-            ->setParameter('settled', SessionStatus::SETTLED)->setParameter('since', \Base\Restaurant\Model\Instant::from($since))
+            ->setParameter('settled', SessionStatus::SETTLED)->setParameter('since', \Base\Database\Type\Utc::from($since))
             ->orderBy('s.settledAt', 'DESC')->getQuery()->getResult();
     }
 }

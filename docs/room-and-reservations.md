@@ -70,9 +70,12 @@ Statuses: `requested → confirmed → seated → finished`, or `no_show`,
 dispatches `Event\ReservationChangedEvent`.
 
 **Times.** A reservation's `startsAt` is the restaurant's wall clock, stored
-and compared as written. Moments (a ticket's arrival, a deadline) are stored
-in UTC through `Model\Instant`: omnibase sets PHP's zone per visitor, and a
-plain `datetime_immutable` would be written in whatever zone the request is in.
+and compared as written (`datetime_immutable`). Moments (a ticket's arrival,
+a deadline, when a table was settled) are columns of glitchr/omnibase's type
+`utc_datetime_immutable`, written in UTC and read back as UTC: omnibase sets
+PHP's zone per visitor, and a plain `datetime_immutable` would be written in
+whatever zone the request is in. In a query, such a column is compared with
+`Base\Database\Type\Utc::from($moment)` or `Utc::now()`.
 
 ## Public pages
 

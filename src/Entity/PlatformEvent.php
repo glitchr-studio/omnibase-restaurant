@@ -2,7 +2,8 @@
 
 namespace Base\Restaurant\Entity;
 
-use Base\Restaurant\Model\Instant;
+use Base\Database\Type\Utc;
+use Base\Database\Type\UtcDateTimeImmutableType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,7 +20,7 @@ class PlatformEvent
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME)]
     private \DateTimeImmutable $receivedAt;
 
     public function __construct(
@@ -27,12 +28,12 @@ class PlatformEvent
         #[ORM\Column(length: 190)] private string $eventId,
         #[ORM\Column(length: 80)] private string $event = '',
     ) {
-        $this->receivedAt = Instant::now();
+        $this->receivedAt = Utc::now();
     }
 
     public function getId(): ?int { return $this->id; }
     public function getPlatform(): string { return $this->platform; }
     public function getEventId(): string { return $this->eventId; }
     public function getEvent(): string { return $this->event; }
-    public function getReceivedAt(): \DateTimeImmutable { return Instant::read($this->receivedAt); }
+    public function getReceivedAt(): \DateTimeImmutable { return $this->receivedAt; }
 }

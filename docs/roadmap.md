@@ -21,4 +21,3 @@ where it exists: the order without an account, the bill paid from a phone.
 | A hand-over charge as a charge, not a line | `QuickOrder::buy()` offers nothing between the order's making and its payment: the delivery and the parcel are sold as a product (`fee_product`). |
 | The chilled parcel booked by itself | The label is the staff's to book (`Shipping::book()`); booking it when the ticket is ready, with the basket's use-by date, waits for a Chronofresh contract to try it on. |
 | Options on take-home dishes | same limit of `buy()`. |
-| `Model\Instant` replaced by glitchr/omnibase's `utc_datetime_immutable` | the type is not published yet (it is in the core's checkout, ahead of its remote); the columns and `Instant` stay as they are until it is. |

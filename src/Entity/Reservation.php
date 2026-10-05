@@ -2,7 +2,8 @@
 
 namespace Base\Restaurant\Entity;
 
-use Base\Restaurant\Model\Instant;
+use Base\Database\Type\Utc;
+use Base\Database\Type\UtcDateTimeImmutableType;
 use Base\Restaurant\Enum\ReservationStatus;
 use Base\Restaurant\Repository\ReservationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -84,10 +85,10 @@ class Reservation
     #[ORM\Column(length: 8, nullable: true)]
     private ?string $locale = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME)]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME)]
     private \DateTimeImmutable $updatedAt;
 
     public function __construct(?\DateTimeImmutable $startsAt = null, int $covers = 2, string $name = '')
@@ -98,13 +99,13 @@ class Reservation
         $this->name = $name;
         $this->tables = new ArrayCollection();
         $this->token = rtrim(strtr(base64_encode(random_bytes(24)), '+/', '-_'), '=');
-        $this->createdAt = $this->updatedAt = Instant::now();
+        $this->createdAt = $this->updatedAt = Utc::now();
     }
 
     #[ORM\PreUpdate]
     public function touch(): void
     {
-        $this->updatedAt = Instant::now();
+        $this->updatedAt = Utc::now();
     }
 
     public function __toString(): string
@@ -209,6 +210,6 @@ class Reservation
     public function getToken(): string { return $this->token; }
     public function getLocale(): ?string { return $this->locale; }
     public function setLocale(?string $locale): self { $this->locale = $locale ? substr($locale, 0, 8) : null; return $this; }
-    public function getCreatedAt(): \DateTimeImmutable { return Instant::read($this->createdAt); }
-    public function getUpdatedAt(): \DateTimeImmutable { return Instant::read($this->updatedAt); }
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
 }

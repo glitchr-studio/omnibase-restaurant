@@ -2,7 +2,8 @@
 
 namespace Base\Restaurant\Entity\Order;
 
-use Base\Restaurant\Model\Instant;
+use Base\Database\Type\Utc;
+use Base\Database\Type\UtcDateTimeImmutableType;
 use Base\Restaurant\Entity\Table;
 use Base\Restaurant\Enum\Station;
 use Base\Restaurant\Enum\TicketChannel;
@@ -79,27 +80,27 @@ class Ticket
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $paid = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME)]
     private \DateTimeImmutable $createdAt;
 
     /** A platform's order not answered by then is refused by the platform */
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME, nullable: true)]
     private ?\DateTimeImmutable $acceptBy = null;
 
     /** When the courier or the customer comes for it */
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME, nullable: true)]
     private ?\DateTimeImmutable $pickupAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME, nullable: true)]
     private ?\DateTimeImmutable $acceptedAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME, nullable: true)]
     private ?\DateTimeImmutable $readyAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME, nullable: true)]
     private ?\DateTimeImmutable $servedAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: UtcDateTimeImmutableType::NAME)]
     private \DateTimeImmutable $updatedAt;
 
     public function __construct(TicketChannel $channel = TicketChannel::TABLE, ?string $platform = null)
@@ -107,13 +108,13 @@ class Ticket
         $this->channel = $channel;
         $this->platform = $platform;
         $this->lines = new ArrayCollection();
-        $this->createdAt = $this->updatedAt = Instant::now();
+        $this->createdAt = $this->updatedAt = Utc::now();
     }
 
     #[ORM\PreUpdate]
     public function touch(): void
     {
-        $this->updatedAt = Instant::now();
+        $this->updatedAt = Utc::now();
     }
 
     public function __toString(): string
@@ -174,7 +175,7 @@ class Ticket
         if (!$this->status->canBecome($to)) {
             throw new TransitionException(sprintf('A ticket %s cannot become %s.', $this->status->value, $to->value));
         }
-        $at = Instant::from($at) ?? Instant::now();
+        $at = Utc::from($at) ?? Utc::now();
         match ($to) {
             TicketStatus::ACCEPTED => $this->acceptedAt = $at,
             TicketStatus::READY => $this->readyAt = $at,
@@ -203,7 +204,7 @@ class Ticket
      */
     public function close(TicketStatus $status, ?\DateTimeImmutable $at = null): self
     {
-        $at = Instant::from($at) ?? Instant::now();
+        $at = Utc::from($at) ?? Utc::now();
         if (TicketStatus::SERVED === $status) {
             $this->acceptedAt ??= $at;
             $this->readyAt ??= $at;
@@ -267,16 +268,16 @@ class Ticket
 
     public function getPaid(): ?int { return $this->paid; }
     public function setPaid(?int $paid): self { $this->paid = $paid; return $this; }
-    public function getCreatedAt(): \DateTimeImmutable { return Instant::read($this->createdAt); }
-    public function setCreatedAt(\DateTimeInterface $at): self { $this->createdAt = Instant::from($at); return $this; }
-    public function getAcceptBy(): ?\DateTimeImmutable { return Instant::read($this->acceptBy); }
-    public function setAcceptBy(?\DateTimeInterface $at): self { $this->acceptBy = Instant::from($at); return $this; }
-    public function getPickupAt(): ?\DateTimeImmutable { return Instant::read($this->pickupAt); }
-    public function setPickupAt(?\DateTimeInterface $at): self { $this->pickupAt = Instant::from($at); return $this; }
-    public function getAcceptedAt(): ?\DateTimeImmutable { return Instant::read($this->acceptedAt); }
-    public function getReadyAt(): ?\DateTimeImmutable { return Instant::read($this->readyAt); }
-    public function getServedAt(): ?\DateTimeImmutable { return Instant::read($this->servedAt); }
-    public function getUpdatedAt(): \DateTimeImmutable { return Instant::read($this->updatedAt); }
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+    public function setCreatedAt(\DateTimeInterface $at): self { $this->createdAt = Utc::from($at); return $this; }
+    public function getAcceptBy(): ?\DateTimeImmutable { return $this->acceptBy; }
+    public function setAcceptBy(?\DateTimeInterface $at): self { $this->acceptBy = Utc::from($at); return $this; }
+    public function getPickupAt(): ?\DateTimeImmutable { return $this->pickupAt; }
+    public function setPickupAt(?\DateTimeInterface $at): self { $this->pickupAt = Utc::from($at); return $this; }
+    public function getAcceptedAt(): ?\DateTimeImmutable { return $this->acceptedAt; }
+    public function getReadyAt(): ?\DateTimeImmutable { return $this->readyAt; }
+    public function getServedAt(): ?\DateTimeImmutable { return $this->servedAt; }
+    public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
 
     /** Seconds left to accept a platform's order; null when nothing is awaited. */
     public function secondsToAccept(?\DateTimeImmutable $now = null): ?int
@@ -285,6 +286,6 @@ class Ticket
             return null;
         }
 
-        return Instant::read($this->acceptBy)->getTimestamp() - ($now ?? Instant::now())->getTimestamp();
+        return $this->acceptBy->getTimestamp() - ($now ?? Utc::now())->getTimestamp();
     }
 }

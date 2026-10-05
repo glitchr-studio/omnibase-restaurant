@@ -2,6 +2,8 @@
 
 namespace Base\Restaurant\Tests;
 
+use Base\Database\Type\Utc;
+use Base\Database\Type\UtcDateTimeImmutableType;
 use Base\Restaurant\Entity\Layout;
 use Base\Restaurant\Entity\MealService;
 use Base\Restaurant\Entity\Order\Session;
@@ -15,7 +17,8 @@ use Base\Restaurant\Enum\TicketChannel;
 use Base\Restaurant\Enum\TicketStatus;
 use Base\Restaurant\Exception\TransitionException;
 use Base\Restaurant\Model\Booking;
-use Base\Restaurant\Model\Instant;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\ORM\Mapping\Column;
 use PHPUnit\Framework\TestCase;
 
 class EntitiesTest extends TestCase
@@ -72,7 +75,7 @@ class EntitiesTest extends TestCase
 
     public function testAPlatformsOrderIsLateWhenItsDeadlineNears(): void
     {
-        $ticket = (new Ticket(TicketChannel::PLATFORM, 'ubereats'))->setAcceptBy(Instant::now()->modify('+100 seconds'));
+        $ticket = (new Ticket(TicketChannel::PLATFORM, 'ubereats'))->setAcceptBy(Utc::now()->modify('+100 seconds'));
 
         self::assertEqualsWithDelta(100, $ticket->secondsToAccept(), 2);
         $ticket->moveTo(TicketStatus::ACCEPTED);
@@ -85,11 +88,22 @@ class EntitiesTest extends TestCase
         date_default_timezone_set('Asia/Tokyo');
         try {
             $ticket = new Ticket(TicketChannel::TABLE);
-            $stored = (new \ReflectionProperty(Ticket::class, 'createdAt'))->getValue($ticket);
-            self::assertSame('UTC', $stored->getTimezone()->getName());
-            // What Doctrine gives back: the stored wall clock, labelled with PHP's zone.
-            $hydrated = new \DateTimeImmutable($stored->format('Y-m-d H:i:s'));
-            self::assertSame($stored->getTimestamp(), Instant::read($hydrated)->getTimestamp());
+            self::assertSame('UTC', $ticket->getCreatedAt()->getTimezone()->getName());
+
+            // The column is glitchr/omnibase's utc_datetime_immutable: written in UTC, read back as UTC, whatever PHP's zone.
+            $column = (new \ReflectionProperty(Ticket::class, 'createdAt'))->getAttributes(Column::class)[0]->newInstance();
+            self::assertSame(UtcDateTimeImmutableType::NAME, $column->type);
+            $type = new UtcDateTimeImmutableType();
+            $platform = new MySQLPlatform();
+            $stored = $type->convertToDatabaseValue($ticket->getCreatedAt()->setTimezone(new \DateTimeZone('Asia/Tokyo')), $platform);
+            self::assertSame($ticket->getCreatedAt()->format('Y-m-d H:i:s'), $stored);
+            $hydrated = $type->convertToPHPValue($stored, $platform);
+            self::assertSame('UTC', $hydrated->getTimezone()->getName());
+            self::assertSame($ticket->getCreatedAt()->getTimestamp(), $hydrated->getTimestamp());
+
+            // A deadline given in another zone is the same moment.
+            $ticket->setAcceptBy(new \DateTimeImmutable('2026-10-05 21:00:00', new \DateTimeZone('Europe/Paris')));
+            self::assertSame('2026-10-05 19:00:00', $ticket->getAcceptBy()->format('Y-m-d H:i:s'));
         } finally {
             date_default_timezone_set($zone);
         }
