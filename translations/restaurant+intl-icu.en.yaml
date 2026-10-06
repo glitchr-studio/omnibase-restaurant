@@ -458,3 +458,18 @@ tracking:
     total: Total
     use_by: "Use by {date}, kept chilled."
     keep_link: "Keep this address: it follows your order, without an account."
+
+# The demonstration accounts (Base\Restaurant\Demo\RestaurantDemoAccounts): the button, and what the role sees.
+demo:
+    gerant:
+        label: Manager
+        description: "The restaurant's administration: the floor plan, the services, the reservation book, the menu, the take-home shop."
+    salle:
+        label: Floor
+        description: "The pass: the room live, the day's reservations, tables to seat and to settle."
+    cuisine:
+        label: Kitchen
+        description: "The pass one station at a time (hot, cold, bar): the tickets to prepare, a dish run out."
+    client:
+        label: Customer
+        description: "The take-home shop: an order paid with the trial payment, then followed."

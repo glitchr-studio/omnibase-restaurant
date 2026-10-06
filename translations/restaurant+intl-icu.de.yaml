@@ -458,3 +458,18 @@ tracking:
     total: Gesamt
     use_by: "Zu verbrauchen bis {date}, gekühlt gelagert."
     keep_link: "Bewahren Sie diese Adresse auf: Sie verfolgt Ihre Bestellung, ohne Konto."
+
+# The demonstration accounts (Base\Restaurant\Demo\RestaurantDemoAccounts): the button, and what the role sees.
+demo:
+    gerant:
+        label: Geschäftsführung
+        description: "Die Verwaltung des Restaurants: der Saalplan, die Services, das Reservierungsbuch, die Karte, der Shop zum Mitnehmen."
+    salle:
+        label: Service
+        description: "Der Pass: der Saal in Echtzeit, die Reservierungen des Tages, Tische zum Platzieren und Abrechnen."
+    cuisine:
+        label: Küche
+        description: "Der Pass Posten für Posten (warm, kalt, Bar): die Bons zum Zubereiten, ein ausverkauftes Gericht."
+    client:
+        label: Gast
+        description: "Der Shop zum Mitnehmen: eine Bestellung, mit der Testzahlung bezahlt und dann verfolgt."

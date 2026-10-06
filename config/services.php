@@ -9,7 +9,9 @@ use Symfony\Component\RateLimiter\Storage\CacheStorage;
  * Autowiring over src/. Entities, enums, models, events and exceptions are
  * not services. The back office's screens and widgets need omnibase/admin;
  * the platforms' bridge (src/Omnifood) is loaded only when glitchr/omnifood
- * is installed - and its keys' section only with omnibase/admin too.
+ * is installed - and its keys' section only with omnibase/admin too. The
+ * demonstration accounts (src/Demo) need a glitchr/omnibase with the demo
+ * environment.
  */
 return function (ContainerConfigurator $configurator) {
     $src = \dirname(__DIR__).'/src';
@@ -31,6 +33,7 @@ return function (ContainerConfigurator $configurator) {
             $src.'/Controller/',
             $src.'/Admin/',
             $src.'/Omnifood/',
+            $src.'/Demo/',
             $src.'/RestaurantBundle.php',
             // An order without an account, a bill paid from a phone: on omnibase/marketplace's quick order.
             ...($quickOrder ? [] : [$src.'/Service/TakeHomeOrders.php', $src.'/Service/TablePayments.php', $src.'/EventListener/QuickOrderListener.php']),
@@ -54,6 +57,11 @@ return function (ContainerConfigurator $configurator) {
         $services->load('Base\\Restaurant\\Controller\\Admin\\', $src.'/Controller/Admin/')
             ->tag('controller.service_arguments');
         $services->load('Base\\Restaurant\\Admin\\', $src.'/Admin/');
+    }
+
+    // The demonstration accounts of a restaurant, when the installed glitchr/omnibase has the demo environment.
+    if (interface_exists('Base\\Demo\\DemoAccountProviderInterface')) {
+        $services->load('Base\\Restaurant\\Demo\\', $src.'/Demo/');
     }
 
     if (class_exists('Omnifood\\Registry')) {

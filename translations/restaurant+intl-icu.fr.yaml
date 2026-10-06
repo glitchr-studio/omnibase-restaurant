@@ -458,3 +458,18 @@ tracking:
     total: Total
     use_by: "À consommer jusqu'au {date}, conservé au frais."
     keep_link: "Gardez cette adresse : elle suit votre commande, sans compte."
+
+# The demonstration accounts (Base\Restaurant\Demo\RestaurantDemoAccounts): the button, and what the role sees.
+demo:
+    gerant:
+        label: Gérant
+        description: "L'administration du restaurant : le plan de salle, les services, le carnet de réservations, la carte, la boutique à emporter."
+    salle:
+        label: Salle
+        description: "Le passe : la salle en direct, les réservations du jour, les tables à installer et à encaisser."
+    cuisine:
+        label: Cuisine
+        description: "Le passe poste par poste (chaud, froid, bar) : les tickets à préparer, un plat épuisé."
+    client:
+        label: Client
+        description: "La boutique à emporter : une commande payée par le paiement d'essai, puis suivie."

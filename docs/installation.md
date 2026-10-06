@@ -71,6 +71,37 @@ When the restaurant is open - and closed - is glitchr/omnibase's
 place is open then. omnibase stores no `ROLE_STAFF` on an account: give it
 through a `Base\Entity\User\Group` (roles `['ROLE_STAFF']`).
 
+## Demonstration accounts
+
+In glitchr/omnibase's `demo` environment (its `docs/20-architecture/demo.md`)
+the sign-in page offers one button for each of a restaurant's people.
+`Base\Restaurant\Demo\RestaurantDemoAccounts` declares them:
+
+| Identifier | Role | |
+|---|---|---|
+| `gerant` | `restaurant.manager_role` (`ROLE_ADMIN`) | the back office: the floor plan, the services, the book, the menu, the take-home shop |
+| `salle` | group "Salle" (`restaurant.staff_role`) | the pass: the room live, the day's reservations, tables to seat and to settle |
+| `cuisine` | group "Cuisine" (`restaurant.staff_role`) | the same pass, one station at a time (`/service?poste=hot`): the tickets to prepare |
+| `client` | none | the take-home shop: an order paid with the trial payment, followed, kept under its account |
+
+The password is the identifier. The fixtures take the accounts from omnibase's
+factory and attach what makes them worth signing in as - the store and its
+dishes to the manager, a day's reservations for the pass:
+
+```php
+public function __construct(private readonly \Base\Demo\DemoAccountFactory $accounts) {}
+
+$gerant = $this->accounts->account('gerant', $manager);   // created with its role, or the database's
+$this->accounts->account('salle', $manager);              // in the group "Salle", created with restaurant.staff_role
+```
+
+A restaurant without one of them leaves it out (`base.demo.exclude:
+[cuisine]`); a site that renames one declares the same identifier in its own
+provider. The labels are `demo.<identifier>.label` and `.description` in the
+`restaurant` domain (fr, en, de, ja). In `demo` omnibase/marketplace offers
+its `dev` gateway alone: a take-home order and a table's bill are paid by
+nobody.
+
 ## Front end
 
 The public pages use Stimulus controllers the site registers, with

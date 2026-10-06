@@ -458,3 +458,18 @@ tracking:
     total: 合計
     use_by: "{date} までに、冷蔵保存でお召し上がりください。"
     keep_link: "このページのアドレスを保存してください。会員登録なしでご注文を確認できます。"
+
+# The demonstration accounts (Base\Restaurant\Demo\RestaurantDemoAccounts): the button, and what the role sees.
+demo:
+    gerant:
+        label: 店長
+        description: "店舗の管理：フロア図、営業時間帯、予約台帳、メニュー、お持ち帰りショップ。"
+    salle:
+        label: ホール
+        description: "パス：リアルタイムのフロア、本日のご予約、ご案内とお会計。"
+    cuisine:
+        label: キッチン
+        description: "持ち場ごとのパス（温菜・冷菜・バー）：調理する伝票、品切れの登録。"
+    client:
+        label: お客様
+        description: "お持ち帰りショップ：お試し決済で支払い、ご注文の状況を確認。"
