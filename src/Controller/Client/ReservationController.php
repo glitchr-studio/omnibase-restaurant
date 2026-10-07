@@ -40,20 +40,17 @@ class ReservationController extends AbstractController
         $booking = new Booking();
         $booking->day = $request->query->get('jour') ?: ($this->availability->openDays(2, null, 1)[0] ?? $this->availability->today()->format('Y-m-d'));
         $booking->covers = max(1, min($this->availability->maxCovers(), $request->query->getInt('couverts', 2)));
-        $booking->startedAt = time();
         $form = $this->createForm(BookingType::class, $booking, [
             'min' => $this->availability->today()->format('Y-m-d'),
             'max' => $this->availability->lastDay()->format('Y-m-d'),
             'max_covers' => $this->availability->maxCovers(),
+            // glitchr/omnibase's forms' guard, with the restaurant's delay (restaurant.reservation.min_delay).
+            'guard' => ['action' => 'book', 'min_delay' => $this->minDelay],
         ]);
         $form->handleRequest($request);
         $error = null;
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($booking->isRobot($this->minDelay)) {
-                // Thanked, nothing kept.
-                return $this->render('@Restaurant/client/booked.html.twig', ['layout' => $this->layout, 'reservation' => null]);
-            }
             try {
                 $reservation = $this->book->request($booking, $request->getLocale());
 

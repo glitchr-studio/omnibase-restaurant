@@ -18,8 +18,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * The public reservation form, on a model (Model\Booking): the day, how
  * many, the time among those offered (the page fills them as the day and
- * the size change), who, what they ask. A trap field no person sees, the
- * time the form took, and glitchr/omnibase's data-protection notice.
+ * the size change), who, what they ask, and glitchr/omnibase's
+ * data-protection notice. Guarded as glitchr/omnibase guards a form (its
+ * option `guard`, action "book"): a trap, the time it takes, the lists, the
+ * captcha when the site has glitchr/omniguard.
  */
 class BookingType extends AbstractType
 {
@@ -34,8 +36,6 @@ class BookingType extends AbstractType
             ->add('phone', TelType::class, ['label' => '@restaurant.book.phone', 'attr' => ['autocomplete' => 'tel']])
             ->add('allergies', TextType::class, ['label' => '@restaurant.book.allergies', 'required' => false])
             ->add('notes', TextareaType::class, ['label' => '@restaurant.book.notes', 'required' => false, 'attr' => ['rows' => 3]])
-            ->add('website', TextType::class, ['label' => false, 'required' => false, 'attr' => ['tabindex' => -1, 'autocomplete' => 'off', 'class' => 'restaurant-trap']])
-            ->add('startedAt', HiddenType::class)
             ->add('privacy', PrivacyType::class, [
                 'notice' => '@restaurant.book.privacy',
                 'consent' => false,
@@ -50,6 +50,7 @@ class BookingType extends AbstractType
             'max' => null,
             'max_covers' => 8,
             'translation_domain' => 'restaurant',
+            'guard' => ['action' => 'book'],
         ]);
     }
 

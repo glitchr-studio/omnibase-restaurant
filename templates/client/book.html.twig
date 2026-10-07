@@ -13,6 +13,8 @@
     </header>
 
     {{ form_start(form, {attr: {class: 'restaurant-form', novalidate: 'novalidate', 'data-controller': 'restaurant-booking', 'data-restaurant-booking-url-value': path('restaurant_book_slots'), 'data-restaurant-booking-none-value': '@restaurant.book.none'|trans, 'data-restaurant-booking-call-value': '@restaurant.book.call'|trans({max: max_covers})}}) }}
+        {#- What belongs to no field: a form sent too fast, from an address a list knows. -#}
+        {% set _errors %}{{ form_errors(form) }}{% endset %}{% if _errors|trim is not empty %}<div class="restaurant-flash is-danger" role="alert">{{ _errors }}</div>{% endif %}
         <fieldset class="restaurant-step">
             <legend><span>1</span> {{ '@restaurant.book.when'|trans }}</legend>
             <div class="restaurant-row">
@@ -39,9 +41,9 @@
             {{ form_row(form.email) }}
             {{ form_row(form.allergies) }}
             {{ form_row(form.notes) }}
-            <div class="restaurant-trap" aria-hidden="true">{{ form_row(form.website) }}</div>
-            {{ form_widget(form.startedAt) }}
             {{ form_row(form.privacy) }}
+            {#- The forms' guard (glitchr/omnibase): its trap, its stamp, its captcha, before the button. -#}
+            {{ form_rest(form) }}
         </fieldset>
 
         <p class="restaurant-submit"><button type="submit" class="restaurant-button">{{ '@restaurant.book.submit'|trans }}</button></p>

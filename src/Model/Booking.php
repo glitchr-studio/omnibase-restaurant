@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * What the public reservation form holds (omnibase's FormFactory takes a
  * model, not an entity): the day, the time, how many, who, what they ask.
- * $website is the trap no person fills; $startedAt how long the form took.
+ * The robots are the form's guard's (glitchr/omnibase's option `guard`).
  */
 class Booking
 {
@@ -41,19 +41,4 @@ class Booking
 
     #[Assert\Length(max: 500)]
     public ?string $allergies = null;
-
-    /** The honeypot: hidden off-screen, a robot fills it */
-    public ?string $website = null;
-
-    /** Unix time the form was shown */
-    public ?int $startedAt = null;
-
-    public function isRobot(int $minDelay = 3, ?int $now = null): bool
-    {
-        if ('' !== trim((string) $this->website)) {
-            return true;
-        }
-
-        return null !== $this->startedAt && (($now ?? time()) - $this->startedAt) < $minDelay;
-    }
 }

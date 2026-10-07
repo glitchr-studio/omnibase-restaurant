@@ -16,7 +16,6 @@ use Base\Restaurant\Enum\Station;
 use Base\Restaurant\Enum\TicketChannel;
 use Base\Restaurant\Enum\TicketStatus;
 use Base\Restaurant\Exception\TransitionException;
-use Base\Restaurant\Model\Booking;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\ORM\Mapping\Column;
 use PHPUnit\Framework\TestCase;
@@ -172,17 +171,6 @@ class EntitiesTest extends TestCase
         self::assertSame(['2026-12-24', '2026-12-31'], $layout->getDates());
         self::assertTrue($layout->takesOver(new \DateTimeImmutable('2026-12-31')));
         self::assertSame(4, $room->getCapacity() - 4);
-    }
-
-    public function testTheBookingFormKnowsARobot(): void
-    {
-        $booking = new Booking();
-        $booking->startedAt = 1000;
-
-        self::assertTrue($booking->isRobot(3, 1001), 'sent a second after it was shown');
-        self::assertFalse($booking->isRobot(3, 1010));
-        $booking->website = 'https://spam.example';
-        self::assertTrue($booking->isRobot(3, 1010), 'the trap filled');
     }
 
     public function testSettlingATableLeavesNoneOfItsRoundsOnThePass(): void
