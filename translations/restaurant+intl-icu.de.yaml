@@ -426,6 +426,7 @@ takehome:
         parcel: Paket
         allergens: Allergene
     error:
+        form: "Das Formular konnte nicht verarbeitet werden: Bitte prüfen Sie es und senden Sie es erneut."
         empty: "Ihre Bestellung ist leer: Bitte eine Menge angeben."
         mode: "Diese Art der Übergabe wird nicht angeboten."
         out_of_zone: "Nach {postcode} liefern wir nicht: Wählen Sie Abholung oder Kühlpaket."

@@ -426,6 +426,7 @@ takehome:
         parcel: Colis
         allergens: Allergènes
     error:
+        form: "Le formulaire n'a pas pu être pris en compte : vérifiez-le et envoyez-le de nouveau."
         empty: "Votre commande est vide : indiquez une quantité."
         mode: "Ce mode de remise n'est pas proposé."
         out_of_zone: "Nous ne livrons pas au {postcode} : choisissez le retrait ou le colis frais."

@@ -9,6 +9,9 @@ use Base\Restaurant\Service\TakeawayTickets;
 use Base\Restaurant\Service\TakeHomeOrders;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Base\Restaurant\Form\TakeHomeOrderType;
+use Base\Restaurant\Model\TakeHomeOrder;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -32,6 +35,7 @@ class TakeHomeController extends AbstractController
         #[Autowire('%restaurant.takehome.enabled%')] private readonly bool $enabled = true,
         #[Autowire('%restaurant.takehome.max_quantity%')] private readonly int $maxQuantity = 20,
         private readonly ?TakeHomeOrders $orders = null,
+        private readonly ?FormFactoryInterface $forms = null,
     ) {
     }
 
@@ -60,6 +64,8 @@ class TakeHomeController extends AbstractController
             'max_quantity' => $this->maxQuantity,
             // What an order refused had typed (TakeHomeOrderController), given back once.
             'posted' => $request->hasPreviousSession() ? (array) $request->getSession()->remove(self::POSTED) : [],
+            // The order's form: the page writes its fields, the form gives the guard's (trap, stamp, captcha) and the token.
+            'form' => null !== $this->orders && $this->orders->isOpen() && null !== $this->forms ? $this->forms->createNamed('', TakeHomeOrderType::class, new TakeHomeOrder())->createView() : null,
         ]);
     }
 

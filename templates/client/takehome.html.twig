@@ -26,8 +26,7 @@
 
     {% if dishes is empty %}<p class="restaurant-muted">{{ '@restaurant.takehome.empty'|trans }}</p>{% endif %}
 
-    {% if can_order %}<form method="post" action="{{ path('restaurant_takehome_order') }}" class="restaurant-form restaurant-takehome-form">
-        <input type="hidden" name="_token" value="{{ csrf_token('restaurant_takehome') }}">{% endif %}
+    {% if can_order %}<form method="post" action="{{ path('restaurant_takehome_order') }}" class="restaurant-form restaurant-takehome-form">{% endif %}
 
     <div class="restaurant-dishes">
         {% for dish in dishes %}{% include '@Restaurant/client/_takehome_dish.html.twig' with {order: can_order} %}{% endfor %}
@@ -82,10 +81,11 @@
             </div>
             <label>{{ '@restaurant.takehome.email'|trans }} <input type="email" name="email" required maxlength="180" autocomplete="email" value="{{ posted.email ?? (app.user ? app.user.email : '') }}"></label>
             <label>{{ '@restaurant.takehome.note'|trans }} <input type="text" name="note" maxlength="500" value="{{ posted.note ?? '' }}"></label>
-            <div class="restaurant-trap" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
             <p class="restaurant-muted">{{ '@restaurant.takehome.no_account'|trans }}</p>
         </fieldset>
 
+        {#- The forms' guard (glitchr/omnibase): its trap, its stamp, its captcha, and the token, before the button. -#}
+        {% if form %}{% for name in ['guard_website', 'guard_opened', 'guard_captcha', 'guard_captcha_fallback', '_token', '_csrf_token'] %}{% if form[name] is defined %}{{ form_row(form[name]) }}{% endif %}{% endfor %}{% endif %}
         <p class="restaurant-submit"><button type="submit" class="restaurant-button">{{ '@restaurant.takehome.submit'|trans }}</button></p>
     </form>
     {% elseif dishes|length %}

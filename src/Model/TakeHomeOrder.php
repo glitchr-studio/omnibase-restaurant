@@ -5,7 +5,7 @@ namespace Base\Restaurant\Model;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * An order of the take-home shop as its form posts it (#[MapRequestPayload]):
+ * An order of the take-home shop as its form posts it (Form\TakeHomeOrderType):
  * the dishes and how many, who, and how it leaves - collected on a slot,
  * brought to a postcode nearby, or sent in a chilled parcel.
  */
@@ -46,14 +46,6 @@ final class TakeHomeOrder
 
     #[Assert\Length(max: 500)]
     public ?string $note = null;
-
-    /** The trap: a field people do not see, and robots fill. */
-    public ?string $website = null;
-
-    public function isRobot(): bool
-    {
-        return '' !== trim((string) $this->website);
-    }
 
     /** @return array<int, int> dish id => quantity, those taken */
     public function quantities(): array

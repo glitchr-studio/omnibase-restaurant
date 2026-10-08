@@ -426,6 +426,7 @@ takehome:
         parcel: Parcel
         allergens: Allergens
     error:
+        form: "The form could not be taken into account: check it and send it again."
         empty: "Your order is empty: give a quantity."
         mode: "This way is not offered."
         out_of_zone: "We do not deliver to {postcode}: choose collection or the chilled parcel."
