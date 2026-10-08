@@ -335,6 +335,9 @@ admin:
         covers: 名（本日）
         to_confirm: 件の予約が確認待ち
         tickets: 件のチケット（パス）
+        reviews_unanswered: "{count, plural, other {返信待ちのレビュー #件}}"
+        reviews_none: "まだレビューはありません。"
+        reviews_anonymous: "匿名"
     floor:
         title: 座席表
         lead: "テーブルをドラッグ、回転、複製できます。レイアウトでは大人数向けにテーブルを連結できます。"
@@ -474,3 +477,6 @@ demo:
     client:
         label: お客様
         description: "お持ち帰りショップ：お試し決済で支払い、ご注文の状況を確認。"
+# What guests say elsewhere (glitchr/omnireview), on the restaurant's page.
+reviews:
+    title: "お客様の声"

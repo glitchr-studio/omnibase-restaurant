@@ -335,6 +335,9 @@ admin:
         covers: couverts aujourd'hui
         to_confirm: réservations à confirmer
         tickets: tickets sur le passe
+        reviews_unanswered: "{count, plural, one {# avis attend une réponse} other {# avis attendent une réponse}}"
+        reviews_none: "Aucun avis pour l'instant."
+        reviews_anonymous: "Anonyme"
     floor:
         title: Plan de salle
         lead: "Glissez les tables, tournez-les, dupliquez-les ; dans une disposition, jumelez-les pour les grandes tablées."
@@ -474,3 +477,6 @@ demo:
     client:
         label: Client
         description: "La boutique à emporter : une commande payée par le paiement d'essai, puis suivie."
+# What guests say elsewhere (glitchr/omnireview), on the restaurant's page.
+reviews:
+    title: "Ce que nos hôtes en disent"

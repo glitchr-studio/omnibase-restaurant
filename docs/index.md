@@ -17,6 +17,7 @@ booking platforms. The site carries the identity; the bundle does the work.
 | [The take-home shop](take-home.md) | fresh dishes to cook at home, the cold chain (pickup, local delivery, chilled parcels), ordering without an account, `/suivi/{token}` |
 | [The pass](pass.md) | `/service`: the floor, the tickets, the book, what the staff do there |
 | [The platforms](platforms.md) | glitchr/omnifood: webhooks, answers, the menu, the keys |
+| [What guests say elsewhere](reviews.md) | glitchr/omnireview: the rating and latest reviews on the page, the dashboard's tile |
 | [Roadmap](roadmap.md) | where it stands, what is left |
 
 Namespace `Base\Restaurant\`, translations in the `restaurant` domain (fr, en,

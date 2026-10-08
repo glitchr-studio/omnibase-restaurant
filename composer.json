@@ -26,7 +26,8 @@
         "phpunit/phpunit": "^12.5"
     },
     "suggest": {
-        "glitchr/omnifood": "The delivery and booking platforms (omnifood/ubereats, omnifood/deliveroo, omnifood/justeat, omnifood/thefork): their orders become tickets on the pass, their reservations join the book, the menu and the out-of-stock dishes are pushed to them."
+        "glitchr/omnifood": "The delivery and booking platforms (omnifood/ubereats, omnifood/deliveroo, omnifood/justeat, omnifood/thefork): their orders become tickets on the pass, their reservations join the book, the menu and the out-of-stock dishes are pushed to them.",
+        "glitchr/omnireview": "What guests say elsewhere (omnireview/google, omnireview/tripadvisor, omnireview/trustpilot): the rating and latest reviews on the restaurant's page, the dashboard's tile (restaurant.reviews); not on Packagist yet - https://github.com/glitchr-studio/omnireview"
     },
     "autoload": {"psr-4": {"Base\\Restaurant\\": "./src"}},
     "autoload-dev": {"psr-4": {"Base\\Restaurant\\Tests\\": "./tests"}},

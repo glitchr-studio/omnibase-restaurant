@@ -9,7 +9,8 @@ use Symfony\Component\RateLimiter\Storage\CacheStorage;
  * Autowiring over src/. Entities, enums, models, events and exceptions are
  * not services. The back office's screens and widgets need omnibase/admin;
  * the platforms' bridge (src/Omnifood) is loaded only when glitchr/omnifood
- * is installed - and its keys' section only with omnibase/admin too. The
+ * is installed - and its keys' section only with omnibase/admin too; the
+ * review platforms' (src/Reviews) only with glitchr/omnireview. The
  * demonstration accounts (src/Demo) need a glitchr/omnibase with the demo
  * environment.
  */
@@ -35,6 +36,8 @@ return function (ContainerConfigurator $configurator) {
             $src.'/Omnifood/',
             $src.'/Demo/',
             $src.'/RestaurantBundle.php',
+            // What guests say on the review platforms: only with glitchr/omnireview (none of its interfaces implemented here).
+            ...(class_exists('Omnireview\\Registry') ? [] : [$src.'/Reviews/']),
             // An order without an account, a bill paid from a phone: on omnibase/marketplace's quick order.
             ...($quickOrder ? [] : [$src.'/Service/TakeHomeOrders.php', $src.'/Service/TablePayments.php', $src.'/EventListener/QuickOrderListener.php']),
         ]);
@@ -52,6 +55,14 @@ return function (ContainerConfigurator $configurator) {
             service('restaurant.table_limiter.storage'),
             service('lock.factory')->nullOnInvalid(),
         ]);
+
+    // The platforms' reviews through the family's registry and Twig functions (its bundle registered): their
+    // terms - what may be kept, and how long - are the family's to keep.
+    if (class_exists('Omnireview\\Registry')) {
+        $services->get('Base\\Restaurant\\Reviews\\RestaurantReviews')
+            ->arg('$registry', service('Omnireview\\Registry')->nullOnInvalid())
+            ->arg('$omnireview', service('Omnireview\\Bridge\\Twig\\OmnireviewExtension')->nullOnInvalid());
+    }
 
     if (class_exists('Base\\Admin\\Controller\\AbstractCrudController')) {
         $services->load('Base\\Restaurant\\Controller\\Admin\\', $src.'/Controller/Admin/')

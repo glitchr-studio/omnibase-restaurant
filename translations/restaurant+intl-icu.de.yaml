@@ -335,6 +335,9 @@ admin:
         covers: Gäste heute
         to_confirm: Reservierungen zu bestätigen
         tickets: Bons am Pass
+        reviews_unanswered: "{count, plural, one {# Bewertung wartet auf eine Antwort} other {# Bewertungen warten auf eine Antwort}}"
+        reviews_none: "Noch keine Bewertung."
+        reviews_anonymous: "Anonym"
     floor:
         title: Tischplan
         lead: "Ziehen, drehen und duplizieren Sie die Tische; in einer Anordnung verbinden Sie sie für große Gesellschaften."
@@ -474,3 +477,6 @@ demo:
     client:
         label: Gast
         description: "Der Shop zum Mitnehmen: eine Bestellung, mit der Testzahlung bezahlt und dann verfolgt."
+# What guests say elsewhere (glitchr/omnireview), on the restaurant's page.
+reviews:
+    title: "Was unsere Gäste sagen"

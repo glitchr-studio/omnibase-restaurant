@@ -69,6 +69,15 @@ class RestaurantConfiguration extends AbstractBaseConfiguration
                         ->scalarNode('cutoff')->defaultValue('12:00')->info('With notice_days 0: past this hour, a parcel leaves tomorrow at the earliest.')->end()
                     ->end()
                 ->end()
+                // What guests say of the restaurant elsewhere (glitchr/omnireview): its rating and latest reviews on its
+                // page, a tile of the back office's dashboard. Nothing shows without the family, nor without a key.
+                ->arrayNode('reviews')->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('places')->useAttributeAsKey('gateway')->scalarPrototype()->end()->defaultValue([])->info('The restaurant on each platform, by its omnireview gateway\'s name: {google: "ChIJ...", tripadvisor: "1234567", trustpilot: "<business unit>"}.')->end()
+                        ->arrayNode('owners')->useAttributeAsKey('gateway')->scalarPrototype()->end()->defaultValue([])->info('The owner\'s side of a platform: {google: "accounts/<a>/locations/<l>"} (Business Profile: every review, and whether it was answered).')->end()
+                        ->integerNode('limit')->min(0)->defaultValue(3)->info('Reviews shown per platform on the restaurant\'s page.')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('pass')->addDefaultsIfNotSet()
                     ->children()
                         ->integerNode('poll')->min(2)->defaultValue(6)->info('Seconds between two looks at the state by the pass and the guests\' phones.')->end()

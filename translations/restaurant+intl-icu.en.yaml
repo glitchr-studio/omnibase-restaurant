@@ -335,6 +335,9 @@ admin:
         covers: guests today
         to_confirm: reservations to confirm
         tickets: tickets on the pass
+        reviews_unanswered: "{count, plural, one {# review awaits an answer} other {# reviews await an answer}}"
+        reviews_none: "No review yet."
+        reviews_anonymous: "Anonymous"
     floor:
         title: Floor plan
         lead: "Drag the tables, turn them, duplicate them; in a layout, join them for large parties."
@@ -474,3 +477,6 @@ demo:
     client:
         label: Customer
         description: "The take-home shop: an order paid with the trial payment, then followed."
+# What guests say elsewhere (glitchr/omnireview), on the restaurant's page.
+reviews:
+    title: "What our guests say"

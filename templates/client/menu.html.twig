@@ -47,6 +47,10 @@
     <p class="restaurant-empty">{{ '@restaurant.menu.empty'|trans }}</p>
     {% endfor %}
 
+    {# The platforms' reviews (glitchr/omnireview), only when a gateway is configured: nothing otherwise. #}
+    {% set reviews = restaurant_reviews() %}
+    {% if reviews is not empty %}{% include '@Restaurant/client/_reviews.html.twig' with {reviews: reviews, limit: restaurant_reviews_limit()} %}{% endif %}
+
     <p class="restaurant-legal">{{ '@restaurant.menu.legal'|trans }}</p>
 </section>
 {% endblock %}

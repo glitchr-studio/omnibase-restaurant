@@ -1,0 +1,11 @@
+{#- What guests say of the restaurant elsewhere: each platform's rating and latest reviews by the family's
+    widget (glitchr/omnireview's omnireview_widget(): the origin, the date and the link always, no JSON-LD), included by the page
+    only when restaurant_reviews() gives a platform. A site dresses it in
+    templates/bundles/RestaurantBundle/client/_reviews.html.twig, and the widget in
+    templates/bundles/OmnireviewBundle/reviews.html.twig. -#}
+<section class="restaurant-reviews" aria-labelledby="restaurant-reviews-title">
+    <h2 id="restaurant-reviews-title">{{ '@restaurant.reviews.title'|trans }}</h2>
+    {% for shown in reviews %}
+        {{ restaurant_review_widget(shown.gateway, shown.place, limit) }}
+    {% endfor %}
+</section>

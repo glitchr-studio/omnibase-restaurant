@@ -1,0 +1,32 @@
+{#- The latest reviews on the platforms (glitchr/omnireview) and those not answered yet; nothing at all
+    without the family or without a configured gateway. Each with its platform, its author, its date
+    and its link: the platforms' terms (Omnireview\Model\Terms) ask it in the back office too. -#}
+{% if shown %}
+<div class="analytics-card card restaurant-reviews-tile">
+    <div class="analytics-card-header"><h2 class="analytics-card-title">{{ widget.label|trans({}, 'admin') }}</h2></div>
+    {% if unanswered is not empty %}
+        <p class="restaurant-reviews-tile-alert">{{ '@restaurant.admin.widget.reviews_unanswered'|trans({'count': unanswered|length}) }}</p>
+    {% endif %}
+    <ul class="restaurant-reviews-tile-list">
+    {% for item in latest %}
+        {% set review = item.review %}
+        <li{% if item.answerable and review.reply is null %} class="is-waiting"{% endif %}>
+            <strong>{{ review.rating }}/{{ review.scale }}</strong>
+            <span>{{ review.author ?? '@restaurant.admin.widget.reviews_anonymous'|trans }}</span>
+            {% if review.publishedAt %}<time datetime="{{ review.publishedAt|date('c') }}">{{ review.publishedAt|date('d/m/Y') }}</time>{% endif %}
+            {% if review.url %}<a href="{{ review.url }}" rel="noopener" target="_blank">{{ item.gateway|capitalize }}</a>{% else %}<em>{{ item.gateway|capitalize }}</em>{% endif %}
+            {% if review.text %}<q>{{ review.text|length > 140 ? review.text|slice(0, 140) ~ '…' : review.text }}</q>{% endif %}
+        </li>
+    {% else %}
+        <li>{{ '@restaurant.admin.widget.reviews_none'|trans }}</li>
+    {% endfor %}
+    </ul>
+</div>
+<style>
+    .restaurant-reviews-tile-alert { margin: 0 1rem .5rem; padding: .5rem .75rem; border-radius: .5rem; background: rgba(252,104,117,.16); color: #d9404e; font-size: .85rem; }
+    .restaurant-reviews-tile-list { list-style: none; margin: 0; padding: 0 1rem 1rem; display: grid; gap: .6rem; }
+    .restaurant-reviews-tile-list li { display: flex; flex-wrap: wrap; gap: .25rem .6rem; align-items: baseline; font-size: .85rem; }
+    .restaurant-reviews-tile-list li.is-waiting strong { color: #d9404e; }
+    .restaurant-reviews-tile-list q { flex-basis: 100%; opacity: .8; }
+</style>
+{% endif %}
