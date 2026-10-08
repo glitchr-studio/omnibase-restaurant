@@ -3,7 +3,7 @@
     "description": "A restaurant on omnibase: the dining room and its layouts (a floor-plan editor, a QR poster per table), meal services and table reservations (availability under a lock, a public form, a management link, ICS), the menu (dishes as omnibase/marketplace products, sections, set menus, EU allergens), ordering at the table by QR code (sessions, rounds, tickets), the pass for the staff, and the delivery and booking platforms through glitchr/omnifood.",
     "type": "symfony-bundle",
     "keywords": ["restaurant", "reservations", "floor plan", "qr code", "table ordering", "kitchen display", "omnibase", "omnifood"],
-    "license": "LGPL-3.0-or-later",
+    "license": "MIT",
     "authors": [{"name": "Marco Meyer", "email": "marco.meyer@glitchr.io"}],
     "require": {
         "php": "^8.2",

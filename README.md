@@ -18,4 +18,4 @@ Documentation: [docs/](docs/index.md). Tests: `vendor/bin/phpunit` (no kernel ne
 
 The order without an account and the bill paid from a phone stand on omnibase/marketplace's quick order, and are loaded only where it exists; what is left is in [docs/roadmap.md](docs/roadmap.md).
 
-License: LGPL-3.0-or-later.
+License: MIT since 2026-10-09; earlier versions remain published under LGPL-3.0-or-later.
