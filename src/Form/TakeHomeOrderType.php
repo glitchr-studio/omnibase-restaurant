@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * when, who. A root form without a name (createNamed('')): its fields keep
  * the page's names - email, lines[12], day. Guarded as glitchr/omnibase
  * guards a public form (its option `guard`, action "takehome": a trap, the
- * time it takes, the lists, the captcha when the site has glitchr/omniguard),
+ * time it takes, the lists, the captcha when the site has glitchr/omnishield),
  * in place of the page's own trap. Its fields are validated as
  * Model\TakeHomeOrder's constraints say.
  *

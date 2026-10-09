@@ -21,7 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * the size change), who, what they ask, and glitchr/omnibase's
  * data-protection notice. Guarded as glitchr/omnibase guards a form (its
  * option `guard`, action "book"): a trap, the time it takes, the lists, the
- * captcha when the site has glitchr/omniguard.
+ * captcha when the site has glitchr/omnishield.
  */
 class BookingType extends AbstractType
 {

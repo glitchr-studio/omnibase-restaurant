@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  * `guard`, action "takehome") in place of the page's own `website` trap: a filled trap, an order sent
  * faster than its delay and a missing captcha token are refused on the form; an order placed as a
  * person places it goes through, into Model\TakeHomeOrder. Run by a host application's PHPUnit, its
- * test captcha being omniguard's "fixed" gateway.
+ * test captcha being omnishield's "fixed" gateway.
  */
 final class TakeHomeGuardTest extends KernelTestCase
 {
@@ -58,7 +58,7 @@ final class TakeHomeGuardTest extends KernelTestCase
             'guard_opened' => static::getContainer()->get(FormGuard::class)->stamp(time() - 10),
         ];
         if ($form->has('guard_captcha')) {
-            $data['guard_captcha'] = 'omniguard-fixed-token';
+            $data['guard_captcha'] = (class_exists(\Omnishield\Testing\FixedGateway::class) ? \Omnishield\Testing\FixedGateway::TOKEN : 'omniguard-fixed-token'); // omnishield's "fixed" test gateway, or omniguard's on a host not moved to omnishield yet.
         }
         $form->submit(array_filter($overrides + $data, static fn ($value) => null !== $value), false);
 
@@ -115,7 +115,7 @@ final class TakeHomeGuardTest extends KernelTestCase
     {
         $form = $this->form();
         if (!$form->has('guard_captcha')) {
-            self::markTestSkipped('The host application has no captcha (glitchr/omniguard).');
+            self::markTestSkipped('The host application has no captcha (glitchr/omnishield).');
         }
         $this->send($form, ['guard_captcha' => '']);
         self::assertFalse($form->isValid());

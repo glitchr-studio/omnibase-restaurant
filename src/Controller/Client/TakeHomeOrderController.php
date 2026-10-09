@@ -80,7 +80,7 @@ class TakeHomeOrderController extends AbstractController
     {
         $this->addFlash('error', $said ? $key : (str_starts_with($key, '@') ? $this->translator->trans($key, $parameters) : $this->translator->trans($key, $parameters, 'restaurant')));
         // What was typed comes back in the form - not the guard's fields, nor the token.
-        $posted = array_filter($request->request->all(), static fn ($value, $name) => !\in_array($name, ['_token', '_csrf_token', 'omniguard-token'], true) && !str_starts_with((string) $name, 'guard_'), \ARRAY_FILTER_USE_BOTH);
+        $posted = array_filter($request->request->all(), static fn ($value, $name) => !\in_array($name, ['_token', '_csrf_token', 'omnishield-token', 'omniguard-token'], true) && !str_starts_with((string) $name, 'guard_'), \ARRAY_FILTER_USE_BOTH);
         $request->getSession()->set(TakeHomeController::POSTED, $posted);
 
         return $this->redirect($this->generateUrl('restaurant_takehome').'#commander');
