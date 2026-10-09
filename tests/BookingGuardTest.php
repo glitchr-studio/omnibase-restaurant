@@ -56,7 +56,7 @@ final class BookingGuardTest extends KernelTestCase
             'guard_opened' => static::getContainer()->get(FormGuard::class)->stamp(time() - 10),
         ];
         if ($form->has('guard_captcha')) {
-            $data['guard_captcha'] = (class_exists(\Omnishield\Testing\FixedGateway::class) ? \Omnishield\Testing\FixedGateway::TOKEN : 'omniguard-fixed-token'); // omnishield's "fixed" test gateway, or omniguard's on a host not moved to omnishield yet.
+            $data['guard_captcha'] = 'omnishield-fixed-token';
         }
         $data = array_filter($overrides + $data, static fn ($value) => null !== $value);
         $form->submit(array_intersect_key($data, iterator_to_array($form)), false);
